@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>与世界交流的魔法书 · 英文版</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Noto+Serif+SC:wght@300;400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #D4C4A0;
+  --bg-deep: #C4B48C;
+  --card-bg: #FAF6EE;
+  --card-warm: #FFF8EE;
+  --ink: #2A2018;
+  --ink-mid: #5C4F3A;
+  --ink-faint: #9A8C72;
+  --border: #B8A87E;
+  --border-light: #D4C8AA;
+
+  /* Bright accent palette — higher saturation, still harmonious */
+  --coral:    #E8654A;
+  --sky:      #4A9FD4;
+  --sage:     #4AAD7A;
+  --gold:     #D4960A;
+  --violet:   #8B5FD4;
+  --rose:     #D45F8B;
+
+  --coral-bg:  rgba(232,101,74,0.12);
+  --sky-bg:    rgba(74,159,212,0.12);
+  --sage-bg:   rgba(74,173,122,0.12);
+  --gold-bg:   rgba(212,150,10,0.12);
+  --violet-bg: rgba(139,95,212,0.12);
+  --rose-bg:   rgba(212,95,139,0.12);
+
+  --shadow: rgba(42,32,24,0.15);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Noto Serif SC', serif;
+  min-height: 100vh;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+.container {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 28px 100px;
+  position: relative;
+}
+
+/* ── Header ── */
+header {
+  padding: 48px 0 30px;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 32px;
+  position: relative;
+}
+
+header::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to right, var(--coral), var(--sky), var(--sage), var(--gold), var(--violet), var(--rose));
+  border-radius: 2px;
+}
+
+.header-eyebrow {
+  font-family: 'EB Garamond', serif;
+  font-size: 11px;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  margin-bottom: 10px;
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 38px;
+  color: var(--ink);
+  line-height: 1.15;
+  margin-bottom: 5px;
+}
+
+h1 .en-sub {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 20px;
+  color: var(--ink-mid);
+  display: block;
+  margin-top: 3px;
+  letter-spacing: 0.08em;
+}
+
+.header-sub {
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin-top: 10px;
+  font-style: italic;
+}
+
+.stats-bar {
+  display: flex;
+  gap: 28px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-light);
+  flex-wrap: wrap;
+}
+
+.stat { display: flex; flex-direction: column; gap: 2px; }
+
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1;
+}
+.stat-num.s1 { color: var(--coral); }
+.stat-num.s2 { color: var(--sky); }
+.stat-num.s3 { color: var(--sage); }
+.stat-num.s4 { color: var(--gold); }
+
+.stat-label { font-size: 10px; color: var(--ink-faint); letter-spacing: 0.1em; }
+
+/* ── Controls ── */
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-wrap {
+  flex: 1;
+  min-width: 180px;
+  position: relative;
+}
+
+.search-wrap::before {
+  content: '⌕';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-faint);
+  font-size: 17px;
+  pointer-events: none;
+}
+
+input[type="text"], textarea, select {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="text"]:focus, textarea:focus, select:focus {
+  border-color: var(--violet);
+  box-shadow: 0 0 0 3px rgba(139,95,212,0.12);
+}
+
+.search-input { width: 100%; padding: 9px 12px 9px 35px; }
+
+.filter-select {
+  padding: 9px 26px 9px 12px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235C4F3A'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-color: var(--card-bg);
+}
+
+.btn-primary {
+  padding: 9px 18px;
+  background: var(--ink);
+  color: var(--card-bg);
+  border: none;
+  border-radius: 6px;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.btn-primary:hover { background: var(--ink-mid); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-ghost {
+  padding: 9px 14px;
+  background: var(--card-bg);
+  color: var(--ink-mid);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.btn-ghost:hover { border-color: var(--violet); color: var(--violet); transform: translateY(-1px); }
+
+/* ── Source filter pills ── */
+.source-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 28px;
+}
+
+.src-pill {
+  padding: 4px 14px;
+  border-radius: 100px;
+  border: 1.5px solid var(--border-light);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--card-bg);
+  color: var(--ink-mid);
+  font-family: 'Noto Serif SC', serif;
+}
+.src-pill:hover { transform: translateY(-1px); }
+.src-pill[data-src="all"].active    { background: var(--ink); border-color: var(--ink); color: var(--card-bg); }
+.src-pill[data-src="film"].active   { background: var(--coral); border-color: var(--coral); color: white; }
+.src-pill[data-src="talk"].active   { background: var(--sky); border-color: var(--sky); color: white; }
+.src-pill[data-src="book"].active   { background: var(--sage); border-color: var(--sage); color: white; }
+.src-pill[data-src="vocab"].active  { background: var(--gold); border-color: var(--gold); color: white; }
+
+/* ── Cards ── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 18px;
+}
+
+/* Source-based left border colors */
+.card[data-src="film"]  { --src-color: var(--coral);  --src-bg: var(--coral-bg); }
+.card[data-src="talk"]  { --src-color: var(--sky);    --src-bg: var(--sky-bg); }
+.card[data-src="book"]  { --src-color: var(--sage);   --src-bg: var(--sage-bg); }
+.card[data-src="vocab"] { --src-color: var(--gold);   --src-bg: var(--gold-bg); }
+
+.card {
+  background: var(--card-warm);
+  border: 1px solid var(--border-light);
+  border-left: 4px solid var(--src-color, var(--violet));
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: fadeUp 0.3s ease;
+  overflow: hidden;
+  box-shadow: 0 2px 10px var(--shadow);
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px var(--shadow);
+}
+
+.card-body { padding: 16px 18px 12px; }
+
+.card-source-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 100px;
+  font-size: 10.5px;
+  background: var(--src-bg, rgba(139,95,212,0.12));
+  color: var(--src-color, var(--violet));
+  margin-bottom: 9px;
+  font-family: 'EB Garamond', serif;
+  letter-spacing: 0.05em;
+}
+
+.card-sentence {
+  font-family: 'EB Garamond', serif;
+  font-size: 15px;
+  font-style: italic;
+  line-height: 1.65;
+  color: var(--ink);
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-note-preview {
+  font-size: 12px;
+  color: var(--ink-mid);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-style: italic;
+}
+
+.card-thumb {
+  width: 100%;
+  max-height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-top: 10px;
+  display: block;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 18px;
+  border-top: 1px solid var(--border-light);
+  font-size: 10.5px;
+  color: var(--ink-faint);
+}
+
+.word-count-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10.5px;
+  color: var(--violet);
+}
+
+/* ── Empty state ── */
+.empty-state {
+  text-align: center;
+  padding: 70px 20px;
+  color: var(--ink-faint);
+  grid-column: 1/-1;
+}
+.empty-icon { font-size: 32px; margin-bottom: 12px; }
+.empty-state p { font-size: 13px; font-style: italic; line-height: 1.9; }
+
+/* ── Overlay / Modal ── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(42,32,24,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: none;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 36px 20px;
+  overflow-y: auto;
+}
+.overlay.open { display: flex; }
+
+.modal {
+  background: var(--card-warm);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+  animation: modalIn 0.25s ease;
+  overflow: hidden;
+}
+
+@keyframes modalIn {
+  from { opacity:0; transform:scale(0.97) translateY(-8px); }
+  to   { opacity:1; transform:scale(1) translateY(0); }
+}
+
+.modal-header {
+  padding: 22px 26px 16px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, var(--card-warm), #FFF3E0);
+}
+
+.modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink);
+}
+
+.close-btn {
+  width: 28px; height: 28px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--ink-faint);
+  font-size: 20px;
+  border-radius: 4px;
+  transition: color 0.15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.close-btn:hover { color: var(--ink); }
+
+.modal-body { padding: 22px 26px; }
+
+.form-group { margin-bottom: 16px; }
+
+.form-label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--ink-mid);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+.form-label span { text-transform: none; color: var(--ink-faint); letter-spacing: 0; }
+
+textarea.auto-grow, input[type="text"] {
+  width: 100%;
+  resize: none;
+  padding: 9px 12px;
+  line-height: 1.65;
+}
+textarea.auto-grow { min-height: 76px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* Source type selector */
+.src-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.src-opt {
+  padding: 9px 12px;
+  border: 1.5px solid var(--border-light);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12.5px;
+  background: var(--card-bg);
+  color: var(--ink-mid);
+  transition: all 0.15s;
+  font-family: 'Noto Serif SC', serif;
+  text-align: center;
+}
+.src-opt:hover { border-color: var(--violet); }
+.src-opt.active[data-src="film"]  { background: var(--coral-bg);  border-color: var(--coral);  color: var(--coral); }
+.src-opt.active[data-src="talk"]  { background: var(--sky-bg);    border-color: var(--sky);    color: var(--sky); }
+.src-opt.active[data-src="book"]  { background: var(--sage-bg);   border-color: var(--sage);   color: var(--sage); }
+.src-opt.active[data-src="vocab"] { background: var(--gold-bg);   border-color: var(--gold);   color: var(--gold); }
+
+/* Image upload */
+.img-upload-area {
+  border: 1.5px dashed var(--border);
+  border-radius: 8px;
+  padding: 18px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--card-bg);
+}
+.img-upload-area:hover { border-color: var(--violet); background: rgba(139,95,212,0.04); }
+.img-upload-area p { font-size: 12.5px; color: var(--ink-faint); font-style: italic; }
+
+.img-preview-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.img-preview-item {
+  position: relative;
+  display: inline-block;
+}
+
+.img-preview-item img {
+  max-width: 120px;
+  max-height: 90px;
+  border-radius: 5px;
+  object-fit: cover;
+  display: block;
+  border: 1px solid var(--border-light);
+}
+
+.img-remove-btn {
+  position: absolute;
+  top: -6px; right: -6px;
+  width: 18px; height: 18px;
+  background: var(--coral);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+}
+
+/* Words section */
+.words-section {
+  border-top: 1px dashed var(--border-light);
+  padding-top: 16px;
+  margin-top: 4px;
+}
+
+.words-section-label {
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--violet);
+  margin-bottom: 10px;
+  font-family: 'EB Garamond', serif;
+}
+
+.word-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: flex-start;
+}
+
+.word-input {
+  width: 120px;
+  flex-shrink: 0;
+  font-family: 'EB Garamond', serif !important;
+  font-style: italic;
+  font-size: 14px !important;
+}
+
+.word-def-input { flex: 1; }
+
+.word-remove {
+  width: 26px; height: 36px;
+  background: transparent;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--ink-faint);
+  font-size: 14px;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.word-remove:hover { border-color: var(--coral); color: var(--coral); }
+
+.add-word-btn {
+  padding: 5px 12px;
+  background: transparent;
+  border: 1.5px dashed var(--border);
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--ink-faint);
+  font-family: 'Noto Serif SC', serif;
+  transition: all 0.15s;
+  width: 100%;
+  margin-top: 4px;
+}
+.add-word-btn:hover { border-color: var(--violet); color: var(--violet); }
+
+.modal-footer {
+  padding: 14px 26px 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ── Detail Modal ── */
+.detail-modal { max-width: 660px; }
+
+.detail-sentence {
+  font-family: 'EB Garamond', serif;
+  font-size: 18px;
+  font-style: italic;
+  line-height: 1.75;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+.detail-source-info {
+  font-size: 12px;
+  color: var(--ink-faint);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+
+.detail-section {
+  padding: 16px 26px;
+  border-bottom: 1px solid var(--border-light);
+}
+.detail-section:last-child { border-bottom: none; }
+
+.detail-section-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 8px;
+  font-family: 'EB Garamond', serif;
+}
+
+.detail-note {
+  font-size: 13.5px;
+  line-height: 1.8;
+  color: var(--ink-mid);
+  white-space: pre-wrap;
+  font-style: italic;
+}
+
+.detail-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.detail-images img {
+  max-width: 200px;
+  max-height: 150px;
+  border-radius: 6px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s;
+  border: 1px solid var(--border-light);
+}
+.detail-images img:hover { transform: scale(1.03); }
+
+.detail-words {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-word-row {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  padding: 8px 12px;
+  background: rgba(139,95,212,0.06);
+  border-radius: 6px;
+  border-left: 3px solid var(--violet);
+}
+
+.detail-word {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--violet);
+  font-weight: 500;
+  min-width: 100px;
+}
+
+.detail-def {
+  font-size: 13px;
+  color: var(--ink-mid);
+  line-height: 1.6;
+}
+
+.detail-actions {
+  padding: 12px 26px;
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.btn-sm {
+  padding: 5px 12px;
+  font-size: 11.5px;
+  background: transparent;
+  color: var(--ink-faint);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Noto Serif SC', serif;
+  transition: all 0.15s;
+}
+.btn-sm:hover { border-color: var(--violet); color: var(--violet); }
+.btn-sm.danger:hover { border-color: var(--coral); color: var(--coral); }
+
+/* ── Image lightbox ── */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 300;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.lightbox.open { display: flex; }
+.lightbox img { max-width: 92%; max-height: 92%; border-radius: 8px; }
+
+/* ── Toast ── */
+.toast-container {
+  position: fixed;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.toast {
+  background: var(--ink);
+  color: var(--card-bg);
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: 'Noto Serif SC', serif;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 4px 16px var(--shadow);
+  animation: toastIn 0.25s ease;
+  white-space: nowrap;
+}
+@keyframes toastIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+.toast.fade-out { animation: toastOut 0.3s ease forwards; }
+@keyframes toastOut { to { opacity:0; transform:translateY(6px); } }
+
+.toast-undo {
+  background: none;
+  border: 1px solid rgba(250,246,238,0.4);
+  color: var(--card-bg);
+  padding: 3px 10px;
+  border-radius: 3px;
+  font-size: 11px;
+  cursor: pointer;
+  font-family: 'Noto Serif SC', serif;
+}
+.toast-undo:hover { background: rgba(250,246,238,0.15); }
+
+@media (max-width: 600px) {
+  h1 { font-size: 28px; }
+  .form-row { grid-template-columns: 1fr; }
+  .src-options { grid-template-columns: 1fr 1fr; }
+  .overlay { padding: 16px 12px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-eyebrow">Claude 为 Alice 制作 · Spellbook of Language</div>
+    <h1>
+      与世界交流的魔法书
+      <span class="en-sub">· English Edition ·</span>
+    </h1>
+    <p class="header-sub" style="font-family:'EB Garamond',serif;font-size:13.5px;letter-spacing:0.06em;">language is information, and information is everything</p>
+    <div class="stats-bar">
+      <div class="stat">
+        <span class="stat-num s1" id="statTotal">0</span>
+        <span class="stat-label">全部收藏</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num s2" id="statFilm">0</span>
+        <span class="stat-label">🎬 影视剧</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num s3" id="statTalk">0</span>
+        <span class="stat-label">🎤 演讲TED</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num s4" id="statBook">0</span>
+        <span class="stat-label">📖 书籍文章</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索句子、笔记、单词……">
+    </div>
+    <select class="filter-select" id="sortSelect">
+      <option value="newest">最新收藏</option>
+      <option value="oldest">最早收藏</option>
+    </select>
+    <button class="btn-primary" onclick="openAddModal()">＋ 收录魔法</button>
+    <button class="btn-ghost" onclick="exportData()">导出</button>
+    <label class="btn-ghost" style="cursor:pointer;">导入<input type="file" accept=".json" id="importInput" style="display:none" onchange="importData(event)"></label>
+  </div>
+
+  <div class="source-filters" id="sourceFilters">
+    <span class="src-pill active" data-src="all">全部</span>
+    <span class="src-pill" data-src="film">🎬 影视剧</span>
+    <span class="src-pill" data-src="talk">🎤 演讲/TED</span>
+    <span class="src-pill" data-src="book">📖 书籍文章</span>
+    <span class="src-pill" data-src="vocab">📚 单词书</span>
+  </div>
+
+  <div class="cards-grid" id="cardsGrid"></div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="overlay" id="addOverlay" onclick="overlayClose(event,'addOverlay')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title" id="modalHeading">收录一条魔法</span>
+      <button class="close-btn" onclick="closeAddModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">原句 <span>（保留英文原貌）</span></label>
+        <textarea class="auto-grow" id="inputSentence" placeholder="让你停下来的那句话……" style="font-family:'EB Garamond',serif;font-style:italic;font-size:15px;"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">来源类型</label>
+        <div class="src-options">
+          <button class="src-opt active" data-src="film" onclick="setSrc(this)">🎬 影视剧台词</button>
+          <button class="src-opt" data-src="talk" onclick="setSrc(this)">🎤 演讲/TED</button>
+          <button class="src-opt" data-src="book" onclick="setSrc(this)">📖 书籍/文章</button>
+          <button class="src-opt" data-src="vocab" onclick="setSrc(this)">📚 单词书</button>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">来源名称 <span>（选填）</span></label>
+          <input type="text" id="inputSourceName" placeholder="哪部剧/哪本书……">
+        </div>
+        <div class="form-group">
+          <label class="form-label">标签 <span>（选填，逗号分隔）</span></label>
+          <input type="text" id="inputTags" placeholder="优雅表达, 日常口语……">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">我的分析/笔记 <span>（选填）</span></label>
+        <textarea class="auto-grow" id="inputNote" placeholder="为什么喜欢这句？可以用在什么场合？语法结构……"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">截图 <span>（选填，直接拖入或点击上传）</span></label>
+        <div class="img-upload-area" onclick="document.getElementById('imgInput').click()" id="imgUploadArea">
+          <p>📎 点击上传 或 拖入截图</p>
+        </div>
+        <input type="file" id="imgInput" accept="image/*" multiple style="display:none" onchange="handleImgInput(event)">
+        <div class="img-preview-wrap" id="imgPreviewWrap"></div>
+      </div>
+      <div class="words-section">
+        <div class="words-section-label">✦ 单词提取 <span style="text-transform:none;font-size:10px;color:var(--ink-faint);letter-spacing:0;">（选填，附在这条句子下）</span></div>
+        <div id="wordRows"></div>
+        <button class="add-word-btn" onclick="addWordRow()">＋ 添加单词</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeAddModal()">取消</button>
+      <button class="btn-primary" onclick="saveEntry()">收录</button>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="overlay" id="detailOverlay" onclick="overlayClose(event,'detailOverlay')">
+  <div class="modal detail-modal" onclick="event.stopPropagation()">
+    <div class="modal-header" id="detailHeader"></div>
+    <div class="detail-actions">
+      <button class="btn-sm" onclick="editCurrent()">编辑</button>
+      <button class="btn-sm danger" onclick="deleteCurrent()">删除</button>
+    </div>
+    <div id="detailBody"></div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<!-- Toast -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+const STORAGE_KEY = 'magic_english_v1';
+let entries = [];
+let editingId = null;
+let viewingId = null;
+let currentSrc = 'film';
+let currentFilter = 'all';
+let pendingImgs = []; // base64 array
+
+function load() {
+  try {
+    const d = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    entries = Array.isArray(d) ? d : [];
+  } catch(e) { entries = []; }
+}
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+}
+
+// ── Stats ──
+function renderStats() {
+  document.getElementById('statTotal').textContent = entries.length;
+  document.getElementById('statFilm').textContent  = entries.filter(e => e.src === 'film').length;
+  document.getElementById('statTalk').textContent  = entries.filter(e => e.src === 'talk').length;
+  document.getElementById('statBook').textContent  = entries.filter(e => e.src === 'book').length;
+}
+
+// ── Cards ──
+const SRC_LABELS = { film:'🎬 影视剧', talk:'🎤 演讲/TED', book:'📖 书籍文章', vocab:'📚 单词书' };
+
+function getFiltered() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const sort = document.getElementById('sortSelect').value;
+  let list = [...entries];
+  if (currentFilter !== 'all') list = list.filter(e => e.src === currentFilter);
+  if (q) {
+    list = list.filter(e => {
+      const hay = [e.sentence, e.sourceName, e.note, e.tags,
+        ...(e.words||[]).map(w => w.word + ' ' + w.def)
+      ].join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+  }
+  list.sort((a,b) => sort === 'newest'
+    ? new Date(b.createdAt) - new Date(a.createdAt)
+    : new Date(a.createdAt) - new Date(b.createdAt));
+  return list;
+}
+
+function renderCards() {
+  const grid = document.getElementById('cardsGrid');
+  const list = getFiltered();
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">✨</div><p>还没有收录任何魔法<br>或者当前筛选下没有结果</p></div>`;
+    return;
+  }
+  grid.innerHTML = list.map(e => {
+    const wc = (e.words||[]).length;
+    const date = new Date(e.createdAt).toLocaleDateString('zh-CN',{month:'short',day:'numeric'});
+    const thumb = e.images && e.images[0]
+      ? `<img class="card-thumb" src="${e.images[0]}" alt="截图">`
+      : '';
+    const notePreview = e.note
+      ? `<div class="card-note-preview">${escHtml(e.note)}</div>`
+      : '';
+    return `
+      <div class="card" data-src="${e.src||'film'}" onclick="openDetail('${e.id}')">
+        <div class="card-body">
+          <span class="card-source-badge">${SRC_LABELS[e.src]||''}${e.sourceName ? ' · '+escHtml(e.sourceName) : ''}</span>
+          <div class="card-sentence">${escHtml(e.sentence)}</div>
+          ${notePreview}
+          ${thumb}
+        </div>
+        <div class="card-footer">
+          <span>${date}</span>
+          ${wc ? `<span class="word-count-badge">✦ ${wc} 词</span>` : '<span></span>'}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderAll() {
+  renderStats();
+  renderCards();
+}
+
+// ── Source filter pills ──
+document.getElementById('sourceFilters').addEventListener('click', e => {
+  const pill = e.target.closest('.src-pill');
+  if (!pill) return;
+  currentFilter = pill.dataset.src;
+  document.querySelectorAll('.src-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  renderCards();
+});
+
+document.getElementById('searchInput').addEventListener('input', renderCards);
+document.getElementById('sortSelect').addEventListener('change', renderCards);
+
+// ── Add/Edit Modal ──
+function openAddModal(id = null) {
+  editingId = id;
+  const e = id ? entries.find(x => x.id === id) : null;
+  document.getElementById('modalHeading').textContent = id ? '编辑收录' : '收录一条魔法';
+  document.getElementById('inputSentence').value  = e ? e.sentence : '';
+  document.getElementById('inputSourceName').value = e ? (e.sourceName||'') : '';
+  document.getElementById('inputTags').value       = e ? (e.tags||'') : '';
+  document.getElementById('inputNote').value       = e ? (e.note||'') : '';
+
+  currentSrc = e ? e.src : 'film';
+  document.querySelectorAll('.src-opt').forEach(b => {
+    b.classList.toggle('active', b.dataset.src === currentSrc);
+  });
+
+  pendingImgs = e ? [...(e.images||[])] : [];
+  renderImgPreviews();
+
+  renderWordRows(e ? (e.words||[]) : []);
+
+  document.querySelectorAll('.auto-grow').forEach(el => el.style.height = 'auto');
+  document.getElementById('addOverlay').classList.add('open');
+  setTimeout(() => {
+    document.getElementById('inputSentence').focus();
+    document.querySelectorAll('.auto-grow').forEach(autoGrow);
+  }, 80);
+}
+
+function closeAddModal() {
+  document.getElementById('addOverlay').classList.remove('open');
+  editingId = null;
+  pendingImgs = [];
+}
+
+function setSrc(btn) {
+  currentSrc = btn.dataset.src;
+  document.querySelectorAll('.src-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── Image handling ──
+function handleImgInput(e) {
+  const files = [...e.target.files];
+  files.forEach(f => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      pendingImgs.push(ev.target.result);
+      renderImgPreviews();
+    };
+    reader.readAsDataURL(f);
+  });
+  e.target.value = '';
+}
+
+// Drag & drop
+const uploadArea = document.getElementById('imgUploadArea');
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.style.borderColor = 'var(--violet)'; });
+uploadArea.addEventListener('dragleave', () => { uploadArea.style.borderColor = ''; });
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadArea.style.borderColor = '';
+  [...e.dataTransfer.files].filter(f => f.type.startsWith('image/')).forEach(f => {
+    const reader = new FileReader();
+    reader.onload = ev => { pendingImgs.push(ev.target.result); renderImgPreviews(); };
+    reader.readAsDataURL(f);
+  });
+});
+
+function renderImgPreviews() {
+  const wrap = document.getElementById('imgPreviewWrap');
+  wrap.innerHTML = pendingImgs.map((src, i) => `
+    <div class="img-preview-item">
+      <img src="${src}" alt="预览">
+      <button class="img-remove-btn" onclick="removeImg(${i})">×</button>
+    </div>
+  `).join('');
+}
+
+function removeImg(i) {
+  pendingImgs.splice(i, 1);
+  renderImgPreviews();
+}
+
+// ── Word rows ──
+function renderWordRows(words) {
+  const container = document.getElementById('wordRows');
+  container.innerHTML = '';
+  words.forEach((w, i) => addWordRow(w.word, w.def));
+}
+
+function addWordRow(word = '', def = '') {
+  const container = document.getElementById('wordRows');
+  const i = container.children.length;
+  const div = document.createElement('div');
+  div.className = 'word-row';
+  div.innerHTML = `
+    <input type="text" class="word-input" placeholder="word" value="${escHtml(word)}" data-role="word">
+    <input type="text" class="word-def-input" placeholder="释义 / 怎么用……" value="${escHtml(def)}" data-role="def">
+    <button class="word-remove" onclick="this.parentElement.remove()">×</button>
+  `;
+  container.appendChild(div);
+}
+
+function getWords() {
+  return [...document.querySelectorAll('#wordRows .word-row')].map(row => ({
+    word: row.querySelector('[data-role="word"]').value.trim(),
+    def:  row.querySelector('[data-role="def"]').value.trim()
+  })).filter(w => w.word);
+}
+
+// ── Save ──
+function saveEntry() {
+  const sentence = document.getElementById('inputSentence').value.trim();
+  if (!sentence) { showToast('请填写原句 ·'); return; }
+  const now = new Date().toISOString();
+  if (editingId) {
+    const e = entries.find(x => x.id === editingId);
+    if (e) {
+      e.sentence    = sentence;
+      e.src         = currentSrc;
+      e.sourceName  = document.getElementById('inputSourceName').value.trim();
+      e.tags        = document.getElementById('inputTags').value.trim();
+      e.note        = document.getElementById('inputNote').value.trim();
+      e.images      = [...pendingImgs];
+      e.words       = getWords();
+      e.updatedAt   = now;
+    }
+    showToast('已更新 ✓');
+  } else {
+    entries.unshift({
+      id: 'e' + Date.now(),
+      sentence,
+      src:        currentSrc,
+      sourceName: document.getElementById('inputSourceName').value.trim(),
+      tags:       document.getElementById('inputTags').value.trim(),
+      note:       document.getElementById('inputNote').value.trim(),
+      images:     [...pendingImgs],
+      words:      getWords(),
+      createdAt:  now,
+      updatedAt:  now
+    });
+    showToast('魔法已收录 ✨');
+  }
+  save();
+  closeAddModal();
+  renderAll();
+  if (viewingId) openDetail(viewingId);
+}
+
+// ── Detail ──
+function openDetail(id) {
+  viewingId = id;
+  const e = entries.find(x => x.id === id);
+  if (!e) return;
+
+  const srcLabel = SRC_LABELS[e.src] || '';
+  const date = new Date(e.createdAt).toLocaleDateString('zh-CN',{year:'numeric',month:'short',day:'numeric'});
+
+  document.getElementById('detailHeader').innerHTML = `
+    <div>
+      <div style="margin-bottom:8px;">
+        <span class="card-source-badge" style="--src-color:${srcColorVar(e.src)};--src-bg:${srcBgVar(e.src)}">
+          ${srcLabel}${e.sourceName ? ' · '+escHtml(e.sourceName) : ''}
+        </span>
+      </div>
+      <div class="detail-sentence">${escHtml(e.sentence)}</div>
+      <div class="detail-source-info">${date}${e.tags ? ' · '+escHtml(e.tags) : ''}</div>
+    </div>
+    <button class="close-btn" onclick="closeDetail()" style="flex-shrink:0;align-self:flex-start;">×</button>
+  `;
+
+  let body = '';
+
+  if (e.note) {
+    body += `<div class="detail-section">
+      <div class="detail-section-label">My Notes</div>
+      <div class="detail-note">${escHtml(e.note)}</div>
+    </div>`;
+  }
+
+  if (e.images && e.images.length) {
+    body += `<div class="detail-section">
+      <div class="detail-section-label">截图</div>
+      <div class="detail-images">
+        ${e.images.map(src => `<img src="${src}" onclick="openLightbox('${src}')" alt="截图">`).join('')}
+      </div>
+    </div>`;
+  }
+
+  if (e.words && e.words.length) {
+    body += `<div class="detail-section">
+      <div class="detail-section-label">✦ 单词提取</div>
+      <div class="detail-words">
+        ${e.words.map(w => `
+          <div class="detail-word-row">
+            <span class="detail-word">${escHtml(w.word)}</span>
+            <span class="detail-def">${escHtml(w.def)}</span>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('detailBody').innerHTML = body;
+  document.getElementById('detailOverlay').classList.add('open');
+}
+
+function srcColorVar(src) {
+  const map = { film:'var(--coral)', talk:'var(--sky)', book:'var(--sage)', vocab:'var(--gold)' };
+  return map[src] || 'var(--violet)';
+}
+function srcBgVar(src) {
+  const map = { film:'var(--coral-bg)', talk:'var(--sky-bg)', book:'var(--sage-bg)', vocab:'var(--gold-bg)' };
+  return map[src] || 'rgba(139,95,212,0.12)';
+}
+
+function closeDetail() {
+  document.getElementById('detailOverlay').classList.remove('open');
+  viewingId = null;
+}
+
+function editCurrent() {
+  const id = viewingId;
+  closeDetail();
+  openAddModal(id);
+}
+
+function deleteCurrent() {
+  const id = viewingId;
+  const e = entries.find(x => x.id === id);
+  if (!e) return;
+  entries = entries.filter(x => x.id !== id);
+  save();
+  closeDetail();
+  renderAll();
+  showToast('已删除', () => {
+    entries.unshift(e);
+    save();
+    renderAll();
+    showToast('已撤销 ✓');
+  });
+}
+
+// ── Lightbox ──
+function openLightbox(src) {
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+// ── Export/Import ──
+function exportData() {
+  const blob = new Blob([JSON.stringify(entries, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `magic_english_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('数据已导出 ✓');
+}
+
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const d = JSON.parse(ev.target.result);
+      if (!Array.isArray(d)) throw new Error();
+      if (!confirm(`导入 ${d.length} 条记录？当前数据将被覆盖。`)) return;
+      entries = d;
+      save();
+      renderAll();
+      showToast('导入成功 ✓');
+    } catch { alert('导入失败，请检查文件格式。'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+// ── Toast ──
+function showToast(msg, undoFn = null) {
+  const container = document.getElementById('toastContainer');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = `<span>${msg}</span>${undoFn ? '<button class="toast-undo" id="undoBtn">撤销</button>' : ''}`;
+  container.appendChild(el);
+  if (undoFn) {
+    el.querySelector('#undoBtn').addEventListener('click', () => {
+      clearTimeout(timer);
+      undoFn();
+      el.remove();
+    });
+  }
+  const timer = setTimeout(() => {
+    el.classList.add('fade-out');
+    setTimeout(() => el.remove(), 300);
+  }, undoFn ? 5000 : 2000);
+}
+
+// ── Overlay close ──
+function overlayClose(e, id) {
+  if (e.target === document.getElementById(id)) {
+    document.getElementById(id).classList.remove('open');
+    if (id === 'detailOverlay') viewingId = null;
+    if (id === 'addOverlay') { editingId = null; pendingImgs = []; }
+  }
+}
+
+// ── Auto-grow ──
+function autoGrow(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
+document.addEventListener('input', e => { if (e.target.classList.contains('auto-grow')) autoGrow(e.target); });
+
+// ── Escape / Ctrl+Enter ──
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('lightbox').classList.contains('open')) { closeLightbox(); return; }
+    if (document.getElementById('addOverlay').classList.contains('open')) { closeAddModal(); return; }
+    if (document.getElementById('detailOverlay').classList.contains('open')) { closeDetail(); return; }
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    if (document.getElementById('addOverlay').classList.contains('open')) saveEntry();
+  }
+});
+
+function escHtml(s) {
+  if (!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Init ──
+load();
+renderAll();
+</script>
+</body>
+</html>
