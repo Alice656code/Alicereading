@@ -1,0 +1,1939 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>女巫进修笔记 🔮</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #F8F3EE;
+            --bg-secondary: #EDE6F5;
+            --card-bg: #FEFCF8;
+            --text-primary: #2D2438;
+            --text-secondary: #7A6E88;
+            --accent-purple: #8E7ABF;
+            --accent-purple-bright: #A48ED4;
+            --accent-gold: #C4923E;
+            --accent-rose: #C47A8E;
+            --accent-sage: #6BAA8C;
+            --accent-blue: #6A96C4;
+            --accent-peach: #D4926A;
+            --border-color: #DDD4EC;
+            --border-light: #EDE8F5;
+            --danger: #C47A7A;
+            --shadow: rgba(80, 60, 120, 0.1);
+        }
+
+        body {
+            font-family: 'Noto Serif SC', 'PingFang SC', 'Hiragino Sans GB', serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 2rem;
+            -webkit-touch-callout: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.018'/%3E%3C/svg%3E");
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .header-left h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 300;
+            font-style: italic;
+            margin-bottom: 0.5rem;
+            color: var(--accent-purple);
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            font-weight: 300;
+            min-height: 1.4em;
+            font-style: italic;
+        }
+
+        .settings-btn {
+            padding: 0.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.6rem;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .settings-btn:hover {
+            border-color: var(--accent-purple);
+            background: var(--bg-secondary);
+            transform: rotate(15deg);
+        }
+
+        /* Quote area */
+        .quote-area {
+            background: linear-gradient(135deg, #EDE6F5 0%, #F5EDE8 100%);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+            position: relative;
+            min-height: 60px;
+            box-shadow: 0 2px 12px var(--shadow);
+        }
+
+        .quote-content {
+            color: var(--text-primary);
+            font-style: italic;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            min-height: 30px;
+            font-size: 0.95rem;
+        }
+
+        .quote-edit-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.25rem;
+            font-size: 0.5rem;
+            transition: color 0.3s ease;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quote-edit-btn:hover {
+            color: var(--accent-gold);
+        }
+
+        /* Simple line divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--border-color), transparent);
+            margin: 2rem 0;
+        }
+
+        /* Category pills */
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .category-pill {
+            padding: 0.45rem 1.2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            box-shadow: 0 1px 4px var(--shadow);
+        }
+
+        .category-pill:hover {
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+            background: var(--bg-secondary);
+            transform: translateY(-1px);
+        }
+
+        .category-pill.active {
+            background: var(--accent-purple);
+            color: white;
+            border-color: var(--accent-purple);
+            box-shadow: 0 2px 8px rgba(142, 122, 191, 0.35);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.7rem 1.8rem;
+            background: var(--accent-purple);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.92rem;
+            transition: all 0.25s ease;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            font-family: 'Noto Serif SC', serif;
+            box-shadow: 0 2px 8px rgba(142, 122, 191, 0.3);
+        }
+
+        .btn:hover {
+            background: var(--accent-purple-bright);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(142, 122, 191, 0.4);
+        }
+
+        .btn:active { transform: translateY(0); }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+            background: var(--bg-secondary);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            box-shadow: 0 2px 8px rgba(196, 122, 122, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: #d48888;
+        }
+
+        .btn-small {
+            padding: 0.45rem 0.9rem;
+            font-size: 0.82rem;
+        }
+
+        /* Sort button */
+        .sort-btn {
+            padding: 0.7rem 1.4rem;
+            background: var(--card-bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            transition: all 0.25s ease;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .sort-btn:hover {
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+            background: var(--bg-secondary);
+        }
+
+        .sort-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .sort-dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            min-width: 180px;
+            box-shadow: 0 8px 24px var(--shadow);
+            z-index: 100;
+            margin-top: 4px;
+        }
+
+        .sort-dropdown-content.show {
+            display: block;
+        }
+
+        .sort-option {
+            padding: 0.7rem 1rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+        }
+
+        .sort-option:first-child { border-radius: 8px 8px 0 0; }
+        .sort-option:last-child { border-radius: 0 0 8px 8px; }
+
+        .sort-option:hover {
+            background: var(--bg-secondary);
+            color: var(--accent-purple);
+        }
+
+        .sort-option.active {
+            background: var(--accent-purple);
+            color: white;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(45, 36, 56, 0.4);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 16px 48px rgba(80, 60, 120, 0.18);
+            border: 1px solid var(--border-color);
+            animation: modalIn 0.25s ease;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.97) translateY(-8px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal h2 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            color: var(--accent-purple);
+            font-size: 1.4rem;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.86rem;
+            font-weight: 300;
+            letter-spacing: 0.03em;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.72rem 0.9rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Noto Serif SC', serif;
+            font-size: 0.92rem;
+            transition: border-color 0.2s;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px rgba(142, 122, 191, 0.12);
+        }
+
+        input[type="file"] {
+            padding: 0.5rem;
+        }
+
+        /* Topic cards */
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        /* Colorful card accent system */
+        .topic-card:nth-child(6n+1) { --card-accent: var(--accent-purple); --card-accent-bg: rgba(142,122,191,0.08); }
+        .topic-card:nth-child(6n+2) { --card-accent: var(--accent-rose); --card-accent-bg: rgba(196,122,142,0.08); }
+        .topic-card:nth-child(6n+3) { --card-accent: var(--accent-sage); --card-accent-bg: rgba(107,170,140,0.08); }
+        .topic-card:nth-child(6n+4) { --card-accent: var(--accent-gold); --card-accent-bg: rgba(196,146,62,0.08); }
+        .topic-card:nth-child(6n+5) { --card-accent: var(--accent-blue); --card-accent-bg: rgba(106,150,196,0.08); }
+        .topic-card:nth-child(6n+6) { --card-accent: var(--accent-peach); --card-accent-bg: rgba(212,146,106,0.08); }
+
+        .topic-card {
+            background: var(--card-bg);
+            padding: 1.4rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            border-top: 3px solid var(--card-accent, var(--accent-purple));
+            transition: all 0.25s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 10px var(--shadow);
+            animation: fadeUp 0.3s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .topic-card:hover {
+            border-color: var(--card-accent, var(--accent-purple));
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px var(--shadow);
+        }
+
+        .topic-card-inner {
+            padding: 1.4rem;
+        }
+
+        .topic-card-actions {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            display: flex;
+            gap: 0.25rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .topic-card:hover .topic-card-actions {
+            opacity: 1;
+        }
+
+        .topic-title {
+            font-size: 1.05rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            padding-right: 3rem;
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .topic-meta {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .topic-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Colorful tags - cycle through accent colors */
+        .topic-tag {
+            display: inline-block;
+            padding: 0.2rem 0.7rem;
+            border-radius: 12px;
+            font-size: 0.78rem;
+        }
+
+        .topic-tag:nth-child(6n+1) { background: rgba(142,122,191,0.15); color: var(--accent-purple); }
+        .topic-tag:nth-child(6n+2) { background: rgba(196,122,142,0.15); color: var(--accent-rose); }
+        .topic-tag:nth-child(6n+3) { background: rgba(107,170,140,0.15); color: var(--accent-sage); }
+        .topic-tag:nth-child(6n+4) { background: rgba(196,146,62,0.15); color: var(--accent-gold); }
+        .topic-tag:nth-child(6n+5) { background: rgba(106,150,196,0.15); color: var(--accent-blue); }
+        .topic-tag:nth-child(6n+6) { background: rgba(212,146,106,0.15); color: var(--accent-peach); }
+
+        .notes-preview {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.86rem;
+            color: var(--text-secondary);
+            max-height: 60px;
+            overflow: hidden;
+            font-style: italic;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+            min-width: 200px;
+        }
+
+        .toolbar-right {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        /* Section styles */
+        .section-block {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-weight: 400;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .section-content {
+            color: var(--text-primary);
+            line-height: 1.8;
+            white-space: pre-wrap;
+            font-size: 0.92rem;
+        }
+
+        .section-empty {
+            color: var(--text-secondary);
+            font-style: italic;
+            font-size: 0.88rem;
+        }
+
+        /* Note entries */
+        .note-entry {
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: 7px;
+            margin-bottom: 1rem;
+            position: relative;
+            cursor: move;
+            border: 1px solid var(--border-light);
+            border-left: 3px solid var(--accent-purple);
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 5px var(--shadow);
+        }
+
+        .note-entry:nth-child(4n+1) { border-left-color: var(--accent-purple); }
+        .note-entry:nth-child(4n+2) { border-left-color: var(--accent-rose); }
+        .note-entry:nth-child(4n+3) { border-left-color: var(--accent-sage); }
+        .note-entry:nth-child(4n+4) { border-left-color: var(--accent-blue); }
+
+        .note-entry:hover {
+            border-color: var(--border-color);
+            box-shadow: 0 3px 12px var(--shadow);
+        }
+
+        .note-entry.dragging {
+            opacity: 0.5;
+            border-left-color: var(--accent-gold) !important;
+        }
+
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .note-date {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .note-entry:hover .note-actions {
+            opacity: 1;
+        }
+
+        .note-content {
+            color: var(--text-primary);
+            line-height: 1.8;
+            white-space: pre-wrap;
+            font-size: 0.92rem;
+        }
+
+        .note-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .note-image {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .note-image:hover {
+            transform: scale(1.05);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* Settings menu */
+        .settings-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .settings-item {
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border: 1px solid transparent;
+        }
+
+        .settings-item:hover {
+            border-color: var(--accent-purple);
+            background: #EAE4F3;
+            transform: translateX(3px);
+        }
+
+        .settings-item-title {
+            font-weight: 400;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .settings-item-desc {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        /* Category management */
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: 7px;
+            border: 1px solid var(--border-light);
+        }
+
+        .category-item-name {
+            flex: 1;
+            font-size: 0.92rem;
+        }
+
+        .category-item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .icon-btn {
+            padding: 0.25rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: color 0.2s ease;
+            font-size: 0.5rem;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-btn:hover {
+            color: var(--accent-gold);
+        }
+
+        .icon-btn.danger:hover {
+            color: var(--danger);
+        }
+
+        .success-message {
+            padding: 0.9rem 1rem;
+            background: rgba(107, 170, 140, 0.2);
+            color: var(--accent-sage);
+            border: 1px solid rgba(107,170,140,0.35);
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* Image preview modal */
+        .image-preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .image-preview-modal.active {
+            display: flex;
+        }
+
+        .image-preview-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+        }
+
+        /* Add image button */
+        .add-image-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .add-image-btn:hover {
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+            background: var(--bg-secondary);
+        }
+
+        .add-image-btn .moon-icon {
+            font-size: 0.7rem;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .topics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .toolbar-right {
+                flex-direction: column;
+            }
+
+            .search-box {
+                max-width: 100%;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn, .sort-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <h1>女巫进修笔记</h1>
+                <p class="subtitle" id="subtitleText"></p>
+            </div>
+            <button class="settings-btn" onclick="openSettingsModal()" title="设置">🔮</button>
+        </div>
+
+        <!-- Quote area (editable subtitle area) -->
+        <div class="quote-area">
+            <button class="quote-edit-btn" onclick="editQuote()">✨</button>
+            <div class="quote-content" id="quoteContent"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="categories" id="categories"></div>
+
+        <div class="toolbar">
+            <input type="text" class="search-box" id="searchBox" placeholder="搜索主题、笔记内容...">
+            <div class="toolbar-right">
+                <div class="sort-dropdown">
+                    <button class="sort-btn" onclick="toggleSortDropdown()">
+                        <span id="sortLabel">按时间排序</span>
+                        <span>▼</span>
+                    </button>
+                    <div class="sort-dropdown-content" id="sortDropdown">
+                        <div class="sort-option active" data-sort="time" onclick="setSortOrder('time')">按开始时间排序</div>
+                        <div class="sort-option" data-sort="pinyin" onclick="setSortOrder('pinyin')">按拼音顺序排序</div>
+                    </div>
+                </div>
+                <button class="btn" onclick="openAddTopicModal()">+ 新增课题</button>
+            </div>
+        </div>
+
+        <div class="topics-grid" id="topicsGrid">
+            <div class="empty-state">
+                <div class="empty-state-icon">🌙</div>
+                <p>还没有添加任何课题</p>
+                <p style="font-size: 0.9rem; margin-top: 0.5rem;">点击「新增课题」开始你的修习之旅</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Topic Modal -->
+    <div class="modal" id="topicModal">
+        <div class="modal-content">
+            <h2 id="topicModalTitle">新增课题</h2>
+            <form id="topicForm">
+                <div class="form-group">
+                    <label>课题名称</label>
+                    <input type="text" id="topicTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>分类标签（用顿号"、"分隔多个标签）</label>
+                    <input type="text" id="topicTags" placeholder="例如：塔罗、占星学" required>
+                </div>
+                <div class="form-group">
+                    <label>开始日期</label>
+                    <input type="date" id="startDate" required>
+                </div>
+                <div class="form-group" id="motivationGroup">
+                    <label>学习动机（选填）</label>
+                    <textarea id="topicMotivation" placeholder="为什么想学习这个课题？"></textarea>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn">保存</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeTopicModal()">取消</button>
+                    <button type="button" class="btn btn-danger" id="deleteTopicBtn" style="display: none;" onclick="deleteTopic()">删除课题</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Topic Modal -->
+    <div class="modal" id="viewTopicModal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                <div>
+                    <h2 id="viewTopicTitle" style="margin-bottom: 0.5rem;"></h2>
+                    <p class="topic-meta" id="viewTopicMeta"></p>
+                </div>
+                <button class="icon-btn" onclick="editTopicFromDetail()" title="编辑课题信息">⚙️</button>
+            </div>
+            <div class="topic-tags" id="viewTopicTags"></div>
+            
+            <div class="divider"></div>
+
+            <!-- 阶段领悟 (Summary) -->
+            <div class="section-block">
+                <div class="section-header">
+                    <div class="section-title">🌕 阶段领悟</div>
+                    <div class="section-actions">
+                        <button class="icon-btn" onclick="editInsight()" title="编辑">✨</button>
+                        <button class="icon-btn danger" onclick="deleteInsight()" title="删除" id="deleteInsightBtn" style="display: none;">🗑️</button>
+                    </div>
+                </div>
+                <div class="section-content" id="insightContent">
+                    <span class="section-empty">点击 ✨ 记录你的阶段领悟...</span>
+                </div>
+            </div>
+
+            <!-- 学习动机 (Initial Note) -->
+            <div class="section-block">
+                <div class="section-header">
+                    <div class="section-title">🌑 学习动机</div>
+                    <div class="section-actions">
+                        <button class="icon-btn" onclick="editMotivation()" title="编辑">✨</button>
+                        <button class="icon-btn danger" onclick="deleteMotivation()" title="删除" id="deleteMotivationBtn" style="display: none;">🗑️</button>
+                    </div>
+                </div>
+                <div class="section-content" id="motivationContent">
+                    <span class="section-empty">点击 ✨ 记录你的学习动机...</span>
+                </div>
+            </div>
+
+            <!-- 修习笔记 (Reading Notes) -->
+            <h3 style="font-weight: 300; margin-bottom: 1rem;">🌙 修习笔记</h3>
+            <div id="topicNotes"></div>
+
+            <div class="form-group" style="margin-top: 2rem;">
+                <label>添加新笔记</label>
+                <textarea id="newNoteContent" placeholder="今天的修习心得、实践记录、新的领悟..."></textarea>
+                <div style="margin-top: 0.75rem;">
+                    <input type="file" id="newNoteImages" accept="image/*" multiple style="display: none;">
+                    <button type="button" class="add-image-btn" onclick="document.getElementById('newNoteImages').click()">
+                        <span class="moon-icon">🌗</span> 添加图片
+                    </button>
+                    <div id="newNoteImagePreview" class="note-images" style="margin-top: 0.5rem;"></div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn" onclick="addNote()">添加笔记</button>
+                <button class="btn btn-secondary" onclick="closeViewTopicModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Quote Modal -->
+    <div class="modal" id="quoteModal">
+        <div class="modal-content">
+            <h2>编辑感悟与箴言</h2>
+            <div class="form-group">
+                <label>内容</label>
+                <textarea id="quoteEdit" style="min-height: 200px;" placeholder="记录修习过程中的箴言与感悟..."></textarea>
+            </div>
+            <div class="button-group">
+                <button class="btn" onclick="saveQuote()">保存</button>
+                <button class="btn btn-secondary" onclick="closeQuoteModal()">取消</button>
+                <button class="btn btn-danger" onclick="clearQuote()">清空</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Insight Modal -->
+    <div class="modal" id="insightModal">
+        <div class="modal-content">
+            <h2>编辑阶段领悟</h2>
+            <div class="form-group">
+                <label>领悟内容</label>
+                <textarea id="insightEdit" style="min-height: 200px;" placeholder="对这个课题的系统性总结与领悟..."></textarea>
+            </div>
+            <div class="button-group">
+                <button class="btn" onclick="saveInsight()">保存</button>
+                <button class="btn btn-secondary" onclick="closeInsightModal()">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Motivation Modal -->
+    <div class="modal" id="motivationModal">
+        <div class="modal-content">
+            <h2>编辑学习动机</h2>
+            <div class="form-group">
+                <label>为什么想学习这个课题？</label>
+                <textarea id="motivationEdit" style="min-height: 200px;"></textarea>
+            </div>
+            <div class="button-group">
+                <button class="btn" onclick="saveMotivation()">保存</button>
+                <button class="btn btn-secondary" onclick="closeMotivationModal()">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Note Modal -->
+    <div class="modal" id="noteModal">
+        <div class="modal-content">
+            <h2>编辑修习笔记</h2>
+            <div class="form-group">
+                <label>笔记内容</label>
+                <textarea id="noteEdit" style="min-height: 200px;"></textarea>
+            </div>
+            <div class="form-group">
+                <label>图片</label>
+                <input type="file" id="editNoteImages" accept="image/*" multiple style="display: none;">
+                <button type="button" class="add-image-btn" onclick="document.getElementById('editNoteImages').click()">
+                    <span class="moon-icon">🌗</span> 添加图片
+                </button>
+                <div id="editNoteImagePreview" class="note-images" style="margin-top: 0.5rem;"></div>
+            </div>
+            <div class="button-group">
+                <button class="btn" onclick="saveNote()">保存</button>
+                <button class="btn btn-secondary" onclick="closeNoteModal()">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <h2>设置</h2>
+            <div class="settings-menu">
+                <div class="settings-item" onclick="exportData()">
+                    <div class="settings-item-title">📤 导出数据</div>
+                    <div class="settings-item-desc">将所有笔记保存为JSON文件（建议定期备份）</div>
+                </div>
+                <div class="settings-item" onclick="document.getElementById('importFile').click()">
+                    <div class="settings-item-title">📥 导入数据</div>
+                    <div class="settings-item-desc">从JSON文件恢复笔记数据</div>
+                </div>
+                <div class="settings-item" onclick="openCategoryManagement()">
+                    <div class="settings-item-title">🏷️ 管理分类</div>
+                    <div class="settings-item-desc">添加、删除或重命名分类标签</div>
+                </div>
+            </div>
+            <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="closeSettingsModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Management Modal -->
+    <div class="modal" id="categoryModal">
+        <div class="modal-content">
+            <h2>管理分类</h2>
+            <div id="successMessage" style="display: none;" class="success-message"></div>
+            <div class="category-list" id="categoryList"></div>
+            <div class="form-group">
+                <label>添加新分类</label>
+                <input type="text" id="newCategoryName" placeholder="输入新分类名称">
+            </div>
+            <div class="button-group">
+                <button class="btn" onclick="addCategory()">添加分类</button>
+                <button class="btn btn-secondary" onclick="closeCategoryModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div class="image-preview-modal" id="imagePreviewModal" onclick="closeImagePreview()">
+        <img id="previewImage" src="" alt="预览">
+    </div>
+
+    <script>
+        let topics = [];
+        let categories = ['塔罗', '雷诺曼', '西方魔法仪式', '占星学', '佛教理论观点'];
+        let quoteText = '';
+        let currentTopicId = null;
+        let currentNoteIndex = null;
+        let currentFilter = 'all';
+        let editingTopicId = null;
+        let draggedNoteIndex = null;
+        let currentSortOrder = 'time';
+        let pendingImages = [];
+        let editingNoteImages = [];
+
+        // Load data from localStorage
+        function loadTopics() {
+            const stored = localStorage.getItem('witchNotebook');
+            if (stored) {
+                topics = JSON.parse(stored);
+                topics.forEach(topic => {
+                    if (topic.motivation === undefined) {
+                        topic.motivation = '';
+                    }
+                    if (topic.insight === undefined) {
+                        topic.insight = '';
+                    }
+                });
+            }
+            renderTopics();
+        }
+
+        function loadCategories() {
+            const stored = localStorage.getItem('witchCategories');
+            if (stored) {
+                categories = JSON.parse(stored);
+            }
+            renderCategories();
+        }
+
+        function loadQuote() {
+            const stored = localStorage.getItem('witchQuote');
+            if (stored) {
+                quoteText = stored;
+            }
+            displayQuote();
+        }
+
+        function loadSortOrder() {
+            const stored = localStorage.getItem('witchSortOrder');
+            if (stored) {
+                currentSortOrder = stored;
+                updateSortLabel();
+                updateSortOptions();
+            }
+        }
+
+        // Save data to localStorage
+        function saveTopics() {
+            localStorage.setItem('witchNotebook', JSON.stringify(topics));
+        }
+
+        function saveCategories() {
+            localStorage.setItem('witchCategories', JSON.stringify(categories));
+        }
+
+        function saveQuoteText() {
+            localStorage.setItem('witchQuote', quoteText);
+        }
+
+        function saveSortOrder() {
+            localStorage.setItem('witchSortOrder', currentSortOrder);
+        }
+
+        // Sort functions
+        function toggleSortDropdown() {
+            const dropdown = document.getElementById('sortDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        function setSortOrder(order) {
+            currentSortOrder = order;
+            saveSortOrder();
+            updateSortLabel();
+            updateSortOptions();
+            renderTopics();
+            document.getElementById('sortDropdown').classList.remove('show');
+        }
+
+        function updateSortLabel() {
+            const label = document.getElementById('sortLabel');
+            label.textContent = currentSortOrder === 'time' ? '按时间排序' : '按拼音排序';
+        }
+
+        function updateSortOptions() {
+            document.querySelectorAll('.sort-option').forEach(opt => {
+                opt.classList.remove('active');
+                if (opt.dataset.sort === currentSortOrder) {
+                    opt.classList.add('active');
+                }
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.sort-dropdown')) {
+                document.getElementById('sortDropdown').classList.remove('show');
+            }
+        });
+
+        // Quote functions
+        function displayQuote() {
+            const quoteContent = document.getElementById('quoteContent');
+            quoteContent.innerHTML = quoteText || '';
+        }
+
+        function editQuote() {
+            document.getElementById('quoteEdit').value = quoteText;
+            document.getElementById('quoteModal').classList.add('active');
+        }
+
+        function saveQuote() {
+            quoteText = document.getElementById('quoteEdit').value;
+            saveQuoteText();
+            displayQuote();
+            closeQuoteModal();
+        }
+
+        function clearQuote() {
+            if (confirm('确定要清空内容吗？')) {
+                quoteText = '';
+                saveQuoteText();
+                displayQuote();
+                closeQuoteModal();
+            }
+        }
+
+        function closeQuoteModal() {
+            document.getElementById('quoteModal').classList.remove('active');
+        }
+
+        // Render categories
+        function renderCategories() {
+            const categoriesDiv = document.getElementById('categories');
+            categoriesDiv.innerHTML = `
+                <div class="category-pill ${currentFilter === 'all' ? 'active' : ''}" data-category="all">全部</div>
+                ${categories.map(cat => 
+                    `<div class="category-pill ${currentFilter === cat ? 'active' : ''}" data-category="${cat}">${cat}</div>`
+                ).join('')}
+            `;
+        }
+
+        // Render topics grid
+        function renderTopics() {
+            const grid = document.getElementById('topicsGrid');
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            
+            let filteredTopics = [...topics];
+            
+            if (currentFilter !== 'all') {
+                filteredTopics = filteredTopics.filter(topic => 
+                    topic.tags && topic.tags.includes(currentFilter)
+                );
+            }
+            
+            if (searchTerm) {
+                filteredTopics = filteredTopics.filter(topic => 
+                    topic.title.toLowerCase().includes(searchTerm) ||
+                    (topic.tags && topic.tags.some(tag => tag.toLowerCase().includes(searchTerm))) ||
+                    (topic.motivation && topic.motivation.toLowerCase().includes(searchTerm)) ||
+                    topic.notes.some(note => note.content.toLowerCase().includes(searchTerm))
+                );
+            }
+
+            if (currentSortOrder === 'pinyin') {
+                filteredTopics.sort((a, b) => a.title.localeCompare(b.title, 'zh-Hans-CN'));
+            } else {
+                filteredTopics.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+            }
+
+            if (filteredTopics.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🌙</div>
+                        <p>${searchTerm || currentFilter !== 'all' ? '没有找到匹配的课题' : '还没有添加任何课题'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filteredTopics.map(topic => {
+                const latestNote = topic.notes.length > 0 ? topic.notes[topic.notes.length - 1].content : (topic.motivation || '暂无笔记');
+                const tagsHtml = topic.tags ? topic.tags.map(tag => 
+                    `<span class="topic-tag">${tag}</span>`
+                ).join('') : '';
+                
+                return `
+                    <div class="topic-card" onclick="openTopic('${topic.id}')">
+                        <div class="topic-card-actions">
+                            <button class="icon-btn" onclick="event.stopPropagation(); openTopic('${topic.id}')" title="查看详情">✨</button>
+                        </div>
+                        <div class="topic-title">${topic.title}</div>
+                        <div class="topic-meta">开始于 ${topic.startDate}</div>
+                        <div class="topic-tags">${tagsHtml}</div>
+                        ${(topic.notes.length > 0 || topic.motivation) ? `
+                            <div class="notes-preview">${latestNote}</div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        document.getElementById('categories').addEventListener('click', (e) => {
+            if (e.target.classList.contains('category-pill')) {
+                currentFilter = e.target.dataset.category;
+                renderCategories();
+                renderTopics();
+            }
+        });
+
+        document.getElementById('searchBox').addEventListener('input', renderTopics);
+
+        // Add/Edit topic modal
+        function openAddTopicModal() {
+            editingTopicId = null;
+            document.getElementById('topicModalTitle').textContent = '新增课题';
+            document.getElementById('deleteTopicBtn').style.display = 'none';
+            document.getElementById('motivationGroup').style.display = 'block';
+            document.getElementById('topicMotivation').value = '';
+            document.getElementById('topicModal').classList.add('active');
+            document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
+        }
+
+        function openEditTopic(topicId) {
+            editingTopicId = topicId;
+            const topic = topics.find(t => t.id === topicId);
+            
+            document.getElementById('topicModalTitle').textContent = '编辑课题';
+            document.getElementById('topicTitle').value = topic.title;
+            document.getElementById('topicTags').value = topic.tags ? topic.tags.join('、') : '';
+            document.getElementById('startDate').value = topic.startDate;
+            document.getElementById('motivationGroup').style.display = 'none';
+            document.getElementById('deleteTopicBtn').style.display = 'block';
+            
+            document.getElementById('topicModal').classList.add('active');
+        }
+
+        function closeTopicModal() {
+            document.getElementById('topicModal').classList.remove('active');
+            document.getElementById('topicForm').reset();
+            document.getElementById('topicMotivation').value = '';
+            editingTopicId = null;
+        }
+
+        function deleteTopic() {
+            if (!confirm('确定要删除这个课题吗？所有相关笔记也会被删除。')) {
+                return;
+            }
+            
+            topics = topics.filter(t => t.id !== editingTopicId);
+            saveTopics();
+            renderTopics();
+            closeTopicModal();
+        }
+
+        document.getElementById('topicForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('topicTitle').value;
+            const tagsInput = document.getElementById('topicTags').value;
+            const tags = tagsInput.split('、').map(t => t.trim()).filter(t => t);
+            const startDate = document.getElementById('startDate').value;
+            const motivation = document.getElementById('topicMotivation').value;
+
+            if (editingTopicId) {
+                const topic = topics.find(t => t.id === editingTopicId);
+                topic.title = title;
+                topic.tags = tags;
+                topic.startDate = startDate;
+            } else {
+                const newTopic = {
+                    id: Date.now().toString(),
+                    title: title,
+                    tags: tags,
+                    startDate: startDate,
+                    notes: [],
+                    insight: '',
+                    motivation: motivation || ''
+                };
+
+                topics.unshift(newTopic);
+            }
+
+            saveTopics();
+            renderTopics();
+            closeTopicModal();
+        });
+
+        // View topic
+        function openTopic(topicId) {
+            currentTopicId = topicId;
+            const topic = topics.find(t => t.id === topicId);
+            
+            document.getElementById('viewTopicTitle').textContent = topic.title;
+            document.getElementById('viewTopicMeta').textContent = `开始于 ${topic.startDate}`;
+            
+            const tagsHtml = topic.tags ? topic.tags.map(tag => 
+                `<span class="topic-tag">${tag}</span>`
+            ).join('') : '';
+            document.getElementById('viewTopicTags').innerHTML = tagsHtml;
+            
+            displayInsight(topic);
+            displayMotivation(topic);
+            renderNotes(topic);
+            
+            document.getElementById('newNoteContent').value = '';
+            document.getElementById('newNoteImagePreview').innerHTML = '';
+            pendingImages = [];
+            document.getElementById('viewTopicModal').classList.add('active');
+        }
+
+        function closeViewTopicModal() {
+            document.getElementById('viewTopicModal').classList.remove('active');
+            currentTopicId = null;
+        }
+
+        function editTopicFromDetail() {
+            const topicId = currentTopicId;
+            closeViewTopicModal();
+            openEditTopic(topicId);
+        }
+
+        // Insight functions
+        function displayInsight(topic) {
+            const content = document.getElementById('insightContent');
+            const deleteBtn = document.getElementById('deleteInsightBtn');
+            
+            if (topic.insight && topic.insight.trim()) {
+                content.innerHTML = topic.insight;
+                content.classList.remove('section-empty');
+                deleteBtn.style.display = 'block';
+            } else {
+                content.innerHTML = '<span class="section-empty">点击 ✨ 记录你的阶段领悟...</span>';
+                deleteBtn.style.display = 'none';
+            }
+        }
+
+        function editInsight() {
+            const topic = topics.find(t => t.id === currentTopicId);
+            document.getElementById('insightEdit').value = topic.insight || '';
+            document.getElementById('insightModal').classList.add('active');
+        }
+
+        function saveInsight() {
+            const topic = topics.find(t => t.id === currentTopicId);
+            topic.insight = document.getElementById('insightEdit').value;
+            saveTopics();
+            displayInsight(topic);
+            closeInsightModal();
+        }
+
+        function deleteInsight() {
+            if (!confirm('确定要删除阶段领悟吗？')) {
+                return;
+            }
+            
+            const topic = topics.find(t => t.id === currentTopicId);
+            topic.insight = '';
+            saveTopics();
+            displayInsight(topic);
+        }
+
+        function closeInsightModal() {
+            document.getElementById('insightModal').classList.remove('active');
+        }
+
+        // Motivation functions
+        function displayMotivation(topic) {
+            const content = document.getElementById('motivationContent');
+            const deleteBtn = document.getElementById('deleteMotivationBtn');
+            
+            if (topic.motivation && topic.motivation.trim()) {
+                content.innerHTML = topic.motivation;
+                content.classList.remove('section-empty');
+                deleteBtn.style.display = 'block';
+            } else {
+                content.innerHTML = '<span class="section-empty">点击 ✨ 记录你的学习动机...</span>';
+                deleteBtn.style.display = 'none';
+            }
+        }
+
+        function editMotivation() {
+            const topic = topics.find(t => t.id === currentTopicId);
+            document.getElementById('motivationEdit').value = topic.motivation || '';
+            document.getElementById('motivationModal').classList.add('active');
+        }
+
+        function saveMotivation() {
+            const topic = topics.find(t => t.id === currentTopicId);
+            topic.motivation = document.getElementById('motivationEdit').value;
+            saveTopics();
+            displayMotivation(topic);
+            closeMotivationModal();
+            renderTopics();
+        }
+
+        function deleteMotivation() {
+            if (!confirm('确定要删除学习动机吗？')) {
+                return;
+            }
+            
+            const topic = topics.find(t => t.id === currentTopicId);
+            topic.motivation = '';
+            saveTopics();
+            displayMotivation(topic);
+            renderTopics();
+        }
+
+        function closeMotivationModal() {
+            document.getElementById('motivationModal').classList.remove('active');
+        }
+
+        // Notes functions
+        function renderNotes(topic) {
+            const notesHtml = topic.notes.length > 0 
+                ? topic.notes.map((note, index) => {
+                    const imagesHtml = note.images && note.images.length > 0 
+                        ? `<div class="note-images">${note.images.map((img, imgIndex) => 
+                            `<img src="${img}" class="note-image" onclick="event.stopPropagation(); previewImage('${img}')" alt="笔记图片">`
+                        ).join('')}</div>` 
+                        : '';
+                    
+                    return `
+                        <div class="note-entry" draggable="true" data-index="${index}">
+                            <div class="note-header">
+                                <div class="note-date">${new Date(note.date).toLocaleDateString('zh-CN', { 
+                                    year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                                })}</div>
+                                <div class="note-actions">
+                                    <button class="icon-btn" onclick="editNote(${index})" title="编辑">✨</button>
+                                    <button class="icon-btn danger" onclick="deleteNote(${index})" title="删除">🗑️</button>
+                                </div>
+                            </div>
+                            <div class="note-content">${note.content}</div>
+                            ${imagesHtml}
+                        </div>
+                    `;
+                }).reverse().join('')
+                : '<p style="color: var(--text-secondary); text-align: center; padding: 2rem;">还没有添加修习笔记</p>';
+            
+            document.getElementById('topicNotes').innerHTML = notesHtml;
+            setupDragAndDrop();
+        }
+
+        function setupDragAndDrop() {
+            const noteEntries = document.querySelectorAll('.note-entry');
+            
+            noteEntries.forEach(entry => {
+                entry.addEventListener('dragstart', handleDragStart);
+                entry.addEventListener('dragover', handleDragOver);
+                entry.addEventListener('drop', handleDrop);
+                entry.addEventListener('dragend', handleDragEnd);
+            });
+        }
+
+        function handleDragStart(e) {
+            draggedNoteIndex = parseInt(e.target.dataset.index);
+            e.target.classList.add('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const dropIndex = parseInt(e.currentTarget.dataset.index);
+            
+            if (draggedNoteIndex !== null && draggedNoteIndex !== dropIndex) {
+                const topic = topics.find(t => t.id === currentTopicId);
+                
+                const actualDragIndex = topic.notes.length - 1 - draggedNoteIndex;
+                const actualDropIndex = topic.notes.length - 1 - dropIndex;
+                
+                const [movedNote] = topic.notes.splice(actualDragIndex, 1);
+                topic.notes.splice(actualDropIndex, 0, movedNote);
+                
+                saveTopics();
+                renderNotes(topic);
+            }
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+            draggedNoteIndex = null;
+        }
+
+        // Image handling for new notes
+        document.getElementById('newNoteImages').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    pendingImages.push(event.target.result);
+                    renderPendingImages();
+                };
+                reader.readAsDataURL(file);
+            });
+            e.target.value = '';
+        });
+
+        function renderPendingImages() {
+            const preview = document.getElementById('newNoteImagePreview');
+            preview.innerHTML = pendingImages.map((img, index) => 
+                `<div style="position: relative; display: inline-block;">
+                    <img src="${img}" class="note-image" onclick="previewImage('${img}')">
+                    <button onclick="removePendingImage(${index})" style="position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 12px;">×</button>
+                </div>`
+            ).join('');
+        }
+
+        function removePendingImage(index) {
+            pendingImages.splice(index, 1);
+            renderPendingImages();
+        }
+
+        // Image handling for editing notes
+        document.getElementById('editNoteImages').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    editingNoteImages.push(event.target.result);
+                    renderEditingNoteImages();
+                };
+                reader.readAsDataURL(file);
+            });
+            e.target.value = '';
+        });
+
+        function renderEditingNoteImages() {
+            const preview = document.getElementById('editNoteImagePreview');
+            preview.innerHTML = editingNoteImages.map((img, index) => 
+                `<div style="position: relative; display: inline-block;">
+                    <img src="${img}" class="note-image" onclick="previewImage('${img}')">
+                    <button onclick="removeEditingImage(${index})" style="position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 12px;">×</button>
+                </div>`
+            ).join('');
+        }
+
+        function removeEditingImage(index) {
+            editingNoteImages.splice(index, 1);
+            renderEditingNoteImages();
+        }
+
+        function addNote() {
+            const content = document.getElementById('newNoteContent').value.trim();
+            if (!content && pendingImages.length === 0) return;
+
+            const topic = topics.find(t => t.id === currentTopicId);
+            topic.notes.push({
+                date: new Date().toISOString(),
+                content: content,
+                images: [...pendingImages]
+            });
+
+            saveTopics();
+            renderNotes(topic);
+            renderTopics();
+            document.getElementById('newNoteContent').value = '';
+            document.getElementById('newNoteImagePreview').innerHTML = '';
+            pendingImages = [];
+        }
+
+        function editNote(index) {
+            const topic = topics.find(t => t.id === currentTopicId);
+            const actualIndex = topic.notes.length - 1 - index;
+            currentNoteIndex = actualIndex;
+            
+            const note = topic.notes[actualIndex];
+            document.getElementById('noteEdit').value = note.content;
+            editingNoteImages = note.images ? [...note.images] : [];
+            renderEditingNoteImages();
+            document.getElementById('noteModal').classList.add('active');
+        }
+
+        function saveNote() {
+            const topic = topics.find(t => t.id === currentTopicId);
+            topic.notes[currentNoteIndex].content = document.getElementById('noteEdit').value;
+            topic.notes[currentNoteIndex].images = [...editingNoteImages];
+            saveTopics();
+            renderNotes(topic);
+            renderTopics();
+            closeNoteModal();
+        }
+
+        function deleteNote(index) {
+            if (!confirm('确定要删除这条笔记吗？')) {
+                return;
+            }
+            
+            const topic = topics.find(t => t.id === currentTopicId);
+            const actualIndex = topic.notes.length - 1 - index;
+            topic.notes.splice(actualIndex, 1);
+            
+            saveTopics();
+            renderNotes(topic);
+            renderTopics();
+        }
+
+        function closeNoteModal() {
+            document.getElementById('noteModal').classList.remove('active');
+            currentNoteIndex = null;
+            editingNoteImages = [];
+        }
+
+        // Image preview
+        function previewImage(src) {
+            document.getElementById('previewImage').src = src;
+            document.getElementById('imagePreviewModal').classList.add('active');
+        }
+
+        function closeImagePreview() {
+            document.getElementById('imagePreviewModal').classList.remove('active');
+        }
+
+        // Settings modal
+        function openSettingsModal() {
+            document.getElementById('settingsModal').classList.add('active');
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').classList.remove('active');
+        }
+
+        // Export data
+        function exportData() {
+            const data = {
+                topics: topics,
+                categories: categories,
+                quote: quoteText,
+                sortOrder: currentSortOrder,
+                exportDate: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `witch-notebook-backup-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+            
+            alert('数据导出成功！');
+            closeSettingsModal();
+        }
+
+        // Import data
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (data.topics) {
+                        topics = data.topics;
+                        topics.forEach(topic => {
+                            if (topic.motivation === undefined) topic.motivation = '';
+                            if (topic.insight === undefined) topic.insight = '';
+                        });
+                        saveTopics();
+                    }
+                    
+                    if (data.categories) {
+                        categories = data.categories;
+                        saveCategories();
+                    }
+                    
+                    if (data.quote !== undefined) {
+                        quoteText = data.quote;
+                        saveQuoteText();
+                        displayQuote();
+                    }
+
+                    if (data.sortOrder) {
+                        currentSortOrder = data.sortOrder;
+                        saveSortOrder();
+                        updateSortLabel();
+                        updateSortOptions();
+                    }
+                    
+                    renderCategories();
+                    renderTopics();
+                    
+                    alert('数据导入成功！');
+                    closeSettingsModal();
+                } catch (error) {
+                    alert('文件格式错误，导入失败');
+                }
+            };
+            reader.readAsText(file);
+            
+            event.target.value = '';
+        }
+
+        // Category management
+        function openCategoryManagement() {
+            closeSettingsModal();
+            renderCategoryList();
+            document.getElementById('categoryModal').classList.add('active');
+        }
+
+        function closeCategoryModal() {
+            document.getElementById('categoryModal').classList.remove('active');
+            document.getElementById('newCategoryName').value = '';
+            hideSuccessMessage();
+        }
+
+        function renderCategoryList() {
+            const list = document.getElementById('categoryList');
+            list.innerHTML = categories.map((cat, index) => `
+                <div class="category-item">
+                    <div class="category-item-name">${cat}</div>
+                    <div class="category-item-actions">
+                        <button class="icon-btn" onclick="renameCategory(${index})" title="重命名">✨</button>
+                        <button class="icon-btn danger" onclick="deleteCategory(${index})" title="删除">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addCategory() {
+            const name = document.getElementById('newCategoryName').value.trim();
+            if (!name) {
+                alert('请输入分类名称');
+                return;
+            }
+            
+            if (categories.includes(name)) {
+                alert('该分类已存在');
+                return;
+            }
+            
+            categories.push(name);
+            saveCategories();
+            renderCategoryList();
+            renderCategories();
+            document.getElementById('newCategoryName').value = '';
+            
+            showSuccessMessage(`分类「${name}」已添加`);
+        }
+
+        function deleteCategory(index) {
+            const cat = categories[index];
+            
+            const topicsInCategory = topics.filter(t => t.tags && t.tags.includes(cat));
+            if (topicsInCategory.length > 0) {
+                if (!confirm(`分类「${cat}」下有${topicsInCategory.length}个课题，确定要删除吗？删除后这些课题将失去该标签。`)) {
+                    return;
+                }
+                
+                topics.forEach(topic => {
+                    if (topic.tags) {
+                        topic.tags = topic.tags.filter(t => t !== cat);
+                    }
+                });
+                saveTopics();
+            }
+            
+            categories.splice(index, 1);
+            saveCategories();
+            renderCategoryList();
+            renderCategories();
+            renderTopics();
+            
+            showSuccessMessage(`分类「${cat}」已删除`);
+        }
+
+        function renameCategory(index) {
+            const oldName = categories[index];
+            const newName = prompt(`重命名分类「${oldName}」：`, oldName);
+            
+            if (!newName || newName === oldName) return;
+            
+            if (categories.includes(newName)) {
+                alert('该分类名称已存在');
+                return;
+            }
+            
+            categories[index] = newName;
+            
+            topics.forEach(topic => {
+                if (topic.tags) {
+                    topic.tags = topic.tags.map(t => t === oldName ? newName : t);
+                }
+            });
+            
+            saveCategories();
+            saveTopics();
+            renderCategoryList();
+            renderCategories();
+            renderTopics();
+            
+            showSuccessMessage(`分类已重命名为「${newName}」`);
+        }
+
+        function showSuccessMessage(message) {
+            const msgDiv = document.getElementById('successMessage');
+            msgDiv.textContent = message;
+            msgDiv.style.display = 'block';
+            setTimeout(hideSuccessMessage, 3000);
+        }
+
+        function hideSuccessMessage() {
+            const msgDiv = document.getElementById('successMessage');
+            msgDiv.style.display = 'none';
+        }
+
+        // Close modals on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // Initialize
+        loadCategories();
+        loadTopics();
+        loadQuote();
+        loadSortOrder();
+    </script>
+</body>
+</html>
