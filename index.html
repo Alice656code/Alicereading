@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alice's Garden · 工具花园</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+SC:wght@300;400&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg: #1C1714;
+  --bg2: #241E1A;
+  --card: #2C2420;
+  --border: #3D342C;
+  --ink: #F0E8DC;
+  --ink-mid: #B8A898;
+  --ink-faint: #7A6E62;
+
+  --coral:  #E8654A;
+  --sky:    #4A9FD4;
+  --sage:   #4AAD7A;
+  --gold:   #D4960A;
+  --violet: #9B7FE0;
+  --rose:   #D45F8B;
+}
+
+html, body { min-height: 100vh; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Noto Serif SC', serif;
+  overflow-x: hidden;
+}
+
+/* ── Background texture ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Floating orbs in background ── */
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+  animation: float 12s ease-in-out infinite;
+}
+.orb1 { width:400px; height:400px; background:var(--violet); top:-100px; left:-100px; animation-delay:0s; }
+.orb2 { width:320px; height:320px; background:var(--coral);  bottom:-80px; right:-60px; animation-delay:-4s; }
+.orb3 { width:260px; height:260px; background:var(--sky);    top:40%; left:60%; animation-delay:-8s; }
+
+@keyframes float {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%      { transform: translate(20px,-15px) scale(1.04); }
+  66%      { transform: translate(-10px,20px) scale(0.97); }
+}
+
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 28px 100px;
+}
+
+/* ── Header ── */
+header {
+  padding: 72px 0 48px;
+  text-align: center;
+  position: relative;
+}
+
+.header-eyebrow {
+  font-family: 'EB Garamond', serif;
+  font-size: 11px;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 300;
+  font-size: 52px;
+  line-height: 1.1;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--coral) 0%, var(--violet) 40%, var(--sky) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h1 em {
+  font-style: italic;
+}
+
+.header-sub {
+  font-family: 'EB Garamond', serif;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--ink-mid);
+  letter-spacing: 0.08em;
+  margin-bottom: 32px;
+}
+
+/* Rainbow divider */
+.rainbow-line {
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(to right, var(--coral), var(--gold), var(--sage), var(--sky), var(--violet), var(--rose));
+  border-radius: 2px;
+  margin: 0 auto 48px;
+}
+
+/* ── Cards grid ── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.tool-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 26px 24px;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  animation: cardIn 0.5s ease backwards;
+}
+
+.tool-card:nth-child(1) { animation-delay: 0.05s; }
+.tool-card:nth-child(2) { animation-delay: 0.10s; }
+.tool-card:nth-child(3) { animation-delay: 0.15s; }
+.tool-card:nth-child(4) { animation-delay: 0.20s; }
+.tool-card:nth-child(5) { animation-delay: 0.25s; }
+.tool-card:nth-child(6) { animation-delay: 0.30s; }
+
+@keyframes cardIn {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* Colored glow top strip */
+.tool-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--card-color, var(--violet));
+  border-radius: 14px 14px 0 0;
+  transition: height 0.25s ease;
+}
+
+/* Soft glow on hover */
+.tool-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: radial-gradient(ellipse at 50% 0%, var(--card-glow, rgba(155,127,224,0.08)) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.tool-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--card-color, var(--violet));
+  box-shadow: 0 12px 36px rgba(0,0,0,0.35), 0 0 0 1px var(--card-color, var(--violet));
+}
+
+.tool-card:hover::before { height: 4px; }
+.tool-card:hover::after  { opacity: 1; }
+
+/* Individual card colors */
+.card-garden  { --card-color: var(--sage);   --card-glow: rgba(74,173,122,0.1); }
+.card-cinema  { --card-color: var(--coral);  --card-glow: rgba(232,101,74,0.1); }
+.card-reading { --card-color: var(--gold);   --card-glow: rgba(212,150,10,0.1); }
+.card-psych   { --card-color: var(--sky);    --card-glow: rgba(74,159,212,0.1); }
+.card-witch   { --card-color: var(--violet); --card-glow: rgba(155,127,224,0.1); }
+.card-english { --card-color: var(--rose);   --card-glow: rgba(212,95,139,0.1); }
+
+.card-emoji {
+  font-size: 32px;
+  margin-bottom: 14px;
+  display: block;
+  line-height: 1;
+}
+
+.card-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.card-name-en {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--card-color, var(--violet));
+  display: block;
+  margin-bottom: 12px;
+  letter-spacing: 0.05em;
+}
+
+.card-desc {
+  font-size: 12px;
+  color: var(--ink-faint);
+  line-height: 1.75;
+  font-weight: 300;
+}
+
+.card-arrow {
+  position: absolute;
+  bottom: 22px;
+  right: 22px;
+  font-size: 16px;
+  color: var(--card-color, var(--violet));
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+.tool-card:hover .card-arrow { opacity: 1; transform: translateX(0); }
+
+/* ── Footer ── */
+footer {
+  text-align: center;
+  padding-top: 56px;
+  color: var(--ink-faint);
+  font-size: 11.5px;
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  line-height: 2;
+}
+
+footer .heart {
+  background: linear-gradient(135deg, var(--coral), var(--rose));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 36px; }
+  .cards-grid { grid-template-columns: 1fr; }
+  header { padding: 48px 0 36px; }
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<div class="page">
+  <header>
+    <div class="header-eyebrow">Alice's Digital Garden</div>
+    <h1><em>工具花园</em></h1>
+    <p class="header-sub">Claude 为 Alice 制作的六个小世界</p>
+    <div class="rainbow-line"></div>
+  </header>
+
+  <div class="cards-grid">
+
+    <a href="garden.html" class="tool-card card-garden">
+      <span class="card-emoji">🌱</span>
+      <div class="card-name">灵感花园</div>
+      <span class="card-name-en">Garden of Thoughts</span>
+      <p class="card-desc">念头 → 对话 → 方向<br>每一粒种子都值得发芽</p>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a href="cinema-sparks.html" class="tool-card card-cinema">
+      <span class="card-emoji">🎬</span>
+      <div class="card-name">光影手札</div>
+      <span class="card-name-en">Cinema Sparks</span>
+      <p class="card-desc">观影笔记 · 台词 · 灵感<br>把看过的光影留下来</p>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a href="reading-journal.html" class="tool-card card-reading">
+      <span class="card-emoji">📖</span>
+      <div class="card-name">读书手账</div>
+      <span class="card-name-en">Reading Journal</span>
+      <p class="card-desc">书摘 · 笔记 · 感悟<br>与书籍的私人对话</p>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a href="psychology_notes_v3.html" class="tool-card card-psych">
+      <span class="card-emoji">🧠</span>
+      <div class="card-name">心理学概念库</div>
+      <span class="card-name-en">Psychology Notes</span>
+      <p class="card-desc">概念 · 理论 · 洞察<br>理解人类心智的地图</p>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a href="witch-notebook.html" class="tool-card card-witch">
+      <span class="card-emoji">🔮</span>
+      <div class="card-name">女巫进修笔记</div>
+      <span class="card-name-en">Witch's Spellbook</span>
+      <p class="card-desc">塔罗 · 占星 · 神秘学<br>修习路上的每一步</p>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a href="english-spellbook.html" class="tool-card card-english">
+      <span class="card-emoji">✨</span>
+      <div class="card-name">与世界交流的魔法书</div>
+      <span class="card-name-en">English Edition</span>
+      <p class="card-desc">language is information<br>and information is everything</p>
+      <span class="card-arrow">→</span>
+    </a>
+
+  </div>
+
+  <footer>
+    <div>made with <span class="heart">♥</span> by Claude · for Alice · 2026</div>
+    <div>每个工具都是我们一起做的东西</div>
+  </footer>
+</div>
+
+</body>
+</html>
