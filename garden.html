@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>灵感花园 · Alice的思想苗圃</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F1EB;
+    --card-bg: #EDE9E2;
+    --green-light: #C2D0C6;
+    --green-mid: #8FA89A;
+    --green-dark: #5C6B5E;
+    --rose: #C4A4A0;
+    --linen: #D4C9A8;
+    --ochre: #A67C5B;
+    --ochre-dim: #8A6548;
+    --border: #D0C9BE;
+    --border-light: #DDD8CF;
+    --ink: #3A3530;
+    --ink-mid: #6B6158;
+    --ink-faint: #9E9489;
+    --white-soft: #FAF8F5;
+    --seed-bg: rgba(194,208,198,0.25);
+    --growing-bg: rgba(196,164,160,0.22);
+    --rooted-bg: rgba(166,124,91,0.18);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Noto Serif SC', serif;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.018'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 28px 100px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Header ── */
+  header {
+    padding: 52px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 36px;
+  }
+
+  .header-eyebrow {
+    font-family: 'Playfair Display', serif;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--green-mid);
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 300;
+    font-size: 42px;
+    color: var(--green-dark);
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+
+  h1 em { font-style: italic; color: var(--green-mid); }
+
+  .header-sub {
+    font-size: 12.5px;
+    color: var(--ink-mid);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    margin-bottom: 22px;
+  }
+
+  .stats-bar {
+    display: flex;
+    gap: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .stat { display: flex; flex-direction: column; gap: 3px; }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .stat-num.total { color: var(--green-dark); }
+  .stat-num.seed { color: var(--green-mid); }
+  .stat-num.growing { color: var(--rose); }
+  .stat-num.rooted { color: var(--ochre); }
+
+  .stat-label {
+    font-size: 10.5px;
+    color: var(--ink-faint);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── Controls ── */
+  .controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .search-wrap {
+    flex: 1;
+    min-width: 180px;
+    position: relative;
+  }
+
+  .search-wrap::before {
+    content: '⌕';
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ink-faint);
+    font-size: 17px;
+    pointer-events: none;
+  }
+
+  input[type="text"], textarea, select {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--white-soft);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input[type="text"]:focus, textarea:focus, select:focus {
+    border-color: var(--green-mid);
+  }
+
+  .search-input { width: 100%; padding: 9px 13px 9px 36px; }
+
+  .filter-select {
+    padding: 9px 28px 9px 13px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238FA89A'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-color: var(--white-soft);
+  }
+
+  .btn-primary {
+    padding: 9px 18px;
+    background: var(--green-dark);
+    color: #f5f2ee;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 13px;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+  }
+
+  .btn-primary:hover { background: #4a5549; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-ghost {
+    padding: 9px 14px;
+    background: var(--white-soft);
+    color: var(--ink-mid);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn-ghost:hover { border-color: var(--green-mid); color: var(--green-dark); transform: translateY(-1px); }
+
+  .btn-sm {
+    padding: 4px 10px;
+    font-size: 11px;
+    background: transparent;
+    color: var(--ink-faint);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: 'Noto Serif SC', serif;
+    transition: all 0.15s;
+  }
+  .btn-sm:hover { border-color: var(--green-mid); color: var(--green-dark); }
+  .btn-sm.danger:hover { border-color: var(--rose); color: var(--rose); }
+
+  /* ── Tag filters ── */
+  .tag-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-bottom: 28px;
+    align-items: center;
+  }
+
+  .tag-pill {
+    padding: 4px 14px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--white-soft);
+    color: var(--ink-mid);
+    font-family: 'Noto Serif SC', serif;
+  }
+
+  .tag-pill:hover { border-color: var(--green-mid); color: var(--green-dark); }
+  .tag-pill.active { background: var(--green-mid); border-color: var(--green-mid); color: var(--white-soft); }
+
+  .manage-tags-btn {
+    padding: 4px 12px;
+    border-radius: 100px;
+    border: 1px dashed var(--border);
+    font-size: 11px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--ink-faint);
+    font-family: 'Noto Serif SC', serif;
+    transition: all 0.15s;
+  }
+  .manage-tags-btn:hover { border-color: var(--green-mid); color: var(--green-dark); }
+
+  /* ── Cards ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
+    gap: 18px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: fadeUp 0.3s ease;
+    overflow: hidden;
+    position: relative;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(60,53,45,0.09);
+  }
+
+  .card-status-bar {
+    height: 4px;
+    width: 100%;
+  }
+  .card-status-bar.seed { background: var(--green-light); }
+  .card-status-bar.growing { background: var(--rose); }
+  .card-status-bar.rooted { background: var(--ochre); }
+
+  .card-body { padding: 16px 18px 14px; }
+
+  .card-thought {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--ink);
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .status-badge {
+    font-size: 11px;
+    padding: 2px 9px;
+    border-radius: 100px;
+    font-family: 'Noto Serif SC', serif;
+    letter-spacing: 0.03em;
+  }
+  .status-badge.seed { background: var(--seed-bg); color: var(--green-dark); }
+  .status-badge.growing { background: var(--growing-bg); color: #8a5e5b; }
+  .status-badge.rooted { background: var(--rooted-bg); color: var(--ochre); }
+
+  .tag-label {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: rgba(143,168,154,0.15);
+    color: var(--green-dark);
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 18px;
+    border-top: 1px solid var(--border-light);
+    font-size: 11px;
+    color: var(--ink-faint);
+  }
+
+  .sticky-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .sticky-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 1px;
+    background: var(--linen);
+    display: inline-block;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--ink-faint);
+    grid-column: 1 / -1;
+  }
+
+  .empty-state .empty-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+
+  .empty-state p {
+    font-size: 13px;
+    font-style: italic;
+    line-height: 1.8;
+  }
+
+  /* ── Modal shared ── */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(58,53,48,0.45);
+    backdrop-filter: blur(3px);
+    z-index: 100;
+    display: none;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px;
+    overflow-y: auto;
+  }
+
+  .overlay.open { display: flex; }
+
+  .modal {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    width: 100%;
+    max-width: 580px;
+    animation: modalIn 0.25s ease;
+    position: relative;
+    margin: auto;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.97) translateY(-8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 26px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--green-dark);
+  }
+
+  .close-btn {
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--ink-faint);
+    font-size: 20px;
+    line-height: 1;
+    border-radius: 4px;
+    transition: color 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .close-btn:hover { color: var(--ink); }
+
+  .modal-body { padding: 22px 26px; }
+
+  .form-group { margin-bottom: 18px; }
+
+  .form-label {
+    display: block;
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    color: var(--ink-mid);
+    margin-bottom: 6px;
+  }
+
+  .form-label span {
+    color: var(--ink-faint);
+    font-weight: 300;
+    letter-spacing: 0;
+  }
+
+  textarea.auto-grow, input[type="text"] {
+    width: 100%;
+    resize: none;
+    padding: 9px 12px;
+    line-height: 1.65;
+    min-height: 40px;
+  }
+
+  textarea.auto-grow { min-height: 72px; }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .status-options {
+    display: flex;
+    gap: 10px;
+  }
+
+  .status-opt {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 12px;
+    background: var(--white-soft);
+    color: var(--ink-mid);
+    transition: all 0.15s;
+    font-family: 'Noto Serif SC', serif;
+  }
+  .status-opt:hover { border-color: var(--green-mid); }
+  .status-opt.active.seed { background: var(--seed-bg); border-color: var(--green-mid); color: var(--green-dark); }
+  .status-opt.active.growing { background: var(--growing-bg); border-color: var(--rose); color: #8a5e5b; }
+  .status-opt.active.rooted { background: var(--rooted-bg); border-color: var(--ochre); color: var(--ochre); }
+
+  .source-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  .source-preset {
+    padding: 3px 10px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    font-size: 11px;
+    cursor: pointer;
+    background: var(--white-soft);
+    color: var(--ink-mid);
+    font-family: 'Noto Serif SC', serif;
+    transition: all 0.15s;
+  }
+  .source-preset:hover, .source-preset.active { border-color: var(--green-mid); color: var(--green-dark); background: rgba(143,168,154,0.1); }
+
+  .modal-footer {
+    padding: 16px 26px 22px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  /* ── Detail Modal ── */
+  .detail-modal {
+    max-width: 640px;
+  }
+
+  .detail-header {
+    padding: 24px 26px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .detail-status-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .detail-thought {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--ink);
+    font-family: 'Noto Serif SC', serif;
+    margin-bottom: 10px;
+  }
+
+  .detail-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--ink-faint);
+    flex-wrap: wrap;
+  }
+
+  .detail-section {
+    padding: 18px 26px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .detail-section:last-child { border-bottom: none; }
+
+  .detail-section-label {
+    font-size: 10.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--green-mid);
+    margin-bottom: 8px;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .detail-section-content {
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink-mid);
+    white-space: pre-wrap;
+  }
+
+  /* ── Stickies ── */
+  .stickies-area { padding: 18px 26px 22px; }
+
+  .stickies-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .stickies-label {
+    font-size: 10.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--green-mid);
+    font-family: 'Playfair Display', serif;
+  }
+
+  .sticky-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+
+  .sticky-item {
+    background: var(--linen);
+    border-radius: 5px;
+    padding: 11px 14px;
+    position: relative;
+    animation: fadeUp 0.2s ease;
+  }
+
+  .sticky-text {
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: var(--ink);
+    white-space: pre-wrap;
+    margin-bottom: 5px;
+  }
+
+  .sticky-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10.5px;
+    color: var(--ink-faint);
+  }
+
+  .sticky-add-area {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sticky-input {
+    width: 100%;
+    padding: 9px 12px;
+    font-size: 13px;
+    background: var(--linen);
+    border: 1px solid rgba(166,124,91,0.2);
+    border-radius: 5px;
+    resize: none;
+    min-height: 68px;
+    line-height: 1.65;
+    font-family: 'Noto Serif SC', serif;
+    color: var(--ink);
+    transition: border-color 0.2s;
+  }
+  .sticky-input:focus { border-color: var(--ochre); outline: none; }
+
+  /* ── Tag Manager Modal ── */
+  .tag-manager-modal {
+    max-width: 440px;
+  }
+
+  .tag-manager-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+
+  .tag-manager-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--white-soft);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+  }
+
+  .tag-manager-item input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    color: var(--ink);
+    font-family: 'Noto Serif SC', serif;
+    padding: 0;
+  }
+  .tag-manager-item input:focus { outline: none; }
+
+  .tag-add-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .tag-add-row input {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 5px;
+  }
+
+  /* ── Toast ── */
+  .toast-container {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .toast {
+    background: var(--green-dark);
+    color: #f0ede8;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: 'Noto Serif SC', serif;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 4px 14px rgba(58,53,48,0.18);
+    animation: toastIn 0.25s ease;
+    white-space: nowrap;
+  }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .toast.fade-out { animation: toastOut 0.3s ease forwards; }
+
+  @keyframes toastOut {
+    to { opacity: 0; transform: translateY(6px); }
+  }
+
+  .toast-undo {
+    background: none;
+    border: 1px solid rgba(240,237,232,0.4);
+    color: #f0ede8;
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-size: 11.5px;
+    cursor: pointer;
+    font-family: 'Noto Serif SC', serif;
+    transition: background 0.15s;
+  }
+  .toast-undo:hover { background: rgba(240,237,232,0.15); }
+
+  /* ── Detail action btns ── */
+  .detail-actions {
+    display: flex;
+    gap: 8px;
+    padding: 14px 26px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .detail-close-row {
+    padding: 14px 26px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 32px; }
+    .form-row { grid-template-columns: 1fr; }
+    .overlay { padding: 16px 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-eyebrow">Garden of Thoughts</div>
+    <h1>灵感花园 <em>· Alice's</em></h1>
+    <p class="header-sub">Claude 为 Alice 制作 · 念头 → 对话 → 方向 · 每一粒种子都值得发芽</p>
+    <div class="stats-bar">
+      <div class="stat">
+        <span class="stat-num total" id="statTotal">0</span>
+        <span class="stat-label">全部念头</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num seed" id="statSeed">0</span>
+        <span class="stat-label">🌱 种子</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num growing" id="statGrowing">0</span>
+        <span class="stat-label">🌿 生长中</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num rooted" id="statRooted">0</span>
+        <span class="stat-label">🌳 已扎根</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索念头、摘要、方向……">
+    </div>
+    <select class="filter-select" id="tagFilter">
+      <option value="">所有领域</option>
+    </select>
+    <select class="filter-select" id="statusFilter">
+      <option value="">所有状态</option>
+      <option value="seed">🌱 种子</option>
+      <option value="growing">🌿 生长中</option>
+      <option value="rooted">🌳 已扎根</option>
+    </select>
+    <button class="btn-primary" onclick="openAddModal()">＋ 记录灵感</button>
+    <button class="btn-ghost" onclick="exportData()">导出</button>
+    <label class="btn-ghost" style="cursor:pointer;">导入<input type="file" accept=".json" id="importInput" style="display:none" onchange="importData(event)"></label>
+  </div>
+
+  <div class="tag-filters" id="tagFilters">
+    <button class="tag-pill active" data-tag="" onclick="setTagFilter(this, '')">全部</button>
+    <button class="manage-tags-btn" onclick="openTagManager()">管理标签 ⋯</button>
+  </div>
+
+  <div class="cards-grid" id="cardsGrid"></div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="overlay" id="addOverlay" onclick="overlayClose(event, 'addOverlay')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title" id="modalHeading">记录一个灵感</span>
+      <button class="close-btn" onclick="closeAddModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">原始念头 <span>（保留最初的样子）</span></label>
+        <textarea class="auto-grow" id="inputThought" placeholder="在备忘录里记的那句话……"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">讨论摘要 <span>（选填）</span></label>
+        <textarea class="auto-grow" id="inputSummary" placeholder="和Claude聊了什么，核心结论是……"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">学习方向 <span>（选填）</span></label>
+        <textarea class="auto-grow" id="inputDirection" placeholder="具体要做什么、看什么、练什么……"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">所属领域</label>
+          <select id="inputTag" style="width:100%;padding:9px 28px 9px 12px;"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">状态</label>
+          <div class="status-options">
+            <button class="status-opt seed active" data-status="seed" onclick="setStatus(this)">🌱 种子</button>
+            <button class="status-opt growing" data-status="growing" onclick="setStatus(this)">🌿 生长</button>
+            <button class="status-opt rooted" data-status="rooted" onclick="setStatus(this)">🌳 扎根</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">来源 <span>（选填）</span></label>
+        <div class="source-presets" id="sourcePresets">
+          <span class="source-preset" onclick="setSource(this)">窗口对话</span>
+          <span class="source-preset" onclick="setSource(this)">小红书看到的</span>
+          <span class="source-preset" onclick="setSource(this)">自己想到的</span>
+          <span class="source-preset" onclick="setSource(this)">读书笔记</span>
+          <span class="source-preset" onclick="setSource(this)">其他</span>
+        </div>
+        <input type="text" id="inputSource" placeholder="或自由输入……" style="margin-top:8px;width:100%;padding:8px 12px;">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeAddModal()">取消</button>
+      <button class="btn-primary" onclick="saveCard()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="overlay" id="detailOverlay" onclick="overlayClose(event, 'detailOverlay')">
+  <div class="modal detail-modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title" style="font-size:17px;font-style:italic;color:var(--ink-mid)">念头详情</span>
+      <button class="close-btn" onclick="closeDetail()">×</button>
+    </div>
+    <div class="detail-header" id="detailHeader"></div>
+    <div class="detail-actions">
+      <button class="btn-sm" onclick="editCurrent()">编辑</button>
+      <button class="btn-sm danger" onclick="deleteCurrent()">删除</button>
+    </div>
+    <div id="detailSections"></div>
+    <div class="stickies-area">
+      <div class="stickies-header">
+        <span class="stickies-label">便利贴 · Stickies</span>
+        <span id="stickyCount" style="font-size:11px;color:var(--ink-faint)"></span>
+      </div>
+      <div class="sticky-list" id="stickyList"></div>
+      <div class="sticky-add-area">
+        <textarea class="sticky-input auto-grow" id="stickyInput" placeholder="追加一条衍生念头……"></textarea>
+        <div style="display:flex;justify-content:flex-end;">
+          <button class="btn-ghost" style="font-size:12px;padding:6px 14px;" onclick="addSticky()">贴上去</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tag Manager Modal -->
+<div class="overlay" id="tagManagerOverlay" onclick="overlayClose(event, 'tagManagerOverlay')">
+  <div class="modal tag-manager-modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title">管理领域标签</span>
+      <button class="close-btn" onclick="closeTagManager()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="tag-manager-list" id="tagManagerList"></div>
+      <div class="tag-add-row">
+        <input type="text" id="newTagInput" placeholder="新标签名称……">
+        <button class="btn-primary" onclick="addTag()">添加</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-primary" onclick="saveTagsAndClose()">完成</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ── Data ──
+const STORAGE_KEY = 'inspiration_garden_v1';
+const DEFAULT_TAGS = ['审美', '心理学', '自媒体运营', 'AI工具', '占卜专业'];
+
+let cards = [];
+let tags = [...DEFAULT_TAGS];
+let editingId = null;
+let viewingId = null;
+let currentStatus = 'seed';
+let currentTagFilter = '';
+let currentStatusFilter = '';
+let pendingTagEdits = [];
+
+function load() {
+  try {
+    const d = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cards = d.cards || [];
+    tags = d.tags || [...DEFAULT_TAGS];
+  } catch(e) {
+    cards = []; tags = [...DEFAULT_TAGS];
+  }
+}
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ cards, tags }));
+}
+
+// ── Render ──
+function renderAll() {
+  renderStats();
+  renderTagPills();
+  renderTagSelects();
+  renderCards();
+}
+
+function renderStats() {
+  document.getElementById('statTotal').textContent = cards.length;
+  document.getElementById('statSeed').textContent = cards.filter(c => c.status === 'seed').length;
+  document.getElementById('statGrowing').textContent = cards.filter(c => c.status === 'growing').length;
+  document.getElementById('statRooted').textContent = cards.filter(c => c.status === 'rooted').length;
+}
+
+function renderTagPills() {
+  const container = document.getElementById('tagFilters');
+  container.innerHTML = `
+    <button class="tag-pill ${currentTagFilter === '' ? 'active' : ''}" onclick="setTagFilter(this,'')">全部</button>
+    ${tags.map(t => `<button class="tag-pill ${currentTagFilter === t ? 'active' : ''}" onclick="setTagFilter(this,'${escHtml(t)}')">${escHtml(t)}</button>`).join('')}
+    <button class="manage-tags-btn" onclick="openTagManager()">管理标签 ⋯</button>
+  `;
+}
+
+function renderTagSelects() {
+  const sel = document.getElementById('tagFilter');
+  const curVal = sel.value;
+  sel.innerHTML = `<option value="">所有领域</option>` + tags.map(t => `<option value="${escHtml(t)}">${escHtml(t)}</option>`).join('');
+  sel.value = tags.includes(curVal) ? curVal : '';
+
+  const inputSel = document.getElementById('inputTag');
+  const inputVal = inputSel.value;
+  inputSel.innerHTML = `<option value="">未分类</option>` + tags.map(t => `<option value="${escHtml(t)}">${escHtml(t)}</option>`).join('');
+  if (tags.includes(inputVal)) inputSel.value = inputVal;
+}
+
+function filteredCards() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const tagF = document.getElementById('tagFilter').value || currentTagFilter;
+  const statusF = document.getElementById('statusFilter').value || currentStatusFilter;
+  return cards.filter(c => {
+    if (tagF && c.tag !== tagF) return false;
+    if (statusF && c.status !== statusF) return false;
+    if (q) {
+      const hay = [c.thought, c.summary, c.direction, c.source, c.tag].join(' ').toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+const STATUS_LABEL = { seed: '🌱 种子', growing: '🌿 生长中', rooted: '🌳 已扎根' };
+const STATUS_CLASS = { seed: 'seed', growing: 'growing', rooted: 'rooted' };
+
+function renderCards() {
+  const grid = document.getElementById('cardsGrid');
+  const visible = filteredCards();
+  if (!visible.length) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🌱</div><p>这里还没有念头<br>或者搜索条件下没有结果</p></div>`;
+    return;
+  }
+  grid.innerHTML = visible.map(c => {
+    const sc = STATUS_CLASS[c.status] || 'seed';
+    const stickyN = (c.stickies || []).length;
+    const updDate = new Date(c.updatedAt).toLocaleDateString('zh-CN', {month:'short',day:'numeric'});
+    return `
+      <div class="card" onclick="openDetail('${c.id}')">
+        <div class="card-status-bar ${sc}"></div>
+        <div class="card-body">
+          <div class="card-thought">${escHtml(c.thought)}</div>
+          <div class="card-meta">
+            <span class="status-badge ${sc}">${STATUS_LABEL[c.status]||''}</span>
+            ${c.tag ? `<span class="tag-label">${escHtml(c.tag)}</span>` : ''}
+          </div>
+        </div>
+        <div class="card-footer">
+          <span>${updDate}</span>
+          ${stickyN ? `<span class="sticky-count"><span class="sticky-dot"></span>${stickyN} 条便利贴</span>` : '<span></span>'}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ── Add/Edit ──
+function openAddModal(id = null) {
+  editingId = id;
+  const c = id ? cards.find(x => x.id === id) : null;
+  document.getElementById('modalHeading').textContent = id ? '编辑灵感' : '记录一个灵感';
+  document.getElementById('inputThought').value = c ? c.thought : '';
+  document.getElementById('inputSummary').value = c ? (c.summary || '') : '';
+  document.getElementById('inputDirection').value = c ? (c.direction || '') : '';
+  document.getElementById('inputSource').value = c ? (c.source || '') : '';
+  renderTagSelects();
+  document.getElementById('inputTag').value = c ? (c.tag || '') : '';
+
+  currentStatus = c ? c.status : 'seed';
+  document.querySelectorAll('.status-opt').forEach(b => {
+    b.classList.toggle('active', b.dataset.status === currentStatus);
+  });
+
+  // reset source presets
+  document.querySelectorAll('.source-preset').forEach(p => {
+    p.classList.toggle('active', c && p.textContent === c.source);
+  });
+
+  document.querySelectorAll('.auto-grow').forEach(el => { el.style.height = 'auto'; });
+  document.getElementById('addOverlay').classList.add('open');
+  setTimeout(() => {
+    document.getElementById('inputThought').focus();
+    document.querySelectorAll('.auto-grow').forEach(autoGrow);
+  }, 80);
+}
+
+function closeAddModal() {
+  document.getElementById('addOverlay').classList.remove('open');
+  editingId = null;
+}
+
+function setStatus(btn) {
+  currentStatus = btn.dataset.status;
+  document.querySelectorAll('.status-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setSource(el) {
+  const val = el.textContent;
+  document.querySelectorAll('.source-preset').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('inputSource').value = val;
+}
+
+function saveCard() {
+  const thought = document.getElementById('inputThought').value.trim();
+  if (!thought) { showToast('请填写原始念头 ·'); return; }
+
+  const now = new Date().toISOString();
+  if (editingId) {
+    const c = cards.find(x => x.id === editingId);
+    if (c) {
+      c.thought = thought;
+      c.summary = document.getElementById('inputSummary').value.trim();
+      c.direction = document.getElementById('inputDirection').value.trim();
+      c.tag = document.getElementById('inputTag').value;
+      c.status = currentStatus;
+      c.source = document.getElementById('inputSource').value.trim();
+      c.updatedAt = now;
+    }
+    showToast('已更新 ✓');
+  } else {
+    const c = {
+      id: 'c' + Date.now(),
+      thought,
+      summary: document.getElementById('inputSummary').value.trim(),
+      direction: document.getElementById('inputDirection').value.trim(),
+      tag: document.getElementById('inputTag').value,
+      status: currentStatus,
+      source: document.getElementById('inputSource').value.trim(),
+      stickies: [],
+      createdAt: now,
+      updatedAt: now
+    };
+    cards.unshift(c);
+    showToast('灵感已种下 🌱');
+  }
+
+  save();
+  closeAddModal();
+  renderAll();
+  if (viewingId) openDetail(viewingId);
+}
+
+// ── Detail ──
+function openDetail(id) {
+  viewingId = id;
+  const c = cards.find(x => x.id === id);
+  if (!c) return;
+
+  const sc = STATUS_CLASS[c.status] || 'seed';
+  const createdDate = new Date(c.createdAt).toLocaleDateString('zh-CN',{year:'numeric',month:'short',day:'numeric'});
+  const updDate = new Date(c.updatedAt).toLocaleDateString('zh-CN',{year:'numeric',month:'short',day:'numeric'});
+
+  document.getElementById('detailHeader').innerHTML = `
+    <div class="detail-status-row">
+      <span class="status-badge ${sc}">${STATUS_LABEL[c.status]||''}</span>
+      ${c.tag ? `<span class="tag-label">${escHtml(c.tag)}</span>` : ''}
+    </div>
+    <div class="detail-thought">${escHtml(c.thought)}</div>
+    <div class="detail-meta-row">
+      ${c.source ? `<span>来源：${escHtml(c.source)}</span>` : ''}
+      <span>种下于 ${createdDate}</span>
+      ${updDate !== createdDate ? `<span>更新于 ${updDate}</span>` : ''}
+    </div>
+  `;
+
+  let sections = '';
+  if (c.summary) {
+    sections += `<div class="detail-section"><div class="detail-section-label">讨论摘要</div><div class="detail-section-content">${escHtml(c.summary)}</div></div>`;
+  }
+  if (c.direction) {
+    sections += `<div class="detail-section"><div class="detail-section-label">学习方向</div><div class="detail-section-content">${escHtml(c.direction)}</div></div>`;
+  }
+  document.getElementById('detailSections').innerHTML = sections;
+
+  renderStickies(c);
+
+  document.getElementById('stickyInput').value = '';
+  document.getElementById('detailOverlay').classList.add('open');
+}
+
+function renderStickies(c) {
+  const stickies = [...(c.stickies || [])].reverse();
+  document.getElementById('stickyCount').textContent = stickies.length ? `共 ${stickies.length} 条` : '';
+  document.getElementById('stickyList').innerHTML = stickies.length
+    ? stickies.map((s, ri) => {
+        const realIdx = (c.stickies.length - 1) - ri;
+        const d = new Date(s.createdAt).toLocaleDateString('zh-CN',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+        return `<div class="sticky-item">
+          <div class="sticky-text">${escHtml(s.text)}</div>
+          <div class="sticky-footer">
+            <span>${d}</span>
+            <button class="btn-sm danger" onclick="deleteSticky('${c.id}',${realIdx})">删除</button>
+          </div>
+        </div>`;
+      }).join('')
+    : '';
+}
+
+function closeDetail() {
+  document.getElementById('detailOverlay').classList.remove('open');
+  viewingId = null;
+}
+
+function editCurrent() {
+  const id = viewingId;
+  closeDetail();
+  openAddModal(id);
+}
+
+function deleteCurrent() {
+  const id = viewingId;
+  const c = cards.find(x => x.id === id);
+  if (!c) return;
+  cards = cards.filter(x => x.id !== id);
+  save();
+  closeDetail();
+  renderAll();
+  showToast(`已删除念头`, () => {
+    cards.unshift(c);
+    save();
+    renderAll();
+    showToast('已撤销 ✓');
+  });
+}
+
+function addSticky() {
+  const text = document.getElementById('stickyInput').value.trim();
+  if (!text) return;
+  const c = cards.find(x => x.id === viewingId);
+  if (!c) return;
+  if (!c.stickies) c.stickies = [];
+  c.stickies.push({ text, createdAt: new Date().toISOString() });
+  c.updatedAt = new Date().toISOString();
+  save();
+  renderStickies(c);
+  renderStats();
+  document.getElementById('stickyInput').value = '';
+  showToast('便利贴已贴上 ✓');
+}
+
+function deleteSticky(cardId, idx) {
+  const c = cards.find(x => x.id === cardId);
+  if (!c || !c.stickies) return;
+  const deleted = c.stickies.splice(idx, 1)[0];
+  c.updatedAt = new Date().toISOString();
+  save();
+  renderStickies(c);
+  showToast('便利贴已删除', () => {
+    c.stickies.splice(idx, 0, deleted);
+    c.updatedAt = new Date().toISOString();
+    save();
+    renderStickies(c);
+    showToast('已撤销 ✓');
+  });
+}
+
+// ── Tag Manager ──
+function openTagManager() {
+  pendingTagEdits = [...tags];
+  renderTagManagerList();
+  document.getElementById('tagManagerOverlay').classList.add('open');
+  document.getElementById('newTagInput').value = '';
+}
+
+function closeTagManager() {
+  document.getElementById('tagManagerOverlay').classList.remove('open');
+}
+
+function renderTagManagerList() {
+  document.getElementById('tagManagerList').innerHTML = pendingTagEdits.map((t, i) => `
+    <div class="tag-manager-item">
+      <input type="text" value="${escHtml(t)}" onchange="pendingTagEdits[${i}]=this.value.trim()" placeholder="标签名称">
+      <button class="btn-sm danger" onclick="removePendingTag(${i})">删除</button>
+    </div>
+  `).join('');
+}
+
+function removePendingTag(i) {
+  pendingTagEdits.splice(i, 1);
+  renderTagManagerList();
+}
+
+function addTag() {
+  const val = document.getElementById('newTagInput').value.trim();
+  if (!val) return;
+  if (pendingTagEdits.includes(val)) { showToast('标签已存在'); return; }
+  pendingTagEdits.push(val);
+  renderTagManagerList();
+  document.getElementById('newTagInput').value = '';
+}
+
+function saveTagsAndClose() {
+  const oldTags = new Set(tags);
+  const newTags = pendingTagEdits.filter(t => t.trim());
+  const removedTags = new Set([...oldTags].filter(t => !newTags.includes(t)));
+  tags = newTags;
+  // Cards with removed tags → unclassified
+  if (removedTags.size) {
+    cards.forEach(c => { if (removedTags.has(c.tag)) c.tag = ''; });
+  }
+  save();
+  closeTagManager();
+  renderAll();
+  showToast('标签已更新 ✓');
+}
+
+// ── Filters ──
+function setTagFilter(btn, val) {
+  currentTagFilter = val;
+  document.querySelectorAll('.tag-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tagFilter').value = val;
+  renderCards();
+}
+
+document.getElementById('searchInput').addEventListener('input', renderCards);
+document.getElementById('tagFilter').addEventListener('change', e => { currentTagFilter = e.target.value; renderTagPills(); renderCards(); });
+document.getElementById('statusFilter').addEventListener('change', renderCards);
+
+// ── Export/Import ──
+function exportData() {
+  const blob = new Blob([JSON.stringify({ cards, tags }, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `inspiration_garden_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('数据已导出 ✓');
+}
+
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const d = JSON.parse(ev.target.result);
+      if (!d.cards) throw new Error();
+      if (!confirm(`导入 ${d.cards.length} 条灵感？当前数据将被覆盖。`)) return;
+      cards = d.cards;
+      tags = d.tags || [...DEFAULT_TAGS];
+      save();
+      renderAll();
+      showToast('导入成功 ✓');
+    } catch(err) { alert('导入失败，请检查文件格式。'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+// ── Toast ──
+function showToast(msg, undoFn = null) {
+  const container = document.getElementById('toastContainer');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = `<span>${msg}</span>${undoFn ? '<button class="toast-undo" onclick="__undoFn()">撤销</button>' : ''}`;
+  if (undoFn) window.__undoFn = () => { undoFn(); el.remove(); };
+  container.appendChild(el);
+  const timer = setTimeout(() => {
+    el.classList.add('fade-out');
+    setTimeout(() => el.remove(), 300);
+  }, undoFn ? 5000 : 2000);
+  if (undoFn) {
+    el.querySelector('.toast-undo').addEventListener('click', () => {
+      clearTimeout(timer);
+    });
+  }
+}
+
+// ── Overlay close ──
+function overlayClose(e, id) {
+  if (e.target === document.getElementById(id)) {
+    document.getElementById(id).classList.remove('open');
+    if (id === 'detailOverlay') viewingId = null;
+    if (id === 'addOverlay') editingId = null;
+  }
+}
+
+// ── Auto-grow ──
+function autoGrow(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+document.addEventListener('input', e => {
+  if (e.target.classList.contains('auto-grow')) autoGrow(e.target);
+});
+
+// ── Escape key ──
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('addOverlay').classList.contains('open')) closeAddModal();
+    else if (document.getElementById('detailOverlay').classList.contains('open')) closeDetail();
+    else if (document.getElementById('tagManagerOverlay').classList.contains('open')) closeTagManager();
+  }
+  // Ctrl/Cmd+Enter to save in add modal
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    if (document.getElementById('addOverlay').classList.contains('open')) saveCard();
+    else if (document.getElementById('detailOverlay').classList.contains('open')) addSticky();
+  }
+});
+
+// ── Escape html ──
+function escHtml(s) {
+  if (!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Init ──
+load();
+renderAll();
+</script>
+</body>
+</html>
