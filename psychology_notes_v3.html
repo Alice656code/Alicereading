@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>心理学概念库 · 咪的笔记</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dust-rose: #c4a09a;
+    --sage: #8fa89a;
+    --warm-beige: #e8ddd3;
+    --slate: #7a8b99;
+    --mauve: #b09aad;
+    --ochre: #c4a96a;
+    --ink: #3a3530;
+    --ink-light: #6b5f58;
+    --paper: #f5f0ea;
+    --paper-dark: #ede5db;
+    --card-bg: #faf7f4;
+    --border: #d9cfc7;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Serif SC', serif;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  header {
+    padding: 52px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+
+  .header-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--dust-rose);
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 42px;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--ink-light);
+  }
+
+  .header-sub {
+    font-size: 13px;
+    color: var(--ink-light);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    gap: 32px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--dust-rose);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--ink-light);
+    letter-spacing: 0.1em;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .search-wrap {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+  }
+
+  .search-wrap::before {
+    content: '⌕';
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ink-light);
+    font-size: 18px;
+    pointer-events: none;
+  }
+
+  input[type="text"], textarea, select {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input[type="text"]:focus, textarea:focus, select:focus {
+    border-color: var(--dust-rose);
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 10px 14px 10px 38px;
+  }
+
+  .filter-select {
+    padding: 10px 14px;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b5f58'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 30px;
+    appearance: none;
+  }
+
+  .btn-add {
+    padding: 10px 20px;
+    background: var(--dust-rose);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 13px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+  }
+
+  .btn-add:hover { background: #b8908a; transform: translateY(-1px); }
+  .btn-add:active { transform: translateY(0); }
+
+  .btn-io {
+    padding: 10px 16px;
+    background: var(--card-bg);
+    color: var(--ink-light);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 13px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+  }
+  .btn-io:hover { border-color: var(--dust-rose); color: var(--dust-rose); transform: translateY(-1px); }
+
+  /* Tag filters */
+  .tag-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .tag-filter {
+    padding: 5px 14px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--card-bg);
+    color: var(--ink-light);
+    font-family: 'Noto Serif SC', serif;
+  }
+
+  .tag-filter:hover { border-color: var(--dust-rose); color: var(--dust-rose); }
+  .tag-filter.active { background: var(--dust-rose); border-color: var(--dust-rose); color: white; }
+
+  /* Cards grid */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(58,53,48,0.08);
+  }
+
+  .card-color-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .card-category {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    color: var(--ink);
+  }
+
+  .card-content {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--ink-light);
+    margin-bottom: 16px;
+    font-weight: 300;
+  }
+
+  .card-source {
+    font-size: 11px;
+    color: var(--mauve);
+    font-style: italic;
+    margin-bottom: 14px;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .tag {
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 8px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-sm {
+    padding: 5px 12px;
+    border-radius: 3px;
+    font-size: 11px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--ink-light);
+    font-family: 'Noto Serif SC', serif;
+    transition: all 0.15s;
+  }
+
+  .btn-sm:hover { background: var(--paper-dark); }
+  .btn-delete:hover { border-color: #c47a7a; color: #c47a7a; }
+
+  .card-date {
+    font-size: 10px;
+    color: var(--border);
+    letter-spacing: 0.1em;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  /* Empty state */
+  .empty-state {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--ink-light);
+  }
+
+  .empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.3;
+  }
+
+  .empty-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+
+  .empty-sub { font-size: 13px; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(58,53,48,0.5);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--paper);
+    border-radius: 12px;
+    padding: 36px;
+    width: 100%;
+    max-width: 540px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalIn 0.25s ease;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 28px;
+    margin-bottom: 24px;
+    color: var(--ink);
+  }
+
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 8px;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 10px 14px;
+  }
+
+  .form-textarea {
+    width: 100%;
+    padding: 10px 14px;
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.7;
+  }
+
+  .form-select {
+    width: 100%;
+    padding: 10px 14px;
+    padding-right: 30px;
+  }
+
+  /* Category select with manage button */
+  .cat-select-wrap {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .cat-select-wrap select { flex: 1; }
+
+  .btn-manage-cat {
+    padding: 8px 14px;
+    background: var(--paper-dark);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--ink-light);
+    font-family: 'Noto Serif SC', serif;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .btn-manage-cat:hover { border-color: var(--dust-rose); color: var(--dust-rose); }
+
+  .tag-input-wrap {
+    display: flex;
+    gap: 8px;
+  }
+
+  .tag-input-wrap input { flex: 1; padding: 8px 12px; }
+
+  .btn-add-tag {
+    padding: 8px 14px;
+    background: var(--paper-dark);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    color: var(--ink-light);
+    transition: all 0.15s;
+  }
+
+  .btn-add-tag:hover { border-color: var(--dust-rose); color: var(--dust-rose); }
+
+  .tags-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .tag-preview-item {
+    padding: 4px 12px;
+    background: var(--paper-dark);
+    border-radius: 100px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink-light);
+  }
+
+  .tag-remove {
+    cursor: pointer;
+    color: var(--dust-rose);
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-cancel {
+    padding: 10px 20px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--ink-light);
+    transition: all 0.15s;
+  }
+
+  .btn-cancel:hover { border-color: var(--ink-light); color: var(--ink); }
+
+  .btn-save {
+    padding: 10px 24px;
+    background: var(--dust-rose);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-save:hover { background: #b8908a; }
+
+  /* Category management modal */
+  .cat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .cat-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+
+  .cat-list-item-name {
+    font-size: 13px;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cat-color-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .cat-list-item-actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  .cat-list-item-actions button {
+    padding: 4px 10px;
+    font-size: 11px;
+    border: 1px solid var(--border);
+    background: transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    color: var(--ink-light);
+    font-family: 'Noto Serif SC', serif;
+    transition: all 0.15s;
+  }
+
+  .cat-list-item-actions button:hover { border-color: var(--dust-rose); color: var(--dust-rose); }
+  .cat-list-item-actions .btn-cat-delete:hover { border-color: #c47a7a; color: #c47a7a; }
+
+  .cat-count-badge {
+    font-size: 10px;
+    color: var(--ink-light);
+    background: var(--paper-dark);
+    padding: 2px 8px;
+    border-radius: 100px;
+  }
+
+  .add-cat-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .add-cat-row input { flex: 1; padding: 10px 14px; }
+
+  /* Category colors - dynamic */
+  .cat-认知 { color: var(--slate); }
+  .cat-社会 { color: var(--sage); }
+  .cat-人格 { color: var(--mauve); }
+  .cat-发展 { color: var(--ochre); }
+  .cat-临床 { color: var(--dust-rose); }
+
+  .bar-认知 { background: var(--slate); }
+  .bar-社会 { background: var(--sage); }
+  .bar-人格 { background: var(--mauve); }
+  .bar-发展 { background: var(--ochre); }
+  .bar-临床 { background: var(--dust-rose); }
+
+  .tag-认知 { background: rgba(122,139,153,0.15); color: var(--slate); }
+  .tag-社会 { background: rgba(143,168,154,0.15); color: var(--sage); }
+  .tag-人格 { background: rgba(176,154,173,0.15); color: var(--mauve); }
+  .tag-发展 { background: rgba(196,169,106,0.15); color: var(--ochre); }
+  .tag-临床 { background: rgba(196,160,154,0.15); color: var(--dust-rose); }
+  .tag-default { background: var(--paper-dark); color: var(--ink-light); }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-size: 13px;
+    z-index: 9999;
+    opacity: 0;
+    transition: all 0.4s ease;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Noto Serif SC', serif;
+  }
+
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .toast-undo {
+    background: transparent;
+    border: 1px solid var(--dust-rose);
+    color: var(--dust-rose);
+    padding: 4px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Noto Serif SC', serif;
+    transition: all 0.15s;
+  }
+
+  .toast-undo:hover { background: var(--dust-rose); color: white; }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 30px; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .modal { padding: 24px; }
+    .controls { flex-direction: column; align-items: stretch; }
+    .search-wrap { min-width: 100%; }
+    .controls .btn-add, .controls .btn-io { width: 100%; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-label">Mimi's Psychology Archive</div>
+    <h1>心理学 <em>概念库</em></h1>
+    <div class="header-sub">理论 · 概念 · 思考 · 连接</div>
+    <div class="stats-bar">
+      <div class="stat">
+        <span class="stat-num" id="totalCount">0</span>
+        <span class="stat-label">概念总数</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="tagCount">0</span>
+        <span class="stat-label">标签种类</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="catCount">0</span>
+        <span class="stat-label">涵盖领域</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索概念、理论、关键词…">
+    </div>
+    <select class="filter-select" id="catFilter">
+      <option value="">全部领域</option>
+    </select>
+    <button class="btn-add" onclick="openModal()">＋ 添加概念</button>
+    <button class="btn-io" onclick="exportData()" title="导出备份">↓ 导出</button>
+    <label class="btn-io" title="导入备份">↑ 导入<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
+  </div>
+
+  <div class="tag-filters" id="tagFilters"></div>
+
+  <div class="cards-grid" id="cardsGrid"></div>
+</div>
+
+<!-- Add/Edit Concept Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <h2 id="modalTitle">添加新概念</h2>
+    <input type="hidden" id="editId">
+
+    <div class="form-group">
+      <label class="form-label">概念名称 *</label>
+      <input type="text" class="form-input" id="inputName" placeholder="例：稀缺心理学、依恋理论…">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">所属领域</label>
+      <div class="cat-select-wrap">
+        <select class="form-select" id="inputCat"></select>
+        <button class="btn-manage-cat" onclick="openCatModal()">管理领域</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">内容描述 *</label>
+      <textarea class="form-textarea auto-grow" id="inputContent" placeholder="这个概念是什么？核心观点、关键机制…" style="min-height:140px"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">理论来源</label>
+      <input type="text" class="form-input" id="inputSource" placeholder="例：Bowlby (1969)、Cialdini、Kahneman…">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">关联标签</label>
+      <div class="tag-input-wrap">
+        <input type="text" id="tagInput" placeholder="输入标签后回车或点击＋" onkeydown="handleTagKey(event)">
+        <button class="btn-add-tag" onclick="addTag()">＋</button>
+      </div>
+      <div class="tags-preview" id="tagsPreview"></div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">个人注记</label>
+      <textarea class="form-textarea auto-grow" id="inputNote" placeholder="咪自己的想法、联想、和其他概念的连接…" style="min-height:90px"></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">取消</button>
+      <button class="btn-save" onclick="saveConcept()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Category Management Modal -->
+<div class="modal-overlay" id="catModalOverlay" onclick="if(event.target===this)closeCatModal()">
+  <div class="modal" style="max-width:460px">
+    <h2>管理所属领域</h2>
+    <div class="cat-list" id="catList"></div>
+    <div class="add-cat-row">
+      <input type="text" id="newCatInput" placeholder="输入新领域名称" onkeydown="if(event.key==='Enter'){event.preventDefault();addCategory()}">
+      <button class="btn-add" onclick="addCategory()">添加</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeCatModal()">完成</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'mimi_psych_v1';
+const CATS_KEY = 'mimi_psych_cats';
+
+let concepts = [];
+let categories = [];
+let currentTags = [];
+let activeTagFilter = '';
+let editingId = null;
+let lastDeleted = null;
+let toastTimer = null;
+
+const DEFAULT_CATS = ['认知', '社会', '人格', '发展', '临床', '其他'];
+const CAT_COLORS = {
+  '认知': 'var(--slate)',
+  '社会': 'var(--sage)',
+  '人格': 'var(--mauve)',
+  '发展': 'var(--ochre)',
+  '临床': 'var(--dust-rose)'
+};
+
+// Extra colors for user-added categories
+const EXTRA_COLORS = [
+  '#9aabbf', '#a3b88f', '#c4a980', '#b5929a', '#8fa5a0',
+  '#aa9b7f', '#8e97a8', '#b8a09f', '#7fa89e', '#a0889e'
+];
+
+function getCatColor(cat) {
+  if (CAT_COLORS[cat]) return CAT_COLORS[cat];
+  // Generate consistent color from name
+  let hash = 0;
+  for (let i = 0; i < cat.length; i++) hash = cat.charCodeAt(i) + ((hash << 5) - hash);
+  return EXTRA_COLORS[Math.abs(hash) % EXTRA_COLORS.length];
+}
+
+const SEED = [
+  {
+    id: 'seed1',
+    name: '稀缺心理学',
+    category: '认知',
+    content: '稀缺资源会训练出特定的思维定式——大脑在资源紧张时会将注意力高度集中于稀缺本身，反而导致对其他事物的认知带宽降低。稀缺训练出的习惯在丰盛时反而失效，因为大脑已经内化了"节俭模式"。',
+    source: 'Mullainathan & Shafir, Scarcity (2013)',
+    tags: ['认知带宽', '资源', '决策', '习惯'],
+    note: '今天聊到token额度用不完却不知道怎么花——这就是稀缺训练出来的思维定式在丰盛时失效的活例子。',
+    date: new Date().toISOString()
+  }
+];
+
+// Toast
+function showToast(message, undoCallback) {
+  const toast = document.getElementById('toast');
+  if (toastTimer) clearTimeout(toastTimer);
+  
+  if (undoCallback) {
+    toast.innerHTML = `<span>${message}</span><button class="toast-undo" onclick="handleUndo()">撤销</button>`;
+    window._undoCallback = undoCallback;
+  } else {
+    toast.innerHTML = `<span>${message}</span>`;
+    window._undoCallback = null;
+  }
+  
+  toast.classList.add('show');
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+    window._undoCallback = null;
+  }, undoCallback ? 5000 : 2500);
+}
+
+function handleUndo() {
+  if (window._undoCallback) {
+    window._undoCallback();
+    window._undoCallback = null;
+  }
+  document.getElementById('toast').classList.remove('show');
+  if (toastTimer) clearTimeout(toastTimer);
+}
+
+// Storage
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    concepts = raw ? JSON.parse(raw) : [...SEED];
+  } catch(e) {
+    concepts = [...SEED];
+  }
+}
+
+function save() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(concepts));
+  } catch(e) {
+    alert('数据保存失败，可能是浏览器存储空间已满。请先导出备份。');
+  }
+}
+
+function loadCategories() {
+  try {
+    const raw = localStorage.getItem(CATS_KEY);
+    categories = raw ? JSON.parse(raw) : [...DEFAULT_CATS];
+  } catch(e) {
+    categories = [...DEFAULT_CATS];
+  }
+}
+
+function saveCategories() {
+  try {
+    localStorage.setItem(CATS_KEY, JSON.stringify(categories));
+  } catch(e) {
+    alert('领域设置保存失败。');
+  }
+}
+
+function getAllTags() {
+  const all = new Set();
+  concepts.forEach(c => c.tags.forEach(t => all.add(t)));
+  return [...all].sort();
+}
+
+function getAllCats() {
+  return [...new Set(concepts.map(c => c.category))];
+}
+
+function updateStats() {
+  document.getElementById('totalCount').textContent = concepts.length;
+  document.getElementById('tagCount').textContent = getAllTags().length;
+  document.getElementById('catCount').textContent = getAllCats().length;
+}
+
+// Render category options in filter and form
+function renderCatOptions() {
+  // Filter dropdown
+  const filterSelect = document.getElementById('catFilter');
+  const currentFilterVal = filterSelect.value;
+  filterSelect.innerHTML = '<option value="">全部领域</option>';
+  categories.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat + '心理学';
+    filterSelect.appendChild(opt);
+  });
+  filterSelect.value = currentFilterVal;
+  
+  // Form dropdown
+  const formSelect = document.getElementById('inputCat');
+  const currentFormVal = formSelect.value;
+  formSelect.innerHTML = '';
+  categories.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat + '心理学';
+    formSelect.appendChild(opt);
+  });
+  if (currentFormVal && categories.includes(currentFormVal)) {
+    formSelect.value = currentFormVal;
+  }
+}
+
+function renderTagFilters() {
+  const tags = getAllTags();
+  const wrap = document.getElementById('tagFilters');
+  wrap.innerHTML = '';
+  if (!tags.length) return;
+
+  const all = document.createElement('span');
+  all.className = 'tag-filter' + (!activeTagFilter ? ' active' : '');
+  all.textContent = '全部';
+  all.onclick = () => { activeTagFilter = ''; renderAll(); };
+  wrap.appendChild(all);
+
+  tags.forEach(t => {
+    const el = document.createElement('span');
+    el.className = 'tag-filter' + (activeTagFilter === t ? ' active' : '');
+    el.textContent = t;
+    el.onclick = () => { activeTagFilter = activeTagFilter === t ? '' : t; renderAll(); };
+    wrap.appendChild(el);
+  });
+}
+
+function getTagClass(tag) {
+  if (categories.includes(tag)) return 'tag tag-' + tag;
+  return 'tag tag-default';
+}
+
+function renderCards() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const cat = document.getElementById('catFilter').value;
+  const grid = document.getElementById('cardsGrid');
+
+  let filtered = concepts.filter(c => {
+    const matchQ = !q || c.name.toLowerCase().includes(q) ||
+      c.content.toLowerCase().includes(q) ||
+      (c.note || '').toLowerCase().includes(q) ||
+      c.tags.some(t => t.toLowerCase().includes(q));
+    const matchCat = !cat || c.category === cat;
+    const matchTag = !activeTagFilter || c.tags.includes(activeTagFilter);
+    return matchQ && matchCat && matchTag;
+  });
+
+  filtered.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">◌</div>
+      <div class="empty-text">暂无匹配的概念</div>
+      <div class="empty-sub">换个关键词，或添加新概念</div>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(c => {
+    const color = getCatColor(c.category);
+    return `
+    <div class="card">
+      <div class="card-color-bar" style="background:${color}"></div>
+      <div class="card-category" style="color:${color}">${c.category}心理学</div>
+      <div class="card-title">${c.name}</div>
+      <div class="card-content">${c.content}</div>
+      ${c.source ? `<div class="card-source">—— ${c.source}</div>` : ''}
+      ${c.tags.length ? `<div class="card-tags">${c.tags.map(t => `<span class="${getTagClass(t)}">${t}</span>`).join('')}</div>` : ''}
+      ${c.note ? `<div class="card-content" style="font-style:italic;font-size:12px;border-left:2px solid var(--dust-rose);padding-left:10px;margin-top:-8px">${c.note}</div>` : ''}
+      <div class="card-actions">
+        <button class="btn-sm" onclick="editConcept('${c.id}')">编辑</button>
+        <button class="btn-sm btn-delete" onclick="deleteConcept('${c.id}')">删除</button>
+        <span class="card-date" style="margin-left:auto;align-self:center">${new Date(c.date).toLocaleDateString('zh-CN',{month:'short',day:'numeric'})}</span>
+      </div>
+    </div>
+  `}).join('');
+}
+
+function renderAll() {
+  updateStats();
+  renderCatOptions();
+  renderTagFilters();
+  renderCards();
+}
+
+// Modal
+function openModal(id = null) {
+  editingId = id;
+  currentTags = [];
+  document.getElementById('editId').value = id || '';
+  document.getElementById('modalTitle').textContent = id ? '编辑概念' : '添加新概念';
+  document.getElementById('inputName').value = '';
+  document.getElementById('inputCat').value = categories[0] || '认知';
+  document.getElementById('inputContent').value = '';
+  document.getElementById('inputSource').value = '';
+  document.getElementById('inputNote').value = '';
+  document.getElementById('tagInput').value = '';
+  document.getElementById('tagsPreview').innerHTML = '';
+
+  // Reset textarea heights
+  document.querySelectorAll('.auto-grow').forEach(el => {
+    el.style.height = '';
+  });
+
+  if (id) {
+    const c = concepts.find(x => x.id === id);
+    if (c) {
+      document.getElementById('inputName').value = c.name;
+      document.getElementById('inputCat').value = c.category;
+      document.getElementById('inputContent').value = c.content;
+      document.getElementById('inputSource').value = c.source || '';
+      document.getElementById('inputNote').value = c.note || '';
+      currentTags = [...c.tags];
+      renderTagsPreview();
+      // Trigger auto-grow for loaded content
+      setTimeout(() => {
+        document.querySelectorAll('.auto-grow').forEach(autoGrow);
+      }, 50);
+    }
+  }
+
+  renderCatOptions();
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('inputName').focus(), 100);
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  editingId = null;
+  currentTags = [];
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function addTag() {
+  const inp = document.getElementById('tagInput');
+  const val = inp.value.trim();
+  if (val && !currentTags.includes(val)) {
+    currentTags.push(val);
+    renderTagsPreview();
+  }
+  inp.value = '';
+  inp.focus();
+}
+
+function handleTagKey(e) {
+  if (e.key === 'Enter') { e.preventDefault(); addTag(); }
+}
+
+function removeTag(t) {
+  currentTags = currentTags.filter(x => x !== t);
+  renderTagsPreview();
+}
+
+function renderTagsPreview() {
+  document.getElementById('tagsPreview').innerHTML = currentTags.map(t =>
+    `<span class="tag-preview-item">${t}<span class="tag-remove" onclick="removeTag('${t}')">×</span></span>`
+  ).join('');
+}
+
+function saveConcept() {
+  const name = document.getElementById('inputName').value.trim();
+  const content = document.getElementById('inputContent').value.trim();
+  if (!name || !content) { alert('请填写概念名称和内容描述'); return; }
+
+  const data = {
+    id: editingId || 'c' + Date.now(),
+    name,
+    category: document.getElementById('inputCat').value,
+    content,
+    source: document.getElementById('inputSource').value.trim(),
+    tags: [...currentTags],
+    note: document.getElementById('inputNote').value.trim(),
+    date: new Date().toISOString()
+  };
+
+  const isEditing = !!editingId;
+
+  if (editingId) {
+    const idx = concepts.findIndex(c => c.id === editingId);
+    if (idx !== -1) { concepts[idx] = data; }
+  } else {
+    concepts.unshift(data);
+  }
+
+  save();
+  closeModal();
+  renderAll();
+  showToast(isEditing ? '概念已更新 ✓' : '新概念已添加 ✓');
+  
+  if (!isEditing) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function editConcept(id) { openModal(id); }
+
+function deleteConcept(id) {
+  const concept = concepts.find(c => c.id === id);
+  if (!concept) return;
+  
+  concepts = concepts.filter(c => c.id !== id);
+  save();
+  renderAll();
+  
+  // Undo support
+  showToast(`已删除「${concept.name}」`, () => {
+    concepts.unshift(concept);
+    save();
+    renderAll();
+    showToast('已撤销删除 ✓');
+  });
+}
+
+// Category Management
+function openCatModal() {
+  renderCatList();
+  document.getElementById('catModalOverlay').classList.add('open');
+  document.getElementById('newCatInput').value = '';
+  setTimeout(() => document.getElementById('newCatInput').focus(), 100);
+}
+
+function closeCatModal() {
+  document.getElementById('catModalOverlay').classList.remove('open');
+  renderCatOptions();
+  renderAll();
+}
+
+function renderCatList() {
+  const list = document.getElementById('catList');
+  list.innerHTML = categories.map((cat, i) => {
+    const count = concepts.filter(c => c.category === cat).length;
+    const color = getCatColor(cat);
+    return `
+      <div class="cat-list-item">
+        <div class="cat-list-item-name">
+          <span class="cat-color-dot" style="background:${color}"></span>
+          ${cat}心理学
+          <span class="cat-count-badge">${count}个概念</span>
+        </div>
+        <div class="cat-list-item-actions">
+          <button onclick="renameCategory(${i})">重命名</button>
+          <button class="btn-cat-delete" onclick="deleteCategory(${i})">删除</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function addCategory() {
+  const input = document.getElementById('newCatInput');
+  const name = input.value.trim();
+  if (!name) return;
+  if (categories.includes(name)) {
+    alert('该领域已存在');
+    return;
+  }
+  categories.push(name);
+  saveCategories();
+  renderCatList();
+  input.value = '';
+  input.focus();
+  showToast(`已添加「${name}心理学」 ✓`);
+}
+
+function renameCategory(index) {
+  const oldName = categories[index];
+  const newName = prompt(`重命名「${oldName}心理学」：`, oldName);
+  if (!newName || newName === oldName) return;
+  if (categories.includes(newName)) {
+    alert('该领域名称已存在');
+    return;
+  }
+  
+  categories[index] = newName;
+  // Update all concepts with this category
+  concepts.forEach(c => {
+    if (c.category === oldName) c.category = newName;
+  });
+  
+  saveCategories();
+  save();
+  renderCatList();
+  showToast(`已重命名为「${newName}心理学」 ✓`);
+}
+
+function deleteCategory(index) {
+  const cat = categories[index];
+  const count = concepts.filter(c => c.category === cat).length;
+  
+  if (count > 0) {
+    if (!confirm(`「${cat}心理学」下有${count}个概念，删除后这些概念将归入「其他」。确定删除吗？`)) return;
+    concepts.forEach(c => {
+      if (c.category === cat) c.category = '其他';
+    });
+    // Make sure '其他' exists
+    if (!categories.includes('其他')) categories.push('其他');
+    save();
+  }
+  
+  categories.splice(index, 1);
+  saveCategories();
+  renderCatList();
+  showToast(`已删除「${cat}心理学」`);
+}
+
+// Auto-grow textareas
+function autoGrow(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+document.addEventListener('input', e => {
+  if (e.target.classList.contains('auto-grow')) {
+    autoGrow(e.target);
+  }
+});
+
+// Export/Import
+function exportData() {
+  const data = {
+    concepts: concepts,
+    categories: categories,
+    exportDate: new Date().toISOString()
+  };
+  const filename = `psychology_notes_${new Date().toISOString().slice(0,10)}.json`;
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+  showToast('数据已导出 ✓');
+}
+
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      
+      // Support both old format (array) and new format (object with categories)
+      if (Array.isArray(data)) {
+        if (!confirm(`导入 ${data.length} 条概念？当前数据将被覆盖。`)) return;
+        concepts = data;
+      } else if (data.concepts) {
+        if (!confirm(`导入 ${data.concepts.length} 条概念？当前数据将被覆盖。`)) return;
+        concepts = data.concepts;
+        if (data.categories) {
+          categories = data.categories;
+          saveCategories();
+        }
+      } else {
+        throw new Error('格式错误');
+      }
+      
+      save();
+      renderAll();
+      showToast('导入成功 ✓');
+    } catch(err) {
+      alert('导入失败，请检查文件格式。');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+// Events
+document.getElementById('searchInput').addEventListener('input', renderCards);
+document.getElementById('catFilter').addEventListener('change', renderCards);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('catModalOverlay').classList.contains('open')) {
+      closeCatModal();
+    } else {
+      closeModal();
+    }
+  }
+});
+
+// Init
+loadCategories();
+load();
+renderAll();
+</script>
+</body>
+</html>
