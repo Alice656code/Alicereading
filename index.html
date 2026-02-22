@@ -149,6 +149,9 @@ h1 em {
 .tool-card:nth-child(4) { animation-delay: 0.20s; }
 .tool-card:nth-child(5) { animation-delay: 0.25s; }
 .tool-card:nth-child(6) { animation-delay: 0.30s; }
+.tool-card:nth-child(7) { animation-delay: 0.35s; }
+.tool-card:nth-child(8) { animation-delay: 0.40s; }
+.tool-card:nth-child(9) { animation-delay: 0.45s; }
 
 @keyframes cardIn {
   from { opacity:0; transform:translateY(16px); }
@@ -194,6 +197,9 @@ h1 em {
 .card-psych   { --card-color: var(--sky);    --card-glow: rgba(74,159,212,0.1); }
 .card-witch   { --card-color: var(--violet); --card-glow: rgba(155,127,224,0.1); }
 .card-english { --card-color: var(--rose);   --card-glow: rgba(212,95,139,0.1); }
+.card-venus   { --card-color: #A08070;   --card-glow: rgba(160,128,112,0.1); }
+.card-embroid { --card-color: #C0392B;   --card-glow: rgba(192,57,43,0.1); }
+.card-gaia    { --card-color: #4A6B35;   --card-glow: rgba(74,107,53,0.1); }
 
 .card-emoji {
   font-size: 32px;
@@ -276,7 +282,7 @@ footer .heart {
   <header>
     <div class="header-eyebrow">Alice's Digital Garden</div>
     <h1><em>工具花园</em></h1>
-    <p class="header-sub">Claude 为 Alice 制作的六个小世界</p>
+    <p class="header-sub">Claude 为 Alice 制作的九个小世界</p>
     <div class="rainbow-line"></div>
   </header>
 
@@ -327,6 +333,31 @@ footer .heart {
       <div class="card-name">与世界交流的魔法书</div>
       <span class="card-name-en">English Edition</span>
       <p class="card-desc">language is information<br>and information is everything</p>
+      <span class="card-arrow">→</span>
+    </a>
+
+
+    <a href="venus.html" class="tool-card card-venus">
+      <span class="card-emoji">🎨</span>
+      <div class="card-name">Venus</div>
+      <span class="card-name-en">美学研习手记</span>
+      <p class="card-desc">绘画 · 建筑 · 服装 · 色彩<br>在美里面找到自己的眼光</p>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a href="embroidery_v3.html" class="tool-card card-embroid">
+      <span class="card-emoji">🪡</span>
+      <div class="card-name">云想衣裳</div>
+      <span class="card-name-en">刺绣缝纫手记</span>
+      <p class="card-desc">纹样 · 针法 · 配色 · 作品<br>一针一线，皆有来处</p>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a href="gaia.html" class="tool-card card-gaia">
+      <span class="card-emoji">🌿</span>
+      <div class="card-name">Gaia & Isis</div>
+      <span class="card-name-en">生存技能手记</span>
+      <p class="card-desc">野外生存 · 城市应急 · 急救<br>大地会保护懂她的人</p>
       <span class="card-arrow">→</span>
     </a>
 
