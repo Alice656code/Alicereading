@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云想衣裳 · 刺绣缝纫手记</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --vermillion:  #C0392B;
+  --vermillion2: #A93226;
+  --gold:        #C9A84C;
+  --gold-light:  #E8C96A;
+  --gold-dim:    #A08535;
+  --ink-dark:    #1A1208;
+  --ink-mid:     #4A3828;
+  --ink-soft:    #8A7A6A;
+  --parchment:   #F5EDD8;
+  --parchment2:  #EDE0C4;
+  --parchment3:  #DDD0B0;
+  --jade:        #2E6B5E;
+  --paper:       #FBF7EE;
+
+  /* Klein-palace blue system */
+  --blue-main:   #2255B8;
+  --blue-mid:    #1E6FBF;
+  --blue-dark:   #1A3E8A;
+  --blue-deep:   #0F2660;
+  --blue-soft:   rgba(34,85,184,0.08);
+  --blue-softer: rgba(34,85,184,0.05);
+
+  /* Status colors */
+  --status-start:  #C0392B;
+  --status-doing:  #C9A84C;
+  --status-done:   #2E6B5E;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--parchment);
+  color: var(--ink-dark);
+  font-family: 'Noto Serif SC', serif;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at 0% 0%, rgba(192,57,43,0.04) 0%, transparent 45%),
+    radial-gradient(ellipse at 100% 100%, rgba(34,85,184,0.05) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 50%, rgba(201,168,76,0.03) 0%, transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+/* ── Cloud pattern divider (CSS) ── */
+.cloud-divider {
+  width: 100%;
+  height: 12px;
+  position: relative;
+  overflow: hidden;
+  margin: 6px 0;
+  opacity: 0.5;
+}
+.cloud-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 0;
+  width: 100%; height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), var(--gold), transparent);
+}
+.cloud-divider::after {
+  content: '❧ ✦ ❧';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--parchment);
+  padding: 0 10px;
+  font-size: 9px;
+  color: var(--gold);
+  letter-spacing: 0.3em;
+  white-space: nowrap;
+}
+
+.cloud-rule {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  height: 16px;
+  margin: 4px 0;
+}
+.cloud-rule-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold-dim));
+}
+.cloud-rule-line.rev {
+  background: linear-gradient(to left, transparent, var(--gold-dim));
+}
+.cloud-rule-center {
+  font-size: 8px;
+  color: var(--gold);
+  padding: 0 6px;
+  letter-spacing: 0.15em;
+}
+
+/* ── Layout ── */
+.layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: 100vh;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  background: var(--blue-deep);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  border-right: 2px solid rgba(201,168,76,0.35);
+  box-shadow: 3px 0 24px rgba(15,38,96,0.35);
+}
+
+/* Gold border pattern on sidebar */
+.sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(to right, var(--vermillion), var(--gold), var(--blue-mid), var(--gold), var(--vermillion));
+}
+
+.sidebar-header {
+  padding: 40px 24px 20px;
+  text-align: center;
+  position: relative;
+}
+
+.sidebar-emblem {
+  font-size: 11px;
+  letter-spacing: 0.5em;
+  color: var(--gold-dim);
+  margin-bottom: 14px;
+  font-weight: 300;
+}
+
+.sidebar-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--gold-light);
+  line-height: 1.3;
+  margin-bottom: 4px;
+  text-shadow: 0 2px 8px rgba(201,168,76,0.3);
+  letter-spacing: 0.15em;
+}
+
+.sidebar-subtitle {
+  font-size: 11px;
+  color: var(--gold-dim);
+  letter-spacing: 0.25em;
+  font-weight: 300;
+}
+
+.sidebar-poem {
+  font-size: 10px;
+  color: rgba(201,168,76,0.45);
+  letter-spacing: 0.2em;
+  line-height: 2;
+  margin-top: 10px;
+}
+
+/* Search */
+.sidebar-search {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(201,168,76,0.15);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+}
+
+.search-input {
+  width: 100%;
+  padding: 7px 12px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 2px;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 12px;
+  color: var(--parchment);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.search-input:focus { border-color: var(--gold-light); }
+.search-input::placeholder { color: rgba(201,168,76,0.4); }
+
+/* Nav */
+.cat-nav { flex: 1; padding: 8px 0; overflow-y: auto; }
+
+.cat-group { margin-bottom: 1px; }
+
+.cat-level1 {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+  gap: 10px;
+  border-left: 2px solid transparent;
+}
+.cat-level1:hover { background: rgba(255,255,255,0.07); border-left-color: rgba(201,168,76,0.4); }
+.cat-level1.active, .cat-level1.open { background: rgba(255,255,255,0.1); border-left-color: var(--gold); }
+
+.cat-symbol {
+  font-size: 13px;
+  color: var(--gold);
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+
+.cat-level1-name {
+  flex: 1;
+  font-size: 13px;
+  color: var(--parchment2);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cat-level1-count {
+  font-size: 10px;
+  color: var(--gold-dim);
+  margin-right: 4px;
+}
+
+.cat-chevron { font-size: 10px; color: var(--gold-dim); transition: transform 0.2s; }
+.cat-level1.open .cat-chevron { transform: rotate(90deg); }
+
+.cat-level1-actions { display: flex; gap: 2px; opacity: 0; transition: opacity 0.15s; }
+.cat-level1:hover .cat-level1-actions { opacity: 1; }
+
+.cat-children { display: none; background: rgba(0,0,0,0.2); }
+.cat-children.open { display: block; }
+
+.cat-level2 {
+  display: flex;
+  align-items: center;
+  padding: 7px 20px 7px 50px;
+  cursor: pointer;
+  font-size: 12px;
+  color: rgba(245,237,216,0.6);
+  transition: all 0.15s;
+  gap: 8px;
+  border-left: 2px solid transparent;
+}
+.cat-level2:hover { background: rgba(255,255,255,0.08); color: var(--parchment); border-left-color: rgba(201,168,76,0.3); }
+.cat-level2.active { color: var(--gold-light); background: rgba(255,255,255,0.12); border-left-color: var(--gold); }
+
+.cat-level2-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--gold-dim); flex-shrink: 0; }
+.cat-level2-name { flex: 1; letter-spacing: 0.05em; }
+.cat-level2-count { font-size: 10px; color: var(--gold-dim); }
+.cat-level2-actions { display: flex; gap: 2px; opacity: 0; transition: opacity 0.15s; }
+.cat-level2:hover .cat-level2-actions { opacity: 1; }
+
+.add-cat-btn {
+  padding: 10px 20px;
+  font-size: 11.5px;
+  color: var(--gold-dim);
+  cursor: pointer;
+  background: none; border: none;
+  font-family: 'Noto Serif SC', serif;
+  text-align: left; width: 100%;
+  display: flex; align-items: center; gap: 8px;
+  border-top: 1px solid rgba(201,168,76,0.1);
+  transition: color 0.15s;
+  letter-spacing: 0.05em;
+}
+.add-cat-btn:hover { color: var(--gold-light); }
+
+.nano-btn {
+  width: 18px; height: 18px;
+  background: transparent; border: none;
+  cursor: pointer; color: var(--gold-dim);
+  font-size: 11px; border-radius: 2px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; flex-shrink: 0;
+}
+.nano-btn:hover { color: var(--gold-light); background: rgba(201,168,76,0.15); }
+.nano-btn.danger:hover { color: var(--vermillion); }
+
+.sidebar-footer {
+  padding: 14px 20px;
+  border-top: 1px solid rgba(201,168,76,0.15);
+  font-size: 10px;
+  color: rgba(201,168,76,0.35);
+  text-align: center;
+  letter-spacing: 0.2em;
+}
+
+/* ── Main ── */
+.main {
+  padding: 40px 48px 80px;
+  min-width: 0;
+}
+
+.main-header {
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  position: relative;
+}
+
+/* Decorative top border */
+.main-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to right, var(--vermillion), var(--gold), var(--blue-mid), var(--gold), var(--vermillion));
+  border-radius: 1px;
+  margin-bottom: 20px;
+}
+
+.main-header-inner {
+  padding-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.main-breadcrumb {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+.main-heading {
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--ink-dark);
+  line-height: 1.1;
+  letter-spacing: 0.1em;
+}
+
+.main-actions { display: flex; gap: 10px; align-items: center; }
+
+/* Buttons */
+.btn-primary {
+  padding: 9px 20px;
+  background: var(--vermillion);
+  color: var(--parchment);
+  border: none; border-radius: 2px;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px; cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.08em;
+  display: flex; align-items: center; gap: 6px;
+  box-shadow: 0 2px 8px rgba(192,57,43,0.3);
+}
+.btn-primary:hover { background: var(--vermillion2); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(192,57,43,0.4); }
+
+.btn-ghost {
+  padding: 9px 16px;
+  background: transparent;
+  color: var(--blue-main);
+  border: 1px solid var(--blue-main);
+  border-radius: 2px;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 12px; cursor: pointer;
+  transition: all 0.2s; letter-spacing: 0.05em;
+}
+.btn-ghost:hover { border-color: var(--blue-mid); background: var(--blue-softer); color: var(--blue-dark); }
+
+/* Stats */
+.stats-row {
+  display: flex; gap: 20px; margin-bottom: 28px; flex-wrap: wrap;
+}
+
+.stat-chip {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 14px;
+  background: var(--paper);
+  border: 1px solid var(--parchment3);
+  border-radius: 2px;
+  font-size: 11.5px; color: var(--ink-soft);
+}
+.stat-chip strong { font-size: 15px; color: var(--ink-dark); }
+
+/* Status filter */
+.status-filter {
+  display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap;
+}
+
+.status-pill {
+  padding: 4px 14px;
+  border-radius: 2px;
+  border: 1px solid var(--parchment3);
+  font-size: 11px; cursor: pointer;
+  background: var(--paper);
+  color: var(--ink-mid);
+  transition: all 0.15s;
+  letter-spacing: 0.08em;
+  font-family: 'Noto Serif SC', serif;
+}
+.status-pill:hover { border-color: var(--gold-dim); }
+.status-pill.active-all { background: var(--blue-dark); color: var(--parchment); border-color: var(--blue-dark); }
+.status-pill.active-start { background: var(--vermillion); color: white; border-color: var(--vermillion); }
+.status-pill.active-doing { background: var(--gold); color: var(--ink-dark); border-color: var(--gold); }
+.status-pill.active-done  { background: var(--jade); color: white; border-color: var(--jade); }
+
+/* ── Notes grid ── */
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 20px;
+}
+
+.note-card {
+  background: var(--paper);
+  border: 1px solid var(--parchment3);
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: cardIn 0.3s ease backwards;
+  position: relative;
+}
+
+@keyframes cardIn {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.note-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(26,18,8,0.15);
+}
+
+/* Top gold border */
+.note-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to right, var(--vermillion), var(--gold), var(--blue-mid));
+  opacity: 0.8;
+}
+
+.card-images {
+  width: 100%; aspect-ratio: 4/3;
+  overflow: hidden; background: var(--parchment2);
+  position: relative;
+}
+
+.card-img-primary {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform 0.4s ease;
+}
+.note-card:hover .card-img-primary { transform: scale(1.03); }
+
+.card-img-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 6px;
+  color: var(--ink-soft); opacity: 0.5;
+}
+.card-img-placeholder-icon { font-size: 28px; }
+.card-img-placeholder-text { font-size: 11px; letter-spacing: 0.15em; }
+
+.card-img-count {
+  position: absolute; bottom: 8px; right: 8px;
+  background: rgba(26,18,8,0.65); color: var(--gold-light);
+  font-size: 10px; padding: 2px 8px; border-radius: 1px;
+  backdrop-filter: blur(4px); letter-spacing: 0.05em;
+}
+
+/* Status badge */
+.card-status {
+  position: absolute; top: 10px; left: 10px;
+  font-size: 9.5px; padding: 2px 9px;
+  border-radius: 1px; letter-spacing: 0.15em;
+  font-weight: 500;
+}
+.status-start { background: var(--vermillion); color: white; }
+.status-doing { background: var(--gold); color: var(--ink-dark); }
+.status-done  { background: var(--jade); color: white; }
+
+.card-body { padding: 14px 16px 10px; }
+
+.card-cats {
+  display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px;
+}
+
+.card-cat-tag {
+  font-size: 9.5px; letter-spacing: 0.1em;
+  padding: 2px 8px; border-radius: 1px;
+  background: rgba(192,57,43,0.07);
+  color: var(--vermillion2); border: 1px solid rgba(192,57,43,0.12);
+}
+
+.card-title {
+  font-size: 16px; font-weight: 500;
+  color: var(--ink-dark); margin-bottom: 6px;
+  line-height: 1.3; letter-spacing: 0.05em;
+}
+
+.card-desc-preview {
+  font-size: 12px; color: var(--ink-mid);
+  line-height: 1.7;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 16px 10px;
+  border-top: 1px solid var(--parchment2);
+  font-size: 10px; color: var(--ink-soft);
+}
+
+.card-actions { display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s; }
+.note-card:hover .card-actions { opacity: 1; }
+
+.card-nano {
+  width: 20px; height: 20px;
+  background: none; border: none; cursor: pointer;
+  color: var(--ink-soft); font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 2px; transition: all 0.15s;
+}
+.card-nano:hover { background: var(--parchment2); color: var(--ink-dark); }
+.card-nano.danger:hover { color: var(--vermillion); }
+
+/* Empty */
+.empty-state {
+  grid-column: 1/-1; text-align: center; padding: 80px 20px; color: var(--ink-soft);
+}
+.empty-icon { font-size: 36px; margin-bottom: 12px; opacity: 0.4; }
+.empty-state p { font-size: 13.5px; line-height: 2.2; letter-spacing: 0.1em; }
+
+/* Welcome */
+.welcome-state { padding: 60px 0; max-width: 520px; }
+.welcome-deco { font-size: 11px; letter-spacing: 0.5em; color: var(--blue-main); margin-bottom: 20px; opacity: 0.7; }
+.welcome-title { font-size: 36px; font-weight: 500; color: var(--ink-dark); margin-bottom: 10px; line-height: 1.3; letter-spacing: 0.1em; }
+.welcome-sub { font-size: 13.5px; color: var(--ink-mid); line-height: 2.2; margin-bottom: 28px; letter-spacing: 0.05em; }
+.welcome-hint { font-size: 11.5px; color: var(--ink-soft); line-height: 2.2; letter-spacing: 0.05em; }
+
+/* ── Overlay/Modal ── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(26,18,8,0.6); backdrop-filter: blur(6px);
+  z-index: 100; display: none;
+  align-items: flex-start; justify-content: center;
+  padding: 32px 20px; overflow-y: auto;
+}
+.overlay.open { display: flex; }
+
+.modal {
+  background: var(--paper);
+  border: 1px solid var(--parchment3);
+  border-radius: 2px; width: 100%; max-width: 660px;
+  margin: auto; animation: modalIn 0.25s ease; overflow: hidden;
+  box-shadow: 0 20px 60px rgba(26,18,8,0.4);
+  position: relative;
+}
+/* Gold top stripe on modal */
+.modal::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(to right, var(--vermillion), var(--gold), var(--blue-mid), var(--gold), var(--vermillion));
+}
+
+@keyframes modalIn {
+  from { opacity:0; transform:translateY(-12px) scale(0.98); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
+}
+
+.modal-header {
+  padding: 24px 28px 16px;
+  border-bottom: 1px solid var(--parchment2);
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+.modal-title { font-size: 20px; font-weight: 500; color: var(--ink-dark); letter-spacing: 0.1em; }
+
+.close-btn {
+  width: 28px; height: 28px; background: none; border: none;
+  cursor: pointer; color: var(--ink-soft); font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 2px; transition: color 0.15s;
+}
+.close-btn:hover { color: var(--vermillion); }
+
+.modal-body { padding: 22px 28px; }
+.modal-footer { padding: 12px 28px 22px; display: flex; justify-content: flex-end; gap: 10px; }
+
+.form-group { margin-bottom: 16px; }
+.form-label {
+  display: block; font-size: 9.5px;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--ink-soft); margin-bottom: 6px;
+}
+.form-label span { text-transform: none; letter-spacing: 0; font-size: 9.5px; opacity: 0.7; }
+
+input[type="text"], textarea, select {
+  width: 100%; padding: 8px 12px;
+  background: var(--parchment);
+  border: 1px solid var(--parchment3);
+  border-radius: 2px;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px; color: var(--ink-dark);
+  outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+}
+input[type="text"]:focus, textarea:focus, select:focus {
+  border-color: var(--blue-mid);
+  box-shadow: 0 0 0 3px rgba(34,85,184,0.1);
+}
+textarea { min-height: 80px; resize: vertical; line-height: 1.8; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+/* Status select in form */
+.status-select-group { display: flex; gap: 8px; }
+.status-opt {
+  flex: 1; padding: 8px 6px; border: 1px solid var(--parchment3);
+  border-radius: 2px; cursor: pointer; text-align: center;
+  font-size: 11.5px; background: var(--parchment);
+  color: var(--ink-mid); transition: all 0.15s;
+  font-family: 'Noto Serif SC', serif; letter-spacing: 0.05em;
+}
+.status-opt:hover { border-color: var(--gold-dim); }
+.status-opt.sel-start { background: var(--vermillion); color: white; border-color: var(--vermillion); }
+.status-opt.sel-doing { background: var(--gold); color: var(--ink-dark); border-color: var(--gold); }
+.status-opt.sel-done  { background: var(--jade); color: white; border-color: var(--jade); }
+
+/* Image upload */
+.img-upload-zone {
+  border: 1.5px dashed var(--parchment3);
+  border-radius: 2px; padding: 18px;
+  text-align: center; cursor: pointer;
+  background: var(--parchment); transition: all 0.2s;
+}
+.img-upload-zone:hover { border-color: var(--gold-dim); background: var(--parchment2); }
+.img-upload-zone p { font-size: 12px; color: var(--ink-soft); letter-spacing: 0.05em; }
+
+.img-thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+
+.img-thumb {
+  position: relative; width: 72px; height: 54px;
+  border-radius: 2px; overflow: hidden; border: 1px solid var(--parchment3);
+}
+.img-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.img-thumb-del {
+  position: absolute; top: 2px; right: 2px;
+  width: 15px; height: 15px;
+  background: rgba(26,18,8,0.7); color: white;
+  border: none; border-radius: 50%; font-size: 9px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.15s;
+}
+.img-thumb:hover .img-thumb-del { opacity: 1; }
+
+.modal-section-label {
+  font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--ink-soft); margin: 18px 0 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.modal-section-label::before { content: '✦'; color: var(--gold-dim); font-size: 8px; }
+.modal-section-label::after { content: ''; flex: 1; height: 1px; background: var(--parchment2); }
+
+/* Materials list */
+.materials-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.material-row { display: flex; gap: 6px; align-items: center; }
+.material-row input { flex: 1; }
+.material-del {
+  width: 28px; height: 34px; background: none;
+  border: 1px solid var(--parchment2); border-radius: 2px;
+  cursor: pointer; color: var(--ink-soft); font-size: 12px;
+  transition: all 0.15s; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.material-del:hover { border-color: var(--vermillion); color: var(--vermillion); }
+.add-material-btn {
+  padding: 5px 12px; background: none;
+  border: 1.5px dashed var(--parchment3);
+  border-radius: 2px; font-size: 11.5px;
+  cursor: pointer; color: var(--ink-soft);
+  font-family: 'Noto Serif SC', serif;
+  transition: all 0.15s; width: 100%; margin-top: 2px;
+}
+.add-material-btn:hover { border-color: var(--gold-dim); color: var(--ink-dark); }
+
+/* ── Detail modal ── */
+.detail-modal { max-width: 740px; }
+
+.detail-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px,1fr));
+  gap: 8px; padding: 18px 28px 4px;
+}
+.detail-img {
+  width: 100%; aspect-ratio: 4/3; object-fit: cover;
+  border-radius: 2px; cursor: pointer;
+  border: 1px solid var(--parchment2);
+  transition: transform 0.2s, box-shadow 0.2s; display: block;
+}
+.detail-img:hover { transform: scale(1.02); box-shadow: 0 4px 14px rgba(26,18,8,0.2); }
+
+.detail-section {
+  padding: 16px 28px;
+  border-bottom: 1px solid var(--parchment2);
+}
+.detail-section:last-child { border-bottom: none; }
+
+.detail-section-label {
+  font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--ink-soft); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.detail-section-label::before { content: '◦'; color: var(--gold-dim); }
+
+.detail-text {
+  font-size: 13.5px; line-height: 1.95;
+  color: var(--ink-mid); white-space: pre-wrap;
+}
+
+.detail-materials {
+  display: flex; flex-wrap: wrap; gap: 7px;
+}
+.detail-material-tag {
+  font-size: 11.5px; padding: 3px 12px;
+  border: 1px solid var(--parchment3);
+  border-radius: 1px; color: var(--ink-mid);
+  background: var(--parchment);
+  letter-spacing: 0.05em;
+}
+
+.detail-cats-row {
+  display: flex; gap: 7px; flex-wrap: wrap;
+  padding: 12px 28px; border-bottom: 1px solid var(--parchment2);
+}
+
+.detail-actions {
+  padding: 8px 28px; display: flex; gap: 8px;
+  border-bottom: 1px solid var(--parchment2);
+}
+
+.btn-sm {
+  padding: 5px 12px; font-size: 11px;
+  background: none; color: var(--ink-soft);
+  border: 1px solid var(--parchment3); border-radius: 2px;
+  cursor: pointer; font-family: 'Noto Serif SC', serif;
+  transition: all 0.15s; letter-spacing: 0.05em;
+}
+.btn-sm:hover { border-color: var(--gold-dim); color: var(--ink-dark); }
+.btn-sm.danger:hover { border-color: var(--vermillion); color: var(--vermillion); }
+
+/* Lightbox */
+.lightbox {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+  z-index: 300; display: none; align-items: center; justify-content: center; cursor: pointer;
+}
+.lightbox.open { display: flex; }
+.lightbox img { max-width: 92%; max-height: 92%; object-fit: contain; border-radius: 2px; }
+
+/* Toast */
+.toast-wrap {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%); z-index: 200;
+  display: flex; flex-direction: column; gap: 6px; align-items: center;
+}
+.toast {
+  background: var(--ink-dark); color: var(--parchment);
+  padding: 9px 18px; border-radius: 2px; font-size: 12.5px;
+  font-family: 'Noto Serif SC', serif;
+  box-shadow: 0 4px 16px rgba(26,18,8,0.4);
+  animation: toastIn 0.2s ease; white-space: nowrap;
+  display: flex; align-items: center; gap: 12px;
+  border-left: 2px solid var(--blue-mid);
+  letter-spacing: 0.05em;
+}
+@keyframes toastIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+.toast.out { animation: toastOut 0.25s ease forwards; }
+@keyframes toastOut { to { opacity:0; transform:translateY(4px); } }
+.toast-undo {
+  background: none; border: 1px solid rgba(245,237,216,0.3);
+  color: var(--parchment); padding: 2px 9px; border-radius: 2px;
+  font-size: 10.5px; cursor: pointer; font-family: 'Noto Serif SC', serif;
+}
+.toast-undo:hover { background: rgba(245,237,216,0.1); }
+
+@media (max-width: 700px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; }
+  .main { padding: 24px 20px 60px; }
+  .form-row, .form-row-3 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-emblem">✦ 刺绣缝纫手记 ✦</div>
+      <div class="sidebar-title">云想衣裳</div>
+      <div class="sidebar-subtitle">花想容</div>
+      <div class="cloud-rule" style="margin:14px 0 6px;">
+        <div class="cloud-rule-line"></div>
+        <div class="cloud-rule-center">✦</div>
+        <div class="cloud-rule-line rev"></div>
+      </div>
+      <div class="sidebar-poem">春风拂槛露华浓</div>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" class="search-input" id="searchInput" placeholder="搜寻纹样、针法…">
+    </div>
+
+    <nav class="cat-nav" id="catNav"></nav>
+
+    <button class="add-cat-btn" onclick="promptAddCat1()">＋ 添加一级分区</button>
+
+    <div class="sidebar-footer">🪡 Claude 为 Alice 制作 · 2026</div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <main class="main" id="mainArea">
+    <div class="welcome-state" id="welcomeState">
+      <div class="welcome-deco">✦ 云想衣裳花想容 ✦</div>
+      <div class="welcome-title">一针一线，皆有来处。</div>
+      <p class="welcome-sub">选择左侧分区开始记录——<br>纹样、针法、配色、作品进度……<br>每一件手作都值得被珍藏。</p>
+      <p class="welcome-hint">起针 · 进行中 · 完成<br>用三种状态追踪每一个作品的旅程。</p>
+    </div>
+
+    <div id="catView" style="display:none;">
+      <div class="main-header">
+        <div class="main-header-inner">
+          <div>
+            <div class="main-breadcrumb" id="breadcrumb"></div>
+            <div class="main-heading" id="mainHeading"></div>
+          </div>
+          <div class="main-actions">
+            <button class="btn-ghost" id="addSub2Btn" style="display:none" onclick="promptAddCat2()">＋ 添加子分区</button>
+            <button class="btn-primary" onclick="openAddNote()">🪡 新增笔记</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-row" id="statsRow"></div>
+
+      <div class="status-filter" id="statusFilter">
+        <button class="status-pill active-all" data-filter="all" onclick="setStatusFilter('all')">全部</button>
+        <button class="status-pill" data-filter="start" onclick="setStatusFilter('start')">起针</button>
+        <button class="status-pill" data-filter="doing" onclick="setStatusFilter('doing')">进行中</button>
+        <button class="status-pill" data-filter="done" onclick="setStatusFilter('done')">完成</button>
+      </div>
+
+      <div class="notes-grid" id="notesGrid"></div>
+    </div>
+  </main>
+</div>
+
+<!-- Add/Edit Note Modal -->
+<div class="overlay" id="noteOverlay" onclick="overlayClose(event,'noteOverlay')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title" id="noteModalTitle">新增笔记</span>
+      <button class="close-btn" onclick="closeNoteModal()">×</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="form-group">
+        <label class="form-label">作品 / 纹样名称</label>
+        <input type="text" id="nTitle" placeholder="这个作品叫什么？">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">一级分区</label>
+          <select id="nCat1" onchange="updateCat2Select()"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">二级分区 <span>（选填）</span></label>
+          <select id="nCat2"></select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">进度状态</label>
+        <div class="status-select-group">
+          <div class="status-opt" data-val="start" onclick="selectStatus('start')">起针</div>
+          <div class="status-opt" data-val="doing" onclick="selectStatus('doing')">进行中</div>
+          <div class="status-opt sel-done" data-val="done" onclick="selectStatus('done')">完成</div>
+        </div>
+        <input type="hidden" id="nStatus" value="done">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">图片 <span>（纹样图、设计图、过程图、成品图）</span></label>
+        <div class="img-upload-zone" id="imgZone" onclick="document.getElementById('imgFileInput').click()">
+          <p>🪡 点击上传 · 或拖入图片</p>
+        </div>
+        <input type="file" id="imgFileInput" accept="image/*" multiple style="display:none" onchange="handleImgs(event)">
+        <div class="img-thumbs" id="imgThumbs"></div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">针法类型 <span>（选填）</span></label>
+          <input type="text" id="nStitch" placeholder="平针、锁链绣、法国结…">
+        </div>
+        <div class="form-group">
+          <label class="form-label">纹样来源 <span>（选填）</span></label>
+          <input type="text" id="nSource" placeholder="书籍、博物馆、自设计…">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">描述与笔记 <span>（选填）</span></label>
+        <textarea id="nDesc" placeholder="这个纹样的含义、难点、心得…"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">配色方案 <span>（选填）</span></label>
+        <input type="text" id="nColor" placeholder="朱砂红+孔雀蓝+鎏金 / DMC色号…">
+      </div>
+
+      <div class="modal-section-label">材料清单</div>
+      <div class="materials-list" id="materialsList"></div>
+      <button class="add-material-btn" onclick="addMaterialRow()">＋ 添加材料</button>
+
+      <div class="form-group" style="margin-top:16px;">
+        <label class="form-label">参考书籍 / 推荐阅读 <span>（选填）</span></label>
+        <textarea id="nBooks" placeholder="书名 · 作者…" style="min-height:60px;"></textarea>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeNoteModal()">取消</button>
+      <button class="btn-primary" onclick="saveNote()">✦ 保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="overlay" id="detailOverlay" onclick="overlayClose(event,'detailOverlay')">
+  <div class="modal detail-modal" onclick="event.stopPropagation()">
+    <div class="modal-header" id="detailHeader"></div>
+    <div class="detail-actions">
+      <button class="btn-sm" onclick="editCurrentNote()">✎ 编辑</button>
+      <button class="btn-sm danger" onclick="deleteCurrentNote()">× 删除</button>
+    </div>
+    <div id="detailBody"></div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<!-- Toast -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+const SK = 'yxycz_v1';
+let data = { cats:[], notes:[] };
+let currentCat1 = null, currentCat2 = null;
+let editingNoteId = null, viewingNoteId = null;
+let pendingImgs = [];
+let statusFilter = 'all';
+
+const CAT_SYMBOLS = ['◈','卐','回','✦','◉','⬡','◇','✿'];
+
+function load() {
+  try { const d = JSON.parse(localStorage.getItem(SK)); if(d) data=d; } catch(e){}
+  if (!data.cats || !data.cats.length) {
+    data.cats = [
+      { id:'c1', name:'纹样', children:[{id:'c1a',name:'传统吉祥纹'},{id:'c1b',name:'花卉草木'},{id:'c1c',name:'几何纹'}] },
+      { id:'c2', name:'针法', children:[{id:'c2a',name:'平绣'},{id:'c2b',name:'立体绣'}] },
+      { id:'c3', name:'作品记录', children:[] },
+      { id:'c4', name:'配色参考', children:[] },
+      { id:'c5', name:'缝纫', children:[] },
+    ];
+  }
+  if (!data.notes) data.notes = [];
+}
+function save() { localStorage.setItem(SK, JSON.stringify(data)); }
+
+function getCatSymbol(i) { return CAT_SYMBOLS[i % CAT_SYMBOLS.length]; }
+
+// ── Sidebar ──
+function renderSidebar() {
+  const nav = document.getElementById('catNav');
+  nav.innerHTML = '';
+
+  const allDiv = document.createElement('div');
+  allDiv.className = 'cat-level2' + (currentCat1==='__all'?' active':'');
+  allDiv.style.paddingLeft = '20px';
+  allDiv.innerHTML = `<span class="cat-level2-dot"></span><span class="cat-level2-name">全部笔记</span><span class="cat-level2-count">${data.notes.length}</span>`;
+  allDiv.onclick = () => selectCat('__all', null);
+  nav.appendChild(allDiv);
+
+  data.cats.forEach((cat, i) => {
+    const sym = getCatSymbol(i);
+    const count = data.notes.filter(n=>n.cat1===cat.id).length;
+    const chEl = document.getElementById('ch_'+cat.id);
+    const isOpen = currentCat1===cat.id || (chEl && chEl.classList.contains('open'));
+
+    const group = document.createElement('div');
+    group.className = 'cat-group'; group.id = 'cg_'+cat.id;
+    group.innerHTML = `
+      <div class="cat-level1 ${currentCat1===cat.id?'active':''} ${isOpen?'open':''}" onclick="toggleCat1('${cat.id}')">
+        <span class="cat-symbol">${sym}</span>
+        <span class="cat-level1-name">${escH(cat.name)}</span>
+        <span class="cat-level1-count">${count}</span>
+        <div class="cat-level1-actions">
+          <button class="nano-btn" onclick="event.stopPropagation();renameCat1('${cat.id}')">✎</button>
+          <button class="nano-btn danger" onclick="event.stopPropagation();deleteCat1('${cat.id}')">×</button>
+        </div>
+        <span class="cat-chevron">›</span>
+      </div>
+      <div class="cat-children ${isOpen?'open':''}" id="ch_${cat.id}">
+        ${cat.children.map(sub=>{
+          const sc = data.notes.filter(n=>n.cat2===sub.id).length;
+          return `<div class="cat-level2 ${currentCat2===sub.id?'active':''}" onclick="selectCat('${cat.id}','${sub.id}')">
+            <span class="cat-level2-dot"></span>
+            <span class="cat-level2-name">${escH(sub.name)}</span>
+            <span class="cat-level2-count">${sc}</span>
+            <div class="cat-level2-actions">
+              <button class="nano-btn" onclick="event.stopPropagation();renameCat2('${cat.id}','${sub.id}')">✎</button>
+              <button class="nano-btn danger" onclick="event.stopPropagation();deleteCat2('${cat.id}','${sub.id}')">×</button>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`;
+    nav.appendChild(group);
+  });
+}
+
+function toggleCat1(id) {
+  selectCat(id, null);
+  const ch = document.getElementById('ch_'+id);
+  const l1 = ch.previousElementSibling;
+  const wasOpen = ch.classList.contains('open');
+  document.querySelectorAll('.cat-children').forEach(el=>el.classList.remove('open'));
+  document.querySelectorAll('.cat-level1').forEach(el=>el.classList.remove('open'));
+  if (!wasOpen) { ch.classList.add('open'); l1.classList.add('open'); }
+}
+
+function selectCat(cat1, cat2) {
+  currentCat1=cat1; currentCat2=cat2;
+  renderSidebar(); renderMain();
+}
+
+// ── Main ──
+function renderMain() {
+  document.getElementById('welcomeState').style.display='none';
+  document.getElementById('catView').style.display='block';
+
+  const bc = document.getElementById('breadcrumb');
+  const h = document.getElementById('mainHeading');
+  const sub2Btn = document.getElementById('addSub2Btn');
+
+  if (currentCat1==='__all') {
+    bc.innerHTML='云想衣裳'; h.textContent='全部笔记'; sub2Btn.style.display='none';
+  } else {
+    const cat1 = data.cats.find(c=>c.id===currentCat1);
+    if (currentCat2) {
+      const sub = cat1.children.find(c=>c.id===currentCat2);
+      bc.innerHTML=`云想衣裳 · ${escH(cat1.name)}`; h.textContent=sub.name; sub2Btn.style.display='none';
+    } else {
+      bc.innerHTML='云想衣裳'; h.textContent=cat1.name; sub2Btn.style.display='';
+    }
+  }
+  renderStats(); renderNotes();
+}
+
+function setStatusFilter(f) {
+  statusFilter = f;
+  document.querySelectorAll('.status-pill').forEach(el=>{
+    el.className = 'status-pill';
+    if (el.dataset.filter===f) el.classList.add('active-'+f);
+  });
+  renderNotes();
+}
+
+function renderStats() {
+  const all = getFilteredNotes('all');
+  const start = all.filter(n=>n.status==='start').length;
+  const doing = all.filter(n=>n.status==='doing').length;
+  const done = all.filter(n=>n.status==='done').length;
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-chip"><strong>${all.length}</strong> 条记录</div>
+    ${start?`<div class="stat-chip" style="border-left:2px solid var(--vermillion)"><strong>${start}</strong> 起针</div>`:''}
+    ${doing?`<div class="stat-chip" style="border-left:2px solid var(--gold)"><strong>${doing}</strong> 进行中</div>`:''}
+    ${done?`<div class="stat-chip" style="border-left:2px solid var(--jade)"><strong>${done}</strong> 完成</div>`:''}
+  `;
+}
+
+function getFilteredNotes(sf) {
+  const f = sf !== undefined ? sf : statusFilter;
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  let list = [...data.notes];
+  if (currentCat1 !== '__all') {
+    list = currentCat2 ? list.filter(n=>n.cat2===currentCat2) : list.filter(n=>n.cat1===currentCat1);
+  }
+  if (f !== 'all') list = list.filter(n=>n.status===f);
+  if (q) list = list.filter(n=>[n.title,n.desc,n.stitch,n.source,n.color,n.books,...(n.materials||[])].join(' ').toLowerCase().includes(q));
+  return list.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+}
+
+function renderNotes() {
+  const grid = document.getElementById('notesGrid');
+  const list = getFilteredNotes();
+  if (!list.length) {
+    grid.innerHTML=`<div class="empty-state"><div class="empty-icon">🪡</div><p>这里还没有记录<br>点击右上角「新增笔记」开始</p></div>`;
+    return;
+  }
+  const statusLabel = {start:'起针', doing:'进行中', done:'完成'};
+  grid.innerHTML = list.map((n,idx)=>{
+    const cat1 = data.cats.find(c=>c.id===n.cat1);
+    const cat2 = cat1&&cat1.children.find(c=>c.id===n.cat2);
+    const date = new Date(n.createdAt).toLocaleDateString('zh-CN',{month:'short',day:'numeric'});
+    const hasImg = n.images&&n.images.length;
+    const status = n.status||'done';
+    return `<div class="note-card" style="animation-delay:${idx*0.04}s" onclick="openDetail('${n.id}')">
+      <div class="card-images">
+        ${hasImg
+          ? `<img class="card-img-primary" src="${n.images[0]}" alt="">
+             ${n.images.length>1?`<span class="card-img-count">${n.images.length} 张</span>`:''}`
+          : `<div class="card-img-placeholder"><div class="card-img-placeholder-icon">🪡</div><div class="card-img-placeholder-text">尚无图片</div></div>`}
+        <span class="card-status status-${status}">${statusLabel[status]}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-cats">
+          ${cat1?`<span class="card-cat-tag">${escH(cat1.name)}</span>`:''}
+          ${cat2?`<span class="card-cat-tag">${escH(cat2.name)}</span>`:''}
+          ${n.stitch?`<span class="card-cat-tag" style="background:rgba(34,85,184,0.07);color:var(--blue-main);border-color:rgba(34,85,184,0.15)">${escH(n.stitch)}</span>`:''}
+        </div>
+        <div class="card-title">${escH(n.title||'无题')}</div>
+        ${n.desc?`<div class="card-desc-preview">${escH(n.desc)}</div>`:''}
+      </div>
+      <div class="card-footer">
+        <span>${date}</span>
+        <div class="card-actions">
+          <button class="card-nano" onclick="event.stopPropagation();editNote('${n.id}')" title="编辑">✦</button>
+          <button class="card-nano danger" onclick="event.stopPropagation();deleteNote('${n.id}')" title="删除">×</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Category management ──
+function promptAddCat1() {
+  const name = prompt('新建一级分区：');
+  if (!name||!name.trim()) return;
+  data.cats.push({id:'c'+Date.now(), name:name.trim(), children:[]});
+  save(); renderSidebar(); toast('分区已创建');
+}
+function promptAddCat2() {
+  const cat1 = data.cats.find(c=>c.id===currentCat1);
+  if (!cat1) return;
+  const name = prompt(`在「${cat1.name}」下新建子分区：`);
+  if (!name||!name.trim()) return;
+  cat1.children.push({id:'c'+Date.now(), name:name.trim()});
+  save(); renderSidebar(); renderMain(); toast('子分区已创建');
+}
+function renameCat1(id) {
+  const cat = data.cats.find(c=>c.id===id);
+  const name = prompt('重命名：', cat.name);
+  if (!name||!name.trim()||name.trim()===cat.name) return;
+  cat.name=name.trim(); save(); renderSidebar(); renderMain();
+}
+function renameCat2(cat1id, id) {
+  const cat1=data.cats.find(c=>c.id===cat1id);
+  const sub=cat1&&cat1.children.find(c=>c.id===id);
+  if (!sub) return;
+  const name=prompt('重命名：',sub.name);
+  if (!name||!name.trim()||name.trim()===sub.name) return;
+  sub.name=name.trim(); save(); renderSidebar(); renderMain();
+}
+function deleteCat1(id) {
+  const cat=data.cats.find(c=>c.id===id);
+  const count=data.notes.filter(n=>n.cat1===id).length;
+  if (!confirm(`删除「${cat.name}」？${count?count+'条笔记将失去分类。':''}不可撤销。`)) return;
+  data.cats=data.cats.filter(c=>c.id!==id);
+  if(currentCat1===id){currentCat1=null;currentCat2=null;}
+  save(); renderSidebar();
+  if(!currentCat1){document.getElementById('catView').style.display='none';document.getElementById('welcomeState').style.display='';}
+  else renderMain();
+}
+function deleteCat2(cat1id, id) {
+  const cat1=data.cats.find(c=>c.id===cat1id);
+  const sub=cat1&&cat1.children.find(c=>c.id===id);
+  const count=data.notes.filter(n=>n.cat2===id).length;
+  if (!confirm(`删除「${sub.name}」？${count?count+'条笔记失去子分类。':''}不可撤销。`)) return;
+  cat1.children=cat1.children.filter(c=>c.id!==id);
+  if(currentCat2===id)currentCat2=null;
+  save(); renderSidebar(); renderMain();
+}
+
+// ── Status select ──
+function selectStatus(val) {
+  document.getElementById('nStatus').value = val;
+  document.querySelectorAll('.status-opt').forEach(el=>{
+    el.className = 'status-opt';
+    if(el.dataset.val===val) el.classList.add('sel-'+val);
+  });
+}
+
+// ── Note modal ──
+function openAddNote() {
+  editingNoteId=null; pendingImgs=[];
+  document.getElementById('noteModalTitle').textContent='新增笔记';
+  ['nTitle','nStitch','nSource','nColor','nBooks'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('nDesc').value='';
+  document.getElementById('imgThumbs').innerHTML='';
+  document.getElementById('materialsList').innerHTML='';
+  selectStatus('done');
+  populateCat1Select(currentCat1);
+  document.getElementById('noteOverlay').classList.add('open');
+  setTimeout(()=>document.getElementById('nTitle').focus(),80);
+}
+
+function editNote(id) {
+  const n=data.notes.find(x=>x.id===id);
+  if(!n) return;
+  editingNoteId=id; pendingImgs=[...(n.images||[])];
+  document.getElementById('noteModalTitle').textContent='编辑笔记';
+  document.getElementById('nTitle').value=n.title||'';
+  document.getElementById('nStitch').value=n.stitch||'';
+  document.getElementById('nSource').value=n.source||'';
+  document.getElementById('nColor').value=n.color||'';
+  document.getElementById('nDesc').value=n.desc||'';
+  document.getElementById('nBooks').value=n.books||'';
+  renderImgThumbs();
+  selectStatus(n.status||'done');
+  populateCat1Select(n.cat1);
+  setTimeout(()=>{
+    const s2=document.getElementById('nCat2');
+    for(let i=0;i<s2.options.length;i++){if(s2.options[i].value===(n.cat2||'')){s2.selectedIndex=i;break;}}
+  },50);
+  document.getElementById('materialsList').innerHTML='';
+  (n.materials||[]).filter(Boolean).forEach(m=>addMaterialRow(m));
+  document.getElementById('noteOverlay').classList.add('open');
+}
+
+function populateCat1Select(sel) {
+  const s=document.getElementById('nCat1');
+  s.innerHTML=data.cats.map(c=>`<option value="${c.id}" ${c.id===sel?'selected':''}>${escH(c.name)}</option>`).join('');
+  updateCat2Select();
+}
+function updateCat2Select() {
+  const cat1=data.cats.find(c=>c.id===document.getElementById('nCat1').value);
+  const s=document.getElementById('nCat2');
+  s.innerHTML=`<option value="">— 不指定 —</option>`+(cat1?cat1.children.map(c=>`<option value="${c.id}">${escH(c.name)}</option>`).join(''):'');
+}
+function closeNoteModal() { document.getElementById('noteOverlay').classList.remove('open'); editingNoteId=null; pendingImgs=[]; }
+
+function saveNote() {
+  const title=document.getElementById('nTitle').value.trim();
+  if(!title){toast('请填写名称');return;}
+  const cat1id=document.getElementById('nCat1').value;
+  const cat2id=document.getElementById('nCat2').value||null;
+  const status=document.getElementById('nStatus').value||'done';
+  const materials=[...document.querySelectorAll('.material-input')].map(el=>el.value.trim()).filter(Boolean);
+  const now=new Date().toISOString();
+
+  if(editingNoteId){
+    const n=data.notes.find(x=>x.id===editingNoteId);
+    if(n){
+      n.title=title;n.cat1=cat1id;n.cat2=cat2id;n.status=status;
+      n.stitch=document.getElementById('nStitch').value.trim();
+      n.source=document.getElementById('nSource').value.trim();
+      n.color=document.getElementById('nColor').value.trim();
+      n.desc=document.getElementById('nDesc').value.trim();
+      n.books=document.getElementById('nBooks').value.trim();
+      n.images=[...pendingImgs];n.materials=materials;n.updatedAt=now;
+    }
+    toast('笔记已更新 ✦');
+  } else {
+    data.notes.unshift({
+      id:'n'+Date.now(),title,cat1:cat1id,cat2:cat2id,status,
+      stitch:document.getElementById('nStitch').value.trim(),
+      source:document.getElementById('nSource').value.trim(),
+      color:document.getElementById('nColor').value.trim(),
+      desc:document.getElementById('nDesc').value.trim(),
+      books:document.getElementById('nBooks').value.trim(),
+      images:[...pendingImgs],materials,createdAt:now,updatedAt:now
+    });
+    toast('已收录 ✦');
+  }
+  save(); closeNoteModal(); renderSidebar(); renderMain();
+  if(viewingNoteId) openDetail(viewingNoteId);
+}
+
+function deleteNote(id) {
+  const n=data.notes.find(x=>x.id===id);
+  if(!n) return;
+  data.notes=data.notes.filter(x=>x.id!==id);
+  save(); renderSidebar(); renderMain();
+  toast('已删除',()=>{data.notes.unshift(n);save();renderSidebar();renderMain();toast('已撤销 ✦');});
+}
+
+// ── Images ──
+function handleImgs(e) {
+  [...e.target.files].forEach(f=>{
+    const r=new FileReader();
+    r.onload=ev=>{pendingImgs.push(ev.target.result);renderImgThumbs();};
+    r.readAsDataURL(f);
+  });
+  e.target.value='';
+}
+const imgZone=document.getElementById('imgZone');
+imgZone.addEventListener('dragover',e=>{e.preventDefault();imgZone.style.borderColor='var(--gold-dim)';});
+imgZone.addEventListener('dragleave',()=>{imgZone.style.borderColor='';});
+imgZone.addEventListener('drop',e=>{
+  e.preventDefault();imgZone.style.borderColor='';
+  [...e.dataTransfer.files].filter(f=>f.type.startsWith('image/')).forEach(f=>{
+    const r=new FileReader();r.onload=ev=>{pendingImgs.push(ev.target.result);renderImgThumbs();};r.readAsDataURL(f);
+  });
+});
+function renderImgThumbs() {
+  document.getElementById('imgThumbs').innerHTML=pendingImgs.map((src,i)=>`
+    <div class="img-thumb"><img src="${src}" alt=""><button class="img-thumb-del" onclick="removeImg(${i})">×</button></div>`).join('');
+}
+function removeImg(i){pendingImgs.splice(i,1);renderImgThumbs();}
+
+// ── Materials ──
+function addMaterialRow(val='') {
+  const row=document.createElement('div');
+  row.className='material-row';
+  row.innerHTML=`<input type="text" class="material-input" placeholder="线材、布料、绣框…" value="${escH(val)}">
+    <button class="material-del" onclick="this.parentElement.remove()">×</button>`;
+  document.getElementById('materialsList').appendChild(row);
+}
+
+// ── Detail ──
+function openDetail(id) {
+  viewingNoteId=id;
+  const n=data.notes.find(x=>x.id===id);
+  if(!n) return;
+  const cat1=data.cats.find(c=>c.id===n.cat1);
+  const cat2=cat1&&cat1.children.find(c=>c.id===n.cat2);
+  const date=new Date(n.createdAt).toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'});
+  const statusLabel={start:'起针',doing:'进行中',done:'完成'};
+  const status=n.status||'done';
+
+  document.getElementById('detailHeader').innerHTML=`
+    <div>
+      <div class="modal-title">${escH(n.title||'无题')}</div>
+      <div style="font-size:11px;color:var(--ink-soft);margin-top:4px;display:flex;gap:10px;align-items:center;">
+        <span>${date}</span>
+        <span class="card-status status-${status}" style="position:static;">${statusLabel[status]}</span>
+      </div>
+    </div>
+    <button class="close-btn" onclick="closeDetail()">×</button>`;
+
+  let body='';
+  if(n.images&&n.images.length){
+    body+=`<div class="detail-gallery">${n.images.map(src=>`<img class="detail-img" src="${src}" onclick="openLightbox('${src}')" alt="">`).join('')}</div>`;
+  }
+  body+=`<div class="detail-cats-row">
+    ${cat1?`<span class="card-cat-tag">${escH(cat1.name)}</span>`:''}
+    ${cat2?`<span class="card-cat-tag">${escH(cat2.name)}</span>`:''}
+    ${n.stitch?`<span class="card-cat-tag" style="background:rgba(34,85,184,0.07);color:var(--blue-main)">${escH(n.stitch)}</span>`:''}
+  </div>`;
+  if(n.desc) body+=`<div class="detail-section"><div class="detail-section-label">描述与笔记</div><div class="detail-text">${escH(n.desc)}</div></div>`;
+  if(n.color) body+=`<div class="detail-section"><div class="detail-section-label">配色方案</div><div class="detail-text">${escH(n.color)}</div></div>`;
+  if(n.source) body+=`<div class="detail-section"><div class="detail-section-label">纹样来源</div><div class="detail-text">${escH(n.source)}</div></div>`;
+  const mats=(n.materials||[]).filter(Boolean);
+  if(mats.length) body+=`<div class="detail-section"><div class="detail-section-label">材料清单</div>
+    <div class="detail-materials">${mats.map(m=>`<span class="detail-material-tag">${escH(m)}</span>`).join('')}</div></div>`;
+  if(n.books) body+=`<div class="detail-section"><div class="detail-section-label">参考书籍</div><div class="detail-text">${escH(n.books)}</div></div>`;
+
+  document.getElementById('detailBody').innerHTML=body;
+  document.getElementById('detailOverlay').classList.add('open');
+}
+
+function closeDetail(){document.getElementById('detailOverlay').classList.remove('open');viewingNoteId=null;}
+function editCurrentNote(){const id=viewingNoteId;closeDetail();editNote(id);}
+function deleteCurrentNote(){const id=viewingNoteId;closeDetail();deleteNote(id);}
+
+// ── Lightbox ──
+function openLightbox(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('open');}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
+
+// ── Toast ──
+function toast(msg,undoFn=null){
+  const wrap=document.getElementById('toastWrap');
+  const el=document.createElement('div');el.className='toast';
+  el.innerHTML=`<span>${msg}</span>${undoFn?'<button class="toast-undo">撤销</button>':''}`;
+  wrap.appendChild(el);
+  if(undoFn) el.querySelector('.toast-undo').onclick=()=>{clearTimeout(t);undoFn();el.remove();};
+  const t=setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),250);},undoFn?5000:2000);
+}
+
+function overlayClose(e,id){
+  if(e.target===document.getElementById(id)){
+    document.getElementById(id).classList.remove('open');
+    if(id==='detailOverlay')viewingNoteId=null;
+    if(id==='noteOverlay'){editingNoteId=null;pendingImgs=[];}
+  }
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(document.getElementById('lightbox').classList.contains('open')){closeLightbox();return;}
+    if(document.getElementById('noteOverlay').classList.contains('open')){closeNoteModal();return;}
+    if(document.getElementById('detailOverlay').classList.contains('open')){closeDetail();return;}
+  }
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'&&document.getElementById('noteOverlay').classList.contains('open'))saveNote();
+});
+
+document.getElementById('searchInput').addEventListener('input',()=>{if(currentCat1)renderNotes();});
+
+function escH(s){if(!s)return '';return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+load();
+renderSidebar();
+</script>
+</body>
+</html>
