@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gaia & Isis · 生存技能手记</title>
+<link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=Noto+Serif+SC:wght@300;400;500&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --forest:     #2D4A1E;
+  --forest-mid: #3D5F28;
+  --moss:       #4A6B35;
+  --moss-light: #5C8040;
+  --straw:      #C4A85A;
+  --straw-light:#DFC278;
+  --straw-dim:  #8A7035;
+  --earth:      #8B6B3D;
+  --earth-dark: #5C4525;
+  --shadow:     #1A2810;
+  --linen:      #F5F0E8;
+  --linen2:     #EDE6D4;
+  --linen3:     #E0D5BE;
+  --ink:        #1C2010;
+  --ink-mid:    #4A4030;
+  --ink-soft:   #8A7A60;
+  --paper:      #FAF6EC;
+
+  /* Mastery levels */
+  --know:       #C4A85A;
+  --practice:   #4A6B35;
+  --master:     #2D4A1E;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--linen);
+  color: var(--ink);
+  font-family: 'Noto Serif SC', serif;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at 15% 0%, rgba(45,74,30,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 100%, rgba(139,107,61,0.07) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+/* ── Layout ── */
+.layout {
+  display: grid;
+  grid-template-columns: 272px 1fr;
+  min-height: 100vh;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  background: var(--forest);
+  position: sticky; top: 0; height: 100vh;
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+  border-right: 2px solid rgba(196,168,90,0.25);
+  box-shadow: 3px 0 20px rgba(26,40,16,0.4);
+}
+
+.sidebar::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(to right, var(--earth), var(--straw), var(--moss), var(--straw), var(--earth));
+}
+
+/* Subtle camo texture overlay on sidebar */
+.sidebar::after {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    radial-gradient(ellipse at 20% 30%, rgba(74,107,53,0.3) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 70%, rgba(45,74,30,0.4) 0%, transparent 35%),
+    radial-gradient(ellipse at 50% 10%, rgba(92,69,37,0.15) 0%, transparent 30%);
+  z-index: 0;
+}
+
+.sidebar > * { position: relative; z-index: 1; }
+
+.sidebar-header {
+  padding: 36px 22px 22px;
+  text-align: center;
+  border-bottom: 1px solid rgba(196,168,90,0.15);
+}
+
+.sidebar-eyebrow {
+  font-family: 'EB Garamond', serif;
+  font-size: 9px; letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: rgba(196,168,90,0.55);
+  margin-bottom: 14px;
+}
+
+.sidebar-title {
+  font-family: 'Uncial Antiqua', cursive;
+  font-size: 30px;
+  color: var(--straw-light);
+  line-height: 1.2;
+  margin-bottom: 6px;
+  text-shadow: 0 2px 12px rgba(196,168,90,0.25), 0 0 30px rgba(196,168,90,0.1);
+  letter-spacing: 0.05em;
+}
+
+.sidebar-title .ampersand {
+  color: var(--straw);
+  font-size: 22px;
+  opacity: 0.8;
+}
+
+.sidebar-subtitle {
+  font-size: 10.5px;
+  color: rgba(196,168,90,0.5);
+  letter-spacing: 0.2em;
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  line-height: 1.8;
+  margin-top: 6px;
+}
+
+/* Divider */
+.leaf-rule {
+  display: flex; align-items: center; gap: 6px;
+  padding: 10px 22px 6px;
+}
+.leaf-rule-line { flex: 1; height: 1px; background: rgba(196,168,90,0.15); }
+.leaf-rule-center { font-size: 9px; color: rgba(196,168,90,0.4); letter-spacing: 0.2em; }
+
+/* Search */
+.sidebar-search {
+  padding: 10px 18px 12px;
+  border-bottom: 1px solid rgba(196,168,90,0.12);
+}
+.search-input {
+  width: 100%; padding: 7px 12px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(196,168,90,0.2);
+  border-radius: 3px;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 12px; color: var(--linen);
+  outline: none; transition: border-color 0.2s;
+}
+.search-input:focus { border-color: var(--straw); }
+.search-input::placeholder { color: rgba(196,168,90,0.35); }
+
+/* Nav */
+.cat-nav { flex: 1; padding: 8px 0; overflow-y: auto; }
+.cat-group { margin-bottom: 1px; }
+
+.cat-level1 {
+  display: flex; align-items: center;
+  padding: 10px 18px; cursor: pointer;
+  transition: all 0.2s; user-select: none; gap: 10px;
+  border-left: 3px solid transparent;
+}
+.cat-level1:hover { background: rgba(255,255,255,0.07); border-left-color: rgba(196,168,90,0.3); }
+.cat-level1.active, .cat-level1.open { background: rgba(255,255,255,0.1); border-left-color: var(--straw); }
+
+.cat-symbol { font-size: 13px; color: var(--straw-dim); width: 18px; text-align: center; flex-shrink: 0; }
+.cat-level1-name { flex: 1; font-size: 13px; color: var(--linen2); font-weight: 400; letter-spacing: 0.04em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cat-level1-count { font-size: 10px; color: var(--straw-dim); margin-right: 4px; }
+.cat-chevron { font-size: 10px; color: var(--straw-dim); transition: transform 0.2s; }
+.cat-level1.open .cat-chevron { transform: rotate(90deg); }
+.cat-level1-actions { display: flex; gap: 2px; opacity: 0; transition: opacity 0.15s; }
+.cat-level1:hover .cat-level1-actions { opacity: 1; }
+
+.cat-children { display: none; background: rgba(0,0,0,0.18); }
+.cat-children.open { display: block; }
+
+.cat-level2 {
+  display: flex; align-items: center;
+  padding: 7px 18px 7px 46px;
+  cursor: pointer; font-size: 12px;
+  color: rgba(240,232,210,0.6);
+  transition: all 0.15s; gap: 8px;
+  border-left: 3px solid transparent;
+}
+.cat-level2:hover { background: rgba(255,255,255,0.08); color: var(--linen); border-left-color: rgba(196,168,90,0.25); }
+.cat-level2.active { color: var(--straw-light); background: rgba(255,255,255,0.1); border-left-color: var(--straw); }
+.cat-level2-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--straw-dim); flex-shrink: 0; }
+.cat-level2-name { flex: 1; letter-spacing: 0.03em; }
+.cat-level2-count { font-size: 10px; color: var(--straw-dim); }
+.cat-level2-actions { display: flex; gap: 2px; opacity: 0; transition: opacity 0.15s; }
+.cat-level2:hover .cat-level2-actions { opacity: 1; }
+
+.add-cat-btn {
+  padding: 10px 18px; font-size: 11.5px;
+  color: var(--straw-dim); cursor: pointer;
+  background: none; border: none;
+  font-family: 'Noto Serif SC', serif;
+  text-align: left; width: 100%;
+  display: flex; align-items: center; gap: 8px;
+  border-top: 1px solid rgba(196,168,90,0.12);
+  transition: color 0.15s; letter-spacing: 0.04em;
+}
+.add-cat-btn:hover { color: var(--straw-light); }
+
+.nano-btn {
+  width: 18px; height: 18px;
+  background: transparent; border: none; cursor: pointer;
+  color: var(--straw-dim); font-size: 11px; border-radius: 2px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; flex-shrink: 0;
+}
+.nano-btn:hover { color: var(--straw-light); background: rgba(196,168,90,0.12); }
+.nano-btn.danger:hover { color: #C05040; }
+
+.sidebar-footer {
+  padding: 12px 18px;
+  border-top: 1px solid rgba(196,168,90,0.12);
+  font-size: 10px; color: rgba(196,168,90,0.35);
+  text-align: center; letter-spacing: 0.18em;
+  font-family: 'EB Garamond', serif; font-style: italic;
+}
+
+/* ── Main ── */
+.main { padding: 40px 48px 80px; min-width: 0; }
+
+.main-header {
+  margin-bottom: 28px; padding-bottom: 20px;
+  position: relative;
+}
+.main-header::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(to right, var(--earth), var(--straw), var(--moss), var(--straw), var(--earth));
+}
+.main-header-inner {
+  padding-top: 16px;
+  display: flex; justify-content: space-between;
+  align-items: flex-end; flex-wrap: wrap; gap: 16px;
+}
+.main-breadcrumb {
+  font-size: 10px; letter-spacing: 0.25em;
+  color: var(--ink-soft); margin-bottom: 6px;
+  font-family: 'EB Garamond', serif;
+}
+.main-heading {
+  font-size: 30px; font-weight: 500;
+  color: var(--ink); letter-spacing: 0.06em;
+}
+.main-actions { display: flex; gap: 10px; align-items: center; }
+
+/* Buttons */
+.btn-primary {
+  padding: 9px 20px;
+  background: var(--forest-mid); color: var(--linen);
+  border: none; border-radius: 3px;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 12.5px; cursor: pointer;
+  transition: all 0.2s; letter-spacing: 0.06em;
+  box-shadow: 0 2px 8px rgba(45,74,30,0.3);
+}
+.btn-primary:hover { background: var(--moss); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(45,74,30,0.4); }
+
+.btn-ghost {
+  padding: 9px 16px; background: transparent;
+  color: var(--moss); border: 1px solid var(--moss);
+  border-radius: 3px;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 12px; cursor: pointer;
+  transition: all 0.2s; letter-spacing: 0.04em;
+}
+.btn-ghost:hover { background: rgba(74,107,53,0.08); border-color: var(--forest-mid); color: var(--forest); }
+
+/* Stats */
+.stats-row { display: flex; gap: 18px; margin-bottom: 22px; flex-wrap: wrap; }
+.stat-chip {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 14px; background: var(--paper);
+  border: 1px solid var(--linen3); border-radius: 3px;
+  font-size: 11.5px; color: var(--ink-soft);
+  font-family: 'EB Garamond', serif;
+}
+.stat-chip strong { font-size: 15px; color: var(--ink); font-family: 'Noto Serif SC', serif; }
+
+/* Mastery filter */
+.mastery-filter { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+.mastery-pill {
+  padding: 4px 14px; border-radius: 3px;
+  border: 1px solid var(--linen3); font-size: 11px;
+  cursor: pointer; background: var(--paper);
+  color: var(--ink-soft); transition: all 0.15s;
+  letter-spacing: 0.06em; font-family: 'Noto Serif SC', serif;
+}
+.mastery-pill:hover { border-color: var(--straw-dim); }
+.mastery-pill.active-all   { background: var(--forest); color: var(--linen); border-color: var(--forest); }
+.mastery-pill.active-know  { background: var(--know); color: var(--ink); border-color: var(--know); }
+.mastery-pill.active-practice { background: var(--practice); color: white; border-color: var(--practice); }
+.mastery-pill.active-master   { background: var(--master); color: var(--straw-light); border-color: var(--master); }
+
+/* ── Notes grid ── */
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 20px;
+}
+
+.note-card {
+  background: var(--paper);
+  border: 1px solid var(--linen3);
+  border-radius: 3px; overflow: hidden;
+  cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+  animation: cardIn 0.3s ease backwards; position: relative;
+}
+@keyframes cardIn {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.note-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(26,40,16,0.12); }
+.note-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(to right, var(--earth), var(--straw), var(--moss));
+  opacity: 0.7;
+}
+
+.card-images {
+  width: 100%; aspect-ratio: 4/3;
+  overflow: hidden; background: var(--linen2); position: relative;
+}
+.card-img-primary {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform 0.4s ease;
+}
+.note-card:hover .card-img-primary { transform: scale(1.03); }
+.card-img-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 6px; color: var(--ink-soft); opacity: 0.45;
+}
+.card-img-placeholder-icon { font-size: 28px; }
+.card-img-placeholder-text { font-size: 11px; letter-spacing: 0.12em; }
+.card-img-count {
+  position: absolute; bottom: 8px; right: 8px;
+  background: rgba(26,40,16,0.65); color: var(--straw-light);
+  font-size: 10px; padding: 2px 8px; border-radius: 2px;
+  backdrop-filter: blur(4px);
+}
+
+/* Mastery badge */
+.card-mastery {
+  position: absolute; top: 10px; left: 10px;
+  font-size: 9.5px; padding: 2px 9px; border-radius: 2px;
+  letter-spacing: 0.12em; font-weight: 500;
+}
+.mastery-know     { background: var(--know); color: var(--ink); }
+.mastery-practice { background: var(--practice); color: white; }
+.mastery-master   { background: var(--master); color: var(--straw-light); }
+
+/* Danger badge */
+.card-danger {
+  position: absolute; top: 10px; right: 10px;
+  font-size: 9px; padding: 2px 7px; border-radius: 2px;
+  letter-spacing: 0.08em;
+}
+.danger-low  { background: rgba(74,107,53,0.15); color: var(--moss); border: 1px solid rgba(74,107,53,0.3); }
+.danger-mid  { background: rgba(196,168,90,0.15); color: var(--straw-dim); border: 1px solid rgba(196,168,90,0.3); }
+.danger-high { background: rgba(180,60,40,0.12); color: #A04030; border: 1px solid rgba(180,60,40,0.25); }
+
+.card-body { padding: 14px 16px 10px; }
+.card-cats { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px; }
+.card-cat-tag {
+  font-size: 9.5px; letter-spacing: 0.08em;
+  padding: 2px 8px; border-radius: 2px;
+  background: rgba(74,107,53,0.08);
+  color: var(--moss); border: 1px solid rgba(74,107,53,0.15);
+}
+.card-title {
+  font-size: 16px; font-weight: 500;
+  color: var(--ink); margin-bottom: 5px;
+  line-height: 1.3; letter-spacing: 0.04em;
+}
+.card-preview {
+  font-size: 12px; color: var(--ink-soft);
+  line-height: 1.7;
+  display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+.card-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 16px 10px;
+  border-top: 1px solid var(--linen2);
+  font-size: 10px; color: var(--ink-soft);
+  font-family: 'EB Garamond', serif;
+}
+.card-actions { display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s; }
+.note-card:hover .card-actions { opacity: 1; }
+.card-nano {
+  width: 20px; height: 20px; background: none; border: none;
+  cursor: pointer; color: var(--ink-soft); font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 2px; transition: all 0.15s;
+}
+.card-nano:hover { background: var(--linen2); color: var(--ink); }
+.card-nano.danger:hover { color: #A04030; }
+
+/* Empty / Welcome */
+.empty-state { grid-column:1/-1; text-align:center; padding:80px 20px; color:var(--ink-soft); }
+.empty-icon { font-size:36px; margin-bottom:12px; opacity:0.4; }
+.empty-state p { font-size:13.5px; line-height:2.2; letter-spacing:0.08em; }
+
+.welcome-state { padding:60px 0; max-width:500px; }
+.welcome-goddess {
+  font-family: 'Uncial Antiqua', cursive;
+  font-size: 28px; color: var(--forest);
+  margin-bottom: 12px; letter-spacing: 0.05em;
+  opacity: 0.7;
+}
+.welcome-title { font-size:32px; font-weight:500; color:var(--ink); margin-bottom:10px; line-height:1.3; letter-spacing:0.06em; }
+.welcome-sub { font-size:13.5px; color:var(--ink-mid); line-height:2.2; margin-bottom:24px; letter-spacing:0.04em; }
+.welcome-hint { font-size:11.5px; color:var(--ink-soft); line-height:2.2; letter-spacing:0.04em; }
+
+/* ── Overlays ── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(26,40,16,0.55); backdrop-filter: blur(5px);
+  z-index: 100; display: none;
+  align-items: flex-start; justify-content: center;
+  padding: 32px 20px; overflow-y: auto;
+}
+.overlay.open { display: flex; }
+
+.modal {
+  background: var(--paper);
+  border: 1px solid var(--linen3); border-radius: 3px;
+  width: 100%; max-width: 660px; margin: auto;
+  animation: modalIn 0.25s ease; overflow: hidden;
+  box-shadow: 0 20px 60px rgba(26,40,16,0.35); position: relative;
+}
+.modal::before {
+  content: ''; position: absolute; top:0; left:0; right:0; height:3px;
+  background: linear-gradient(to right, var(--earth), var(--straw), var(--moss), var(--straw), var(--earth));
+}
+@keyframes modalIn {
+  from { opacity:0; transform:translateY(-10px) scale(0.98); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
+}
+
+.modal-header {
+  padding: 24px 28px 16px;
+  border-bottom: 1px solid var(--linen2);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.modal-title { font-size: 19px; font-weight: 500; color: var(--ink); letter-spacing: 0.08em; }
+.close-btn {
+  width:28px; height:28px; background:none; border:none;
+  cursor:pointer; color:var(--ink-soft); font-size:18px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:2px; transition:color 0.15s;
+}
+.close-btn:hover { color: #A04030; }
+
+.modal-body { padding: 22px 28px; }
+.modal-footer { padding: 12px 28px 22px; display: flex; justify-content: flex-end; gap: 10px; }
+
+.form-group { margin-bottom: 16px; }
+.form-label {
+  display: block; font-size: 9.5px;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--ink-soft); margin-bottom: 6px;
+}
+.form-label span { text-transform:none; letter-spacing:0; font-size:9.5px; opacity:0.7; }
+
+input[type="text"], textarea, select {
+  width: 100%; padding: 8px 12px;
+  background: var(--linen);
+  border: 1px solid var(--linen3); border-radius: 3px;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px; color: var(--ink);
+  outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+}
+input[type="text"]:focus, textarea:focus, select:focus {
+  border-color: var(--moss);
+  box-shadow: 0 0 0 3px rgba(74,107,53,0.1);
+}
+textarea { min-height: 80px; resize: vertical; line-height: 1.8; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* Mastery selector */
+.mastery-select-group { display: flex; gap: 8px; }
+.mastery-opt {
+  flex: 1; padding: 8px 6px; border: 1px solid var(--linen3);
+  border-radius: 3px; cursor: pointer; text-align: center;
+  font-size: 11.5px; background: var(--linen);
+  color: var(--ink-mid); transition: all 0.15s;
+  font-family: 'Noto Serif SC', serif; letter-spacing: 0.04em;
+}
+.mastery-opt:hover { border-color: var(--straw-dim); }
+.mastery-opt.sel-know     { background: var(--know); color: var(--ink); border-color: var(--know); }
+.mastery-opt.sel-practice { background: var(--practice); color: white; border-color: var(--practice); }
+.mastery-opt.sel-master   { background: var(--master); color: var(--straw-light); border-color: var(--master); }
+
+/* Danger selector */
+.danger-select-group { display: flex; gap: 8px; }
+.danger-opt {
+  flex: 1; padding: 7px 4px; border: 1px solid var(--linen3);
+  border-radius: 3px; cursor: pointer; text-align: center;
+  font-size: 11px; background: var(--linen);
+  color: var(--ink-mid); transition: all 0.15s;
+  font-family: 'Noto Serif SC', serif; letter-spacing: 0.03em;
+}
+.danger-opt.sel-low  { background: rgba(74,107,53,0.12); color: var(--moss); border-color: rgba(74,107,53,0.3); }
+.danger-opt.sel-mid  { background: rgba(196,168,90,0.15); color: var(--straw-dim); border-color: rgba(196,168,90,0.35); }
+.danger-opt.sel-high { background: rgba(180,60,40,0.1); color: #A04030; border-color: rgba(180,60,40,0.3); }
+
+/* Image upload */
+.img-upload-zone {
+  border: 1.5px dashed var(--linen3); border-radius: 3px;
+  padding: 18px; text-align: center; cursor: pointer;
+  background: var(--linen); transition: all 0.2s;
+}
+.img-upload-zone:hover { border-color: var(--moss); background: var(--linen2); }
+.img-upload-zone p { font-size: 12px; color: var(--ink-soft); letter-spacing: 0.04em; }
+.img-thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.img-thumb {
+  position: relative; width: 72px; height: 54px;
+  border-radius: 3px; overflow: hidden; border: 1px solid var(--linen3);
+}
+.img-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+.img-thumb-del {
+  position:absolute; top:2px; right:2px; width:15px; height:15px;
+  background:rgba(26,40,16,0.7); color:white; border:none; border-radius:50%;
+  font-size:9px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  opacity:0; transition:opacity 0.15s;
+}
+.img-thumb:hover .img-thumb-del { opacity:1; }
+
+.modal-section-label {
+  font-size:9px; letter-spacing:0.3em; text-transform:uppercase;
+  color:var(--ink-soft); margin:18px 0 12px;
+  display:flex; align-items:center; gap:10px;
+}
+.modal-section-label::before { content:'🌿'; font-size:10px; }
+.modal-section-label::after { content:''; flex:1; height:1px; background:var(--linen2); }
+
+/* Steps list */
+.steps-list { display:flex; flex-direction:column; gap:6px; margin-bottom:8px; }
+.step-row { display:flex; gap:6px; align-items:center; }
+.step-num {
+  width:22px; height:22px; background:var(--forest); color:var(--straw-light);
+  border-radius:50%; font-size:10px; display:flex; align-items:center;
+  justify-content:center; flex-shrink:0; font-family:'EB Garamond',serif;
+}
+.step-row input { flex:1; }
+.step-del {
+  width:28px; height:34px; background:none;
+  border:1px solid var(--linen2); border-radius:3px;
+  cursor:pointer; color:var(--ink-soft); font-size:12px;
+  transition:all 0.15s; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.step-del:hover { border-color:#A04030; color:#A04030; }
+.add-step-btn {
+  padding:5px 12px; background:none;
+  border:1.5px dashed var(--linen3); border-radius:3px;
+  font-size:11.5px; cursor:pointer; color:var(--ink-soft);
+  font-family:'Noto Serif SC',serif; transition:all 0.15s; width:100%; margin-top:2px;
+}
+.add-step-btn:hover { border-color:var(--moss); color:var(--forest); }
+
+/* Detail modal */
+.detail-modal { max-width: 740px; }
+.detail-gallery {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr));
+  gap: 8px; padding: 18px 28px 4px;
+}
+.detail-img {
+  width:100%; aspect-ratio:4/3; object-fit:cover;
+  border-radius:3px; cursor:pointer;
+  border:1px solid var(--linen2);
+  transition:transform 0.2s, box-shadow 0.2s; display:block;
+}
+.detail-img:hover { transform:scale(1.02); box-shadow:0 4px 14px rgba(26,40,16,0.15); }
+
+.detail-section { padding:15px 28px; border-bottom:1px solid var(--linen2); }
+.detail-section:last-child { border-bottom:none; }
+.detail-section-label {
+  font-size:9px; letter-spacing:0.28em; text-transform:uppercase;
+  color:var(--ink-soft); margin-bottom:10px;
+  display:flex; align-items:center; gap:8px;
+}
+.detail-section-label::before { content:'◦'; color:var(--straw-dim); }
+.detail-text { font-size:13.5px; line-height:1.95; color:var(--ink-mid); white-space:pre-wrap; }
+
+.detail-steps { display:flex; flex-direction:column; gap:8px; }
+.detail-step {
+  display:flex; gap:10px; align-items:flex-start;
+  font-size:13px; color:var(--ink-mid); line-height:1.7;
+}
+.detail-step-num {
+  width:22px; height:22px; background:var(--forest); color:var(--straw-light);
+  border-radius:50%; font-size:10px; display:flex; align-items:center;
+  justify-content:center; flex-shrink:0; margin-top:2px;
+  font-family:'EB Garamond',serif;
+}
+
+.detail-cats-row {
+  display:flex; gap:7px; flex-wrap:wrap;
+  padding:12px 28px; border-bottom:1px solid var(--linen2);
+}
+.detail-actions {
+  padding:8px 28px; display:flex; gap:8px;
+  border-bottom:1px solid var(--linen2);
+}
+.btn-sm {
+  padding:5px 12px; font-size:11px;
+  background:none; color:var(--ink-soft);
+  border:1px solid var(--linen3); border-radius:3px;
+  cursor:pointer; font-family:'Noto Serif SC',serif;
+  transition:all 0.15s; letter-spacing:0.04em;
+}
+.btn-sm:hover { border-color:var(--moss); color:var(--forest); }
+.btn-sm.danger:hover { border-color:#A04030; color:#A04030; }
+
+/* Lightbox */
+.lightbox {
+  position:fixed; inset:0; background:rgba(0,0,0,0.92);
+  z-index:300; display:none; align-items:center; justify-content:center; cursor:pointer;
+}
+.lightbox.open { display:flex; }
+.lightbox img { max-width:92%; max-height:92%; object-fit:contain; border-radius:3px; }
+
+/* Toast */
+.toast-wrap {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+  z-index:200; display:flex; flex-direction:column; gap:6px; align-items:center;
+}
+.toast {
+  background:var(--forest); color:var(--linen);
+  padding:9px 18px; border-radius:3px; font-size:12.5px;
+  font-family:'Noto Serif SC',serif;
+  box-shadow:0 4px 16px rgba(26,40,16,0.4);
+  animation:toastIn 0.2s ease; white-space:nowrap;
+  display:flex; align-items:center; gap:12px;
+  border-left:2px solid var(--straw); letter-spacing:0.04em;
+}
+@keyframes toastIn { from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);} }
+.toast.out { animation:toastOut 0.25s ease forwards; }
+@keyframes toastOut { to{opacity:0;transform:translateY(4px);} }
+.toast-undo {
+  background:none; border:1px solid rgba(240,232,210,0.3);
+  color:var(--linen); padding:2px 9px; border-radius:2px;
+  font-size:10.5px; cursor:pointer; font-family:'Noto Serif SC',serif;
+}
+.toast-undo:hover { background:rgba(240,232,210,0.1); }
+
+@media (max-width:700px) {
+  .layout { grid-template-columns:1fr; }
+  .sidebar { position:static; height:auto; }
+  .main { padding:24px 20px 60px; }
+  .form-row { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-eyebrow">🌿 生存技能手记</div>
+      <div class="sidebar-title">Gaia <span class="ampersand">&</span> Isis</div>
+      <div class="sidebar-subtitle">仁慈的母亲，请赐福于我</div>
+    </div>
+
+    <div class="leaf-rule">
+      <div class="leaf-rule-line"></div>
+      <div class="leaf-rule-center">✦</div>
+      <div class="leaf-rule-line"></div>
+    </div>
+
+    <div class="sidebar-search">
+      <input type="text" class="search-input" id="searchInput" placeholder="搜索技能、场景…">
+    </div>
+
+    <nav class="cat-nav" id="catNav"></nav>
+    <button class="add-cat-btn" onclick="promptAddCat1()">＋ 添加一级分区</button>
+    <div class="sidebar-footer">Claude 为 Alice 制作 · 2026</div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main" id="mainArea">
+    <div class="welcome-state" id="welcomeState">
+      <div class="welcome-goddess">Gaia & Isis</div>
+      <div class="welcome-title">大地会保护懂她的人。</div>
+      <p class="welcome-sub">选择左侧分区开始记录——<br>野外生存、城市应急、急救技能……<br>每一个掌握的技能都是一份安全感。</p>
+      <p class="welcome-hint">了解 · 练习中 · 已掌握<br>追踪每一项技能的学习旅程。</p>
+    </div>
+
+    <div id="catView" style="display:none;">
+      <div class="main-header">
+        <div class="main-header-inner">
+          <div>
+            <div class="main-breadcrumb" id="breadcrumb"></div>
+            <div class="main-heading" id="mainHeading"></div>
+          </div>
+          <div class="main-actions">
+            <button class="btn-ghost" id="addSub2Btn" style="display:none" onclick="promptAddCat2()">＋ 添加子分区</button>
+            <button class="btn-primary" onclick="openAddNote()">🌿 新增技能</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-row" id="statsRow"></div>
+
+      <div class="mastery-filter">
+        <button class="mastery-pill active-all" data-filter="all" onclick="setFilter('all')">全部</button>
+        <button class="mastery-pill" data-filter="know" onclick="setFilter('know')">了解</button>
+        <button class="mastery-pill" data-filter="practice" onclick="setFilter('practice')">练习中</button>
+        <button class="mastery-pill" data-filter="master" onclick="setFilter('master')">已掌握</button>
+      </div>
+
+      <div class="notes-grid" id="notesGrid"></div>
+    </div>
+  </main>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="overlay" id="noteOverlay" onclick="overlayClose(event,'noteOverlay')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title" id="noteModalTitle">新增技能</span>
+      <button class="close-btn" onclick="closeNoteModal()">×</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="form-group">
+        <label class="form-label">技能名称</label>
+        <input type="text" id="nTitle" placeholder="这项技能叫什么？">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">一级分区</label>
+          <select id="nCat1" onchange="updateCat2Select()"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">二级分区 <span>（选填）</span></label>
+          <select id="nCat2"></select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">掌握程度</label>
+        <div class="mastery-select-group">
+          <div class="mastery-opt sel-know" data-val="know" onclick="selectMastery('know')">了解</div>
+          <div class="mastery-opt" data-val="practice" onclick="selectMastery('practice')">练习中</div>
+          <div class="mastery-opt" data-val="master" onclick="selectMastery('master')">已掌握</div>
+        </div>
+        <input type="hidden" id="nMastery" value="know">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">危险等级 <span>（操作风险）</span></label>
+        <div class="danger-select-group">
+          <div class="danger-opt sel-low" data-val="low" onclick="selectDanger('low')">低风险</div>
+          <div class="danger-opt" data-val="mid" onclick="selectDanger('mid')">需注意</div>
+          <div class="danger-opt" data-val="high" onclick="selectDanger('high')">高危险</div>
+        </div>
+        <input type="hidden" id="nDanger" value="low">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">图片 <span>（示意图、操作图、实物图）</span></label>
+        <div class="img-upload-zone" id="imgZone" onclick="document.getElementById('imgFileInput').click()">
+          <p>🌿 点击上传 · 或拖入图片</p>
+        </div>
+        <input type="file" id="imgFileInput" accept="image/*" multiple style="display:none" onchange="handleImgs(event)">
+        <div class="img-thumbs" id="imgThumbs"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">概述 <span>（选填）</span></label>
+        <textarea id="nDesc" placeholder="这项技能是什么、用在什么场景…"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">适用场景 <span>（选填）</span></label>
+          <input type="text" id="nScene" placeholder="山地、城市、海边…">
+        </div>
+        <div class="form-group">
+          <label class="form-label">所需工具 <span>（选填）</span></label>
+          <input type="text" id="nTools" placeholder="绳子、打火石、急救包…">
+        </div>
+      </div>
+
+      <div class="modal-section-label">操作步骤</div>
+      <div class="steps-list" id="stepsList"></div>
+      <button class="add-step-btn" onclick="addStepRow()">＋ 添加步骤</button>
+
+      <div class="form-group" style="margin-top:16px;">
+        <label class="form-label">注意事项 / 笔记 <span>（选填）</span></label>
+        <textarea id="nNotes" placeholder="关键提醒、踩过的坑、需要练习的点…" style="min-height:70px;"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">参考来源 <span>（选填）</span></label>
+        <input type="text" id="nSource" placeholder="书籍、课程、视频…">
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeNoteModal()">取消</button>
+      <button class="btn-primary" onclick="saveNote()">✦ 保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="overlay" id="detailOverlay" onclick="overlayClose(event,'detailOverlay')">
+  <div class="modal detail-modal" onclick="event.stopPropagation()">
+    <div class="modal-header" id="detailHeader"></div>
+    <div class="detail-actions">
+      <button class="btn-sm" onclick="editCurrentNote()">✎ 编辑</button>
+      <button class="btn-sm danger" onclick="deleteCurrentNote()">× 删除</button>
+    </div>
+    <div id="detailBody"></div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="">
+</div>
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+const SK = 'gaia_isis_v1';
+let data = { cats:[], notes:[] };
+let currentCat1=null, currentCat2=null;
+let editingNoteId=null, viewingNoteId=null;
+let pendingImgs=[], masteryFilter='all';
+
+const CAT_SYMBOLS = ['🌲','🏙️','🔥','💧','🌿','🪢','⛑️','🧭','🏕️','⚡'];
+
+function load(){
+  try{ const d=JSON.parse(localStorage.getItem(SK)); if(d) data=d; }catch(e){}
+  if(!data.cats||!data.cats.length){
+    data.cats=[
+      {id:'c1',name:'野外生存',children:[
+        {id:'c1a',name:'导航定向'},{id:'c1b',name:'庇护搭建'},
+        {id:'c1c',name:'火与水'},{id:'c1d',name:'食物采集'},
+        {id:'c1e',name:'绳结工具'}
+      ]},
+      {id:'c2',name:'城市应急',children:[
+        {id:'c2a',name:'灾害应对'},{id:'c2b',name:'应急物资'},
+        {id:'c2c',name:'逃生规划'}
+      ]},
+      {id:'c3',name:'急救技能',children:[]},
+    ];
+  }
+  if(!data.notes) data.notes=[];
+}
+function save(){ localStorage.setItem(SK, JSON.stringify(data)); }
+function getCatSymbol(i){ return CAT_SYMBOLS[i%CAT_SYMBOLS.length]; }
+
+function renderSidebar(){
+  const nav=document.getElementById('catNav');
+  nav.innerHTML='';
+  const allDiv=document.createElement('div');
+  allDiv.className='cat-level2'+(currentCat1==='__all'?' active':'');
+  allDiv.style.paddingLeft='18px';
+  allDiv.innerHTML=`<span class="cat-level2-dot"></span><span class="cat-level2-name">全部技能</span><span class="cat-level2-count">${data.notes.length}</span>`;
+  allDiv.onclick=()=>selectCat('__all',null);
+  nav.appendChild(allDiv);
+
+  data.cats.forEach((cat,i)=>{
+    const sym=getCatSymbol(i);
+    const count=data.notes.filter(n=>n.cat1===cat.id).length;
+    const chEl=document.getElementById('ch_'+cat.id);
+    const isOpen=currentCat1===cat.id||(chEl&&chEl.classList.contains('open'));
+    const group=document.createElement('div');
+    group.className='cat-group'; group.id='cg_'+cat.id;
+    group.innerHTML=`
+      <div class="cat-level1 ${currentCat1===cat.id?'active':''} ${isOpen?'open':''}" onclick="toggleCat1('${cat.id}')">
+        <span class="cat-symbol">${sym}</span>
+        <span class="cat-level1-name">${escH(cat.name)}</span>
+        <span class="cat-level1-count">${count}</span>
+        <div class="cat-level1-actions">
+          <button class="nano-btn" onclick="event.stopPropagation();renameCat1('${cat.id}')">✎</button>
+          <button class="nano-btn danger" onclick="event.stopPropagation();deleteCat1('${cat.id}')">×</button>
+        </div>
+        <span class="cat-chevron">›</span>
+      </div>
+      <div class="cat-children ${isOpen?'open':''}" id="ch_${cat.id}">
+        ${cat.children.map(sub=>{
+          const sc=data.notes.filter(n=>n.cat2===sub.id).length;
+          return `<div class="cat-level2 ${currentCat2===sub.id?'active':''}" onclick="selectCat('${cat.id}','${sub.id}')">
+            <span class="cat-level2-dot"></span>
+            <span class="cat-level2-name">${escH(sub.name)}</span>
+            <span class="cat-level2-count">${sc}</span>
+            <div class="cat-level2-actions">
+              <button class="nano-btn" onclick="event.stopPropagation();renameCat2('${cat.id}','${sub.id}')">✎</button>
+              <button class="nano-btn danger" onclick="event.stopPropagation();deleteCat2('${cat.id}','${sub.id}')">×</button>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`;
+    nav.appendChild(group);
+  });
+}
+
+function toggleCat1(id){
+  selectCat(id,null);
+  const ch=document.getElementById('ch_'+id);
+  const l1=ch.previousElementSibling;
+  const wasOpen=ch.classList.contains('open');
+  document.querySelectorAll('.cat-children').forEach(el=>el.classList.remove('open'));
+  document.querySelectorAll('.cat-level1').forEach(el=>el.classList.remove('open'));
+  if(!wasOpen){ch.classList.add('open');l1.classList.add('open');}
+}
+
+function selectCat(c1,c2){ currentCat1=c1; currentCat2=c2; renderSidebar(); renderMain(); }
+
+function renderMain(){
+  document.getElementById('welcomeState').style.display='none';
+  document.getElementById('catView').style.display='block';
+  const bc=document.getElementById('breadcrumb');
+  const h=document.getElementById('mainHeading');
+  const sub2Btn=document.getElementById('addSub2Btn');
+  if(currentCat1==='__all'){ bc.innerHTML='Gaia & Isis'; h.textContent='全部技能'; sub2Btn.style.display='none'; }
+  else {
+    const cat1=data.cats.find(c=>c.id===currentCat1);
+    if(currentCat2){
+      const sub=cat1.children.find(c=>c.id===currentCat2);
+      bc.innerHTML=`Gaia & Isis · ${escH(cat1.name)}`; h.textContent=sub.name; sub2Btn.style.display='none';
+    } else {
+      bc.innerHTML='Gaia & Isis'; h.textContent=cat1.name; sub2Btn.style.display='';
+    }
+  }
+  renderStats(); renderNotes();
+}
+
+function setFilter(f){
+  masteryFilter=f;
+  document.querySelectorAll('.mastery-pill').forEach(el=>{
+    el.className='mastery-pill';
+    if(el.dataset.filter===f) el.classList.add('active-'+f);
+  });
+  renderNotes();
+}
+
+function renderStats(){
+  const all=getFiltered('all');
+  const know=all.filter(n=>n.mastery==='know').length;
+  const practice=all.filter(n=>n.mastery==='practice').length;
+  const master=all.filter(n=>n.mastery==='master').length;
+  document.getElementById('statsRow').innerHTML=`
+    <div class="stat-chip"><strong>${all.length}</strong> 项技能</div>
+    ${know?`<div class="stat-chip" style="border-left:2px solid var(--straw)"><strong>${know}</strong> 了解</div>`:''}
+    ${practice?`<div class="stat-chip" style="border-left:2px solid var(--moss)"><strong>${practice}</strong> 练习中</div>`:''}
+    ${master?`<div class="stat-chip" style="border-left:2px solid var(--forest)"><strong>${master}</strong> 已掌握</div>`:''}
+  `;
+}
+
+function getFiltered(mf){
+  const f=mf!==undefined?mf:masteryFilter;
+  const q=document.getElementById('searchInput').value.trim().toLowerCase();
+  let list=[...data.notes];
+  if(currentCat1!=='__all') list=currentCat2?list.filter(n=>n.cat2===currentCat2):list.filter(n=>n.cat1===currentCat1);
+  if(f!=='all') list=list.filter(n=>n.mastery===f);
+  if(q) list=list.filter(n=>[n.title,n.desc,n.scene,n.tools,n.notes,n.source,...(n.steps||[])].join(' ').toLowerCase().includes(q));
+  return list.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+}
+
+function renderNotes(){
+  const grid=document.getElementById('notesGrid');
+  const list=getFiltered();
+  if(!list.length){
+    grid.innerHTML=`<div class="empty-state"><div class="empty-icon">🌿</div><p>这里还没有技能记录<br>点击右上角「新增技能」开始</p></div>`;
+    return;
+  }
+  const mLabel={know:'了解',practice:'练习中',master:'已掌握'};
+  const dLabel={low:'低风险',mid:'需注意',high:'高危险'};
+  grid.innerHTML=list.map((n,idx)=>{
+    const cat1=data.cats.find(c=>c.id===n.cat1);
+    const cat2=cat1&&cat1.children.find(c=>c.id===n.cat2);
+    const date=new Date(n.createdAt).toLocaleDateString('zh-CN',{month:'short',day:'numeric'});
+    const hasImg=n.images&&n.images.length;
+    const mastery=n.mastery||'know';
+    const danger=n.danger||'low';
+    return `<div class="note-card" style="animation-delay:${idx*0.04}s" onclick="openDetail('${n.id}')">
+      <div class="card-images">
+        ${hasImg
+          ?`<img class="card-img-primary" src="${n.images[0]}" alt="">
+            ${n.images.length>1?`<span class="card-img-count">${n.images.length} 张</span>`:''}`
+          :`<div class="card-img-placeholder"><div class="card-img-placeholder-icon">🌿</div><div class="card-img-placeholder-text">尚无图片</div></div>`}
+        <span class="card-mastery mastery-${mastery}">${mLabel[mastery]}</span>
+        <span class="card-danger danger-${danger}">${dLabel[danger]}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-cats">
+          ${cat1?`<span class="card-cat-tag">${escH(cat1.name)}</span>`:''}
+          ${cat2?`<span class="card-cat-tag">${escH(cat2.name)}</span>`:''}
+          ${n.scene?`<span class="card-cat-tag" style="background:rgba(139,107,61,0.08);color:var(--earth-dark);border-color:rgba(139,107,61,0.2)">${escH(n.scene)}</span>`:''}
+        </div>
+        <div class="card-title">${escH(n.title||'未命名技能')}</div>
+        ${n.desc?`<div class="card-preview">${escH(n.desc)}</div>`:''}
+      </div>
+      <div class="card-footer">
+        <span>${date}</span>
+        <div class="card-actions">
+          <button class="card-nano" onclick="event.stopPropagation();editNote('${n.id}')" title="编辑">✎</button>
+          <button class="card-nano danger" onclick="event.stopPropagation();deleteNote('${n.id}')" title="删除">×</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Categories
+function promptAddCat1(){
+  const name=prompt('新建一级分区：'); if(!name||!name.trim()) return;
+  data.cats.push({id:'c'+Date.now(),name:name.trim(),children:[]});
+  save(); renderSidebar(); toast('分区已创建');
+}
+function promptAddCat2(){
+  const cat1=data.cats.find(c=>c.id===currentCat1); if(!cat1) return;
+  const name=prompt(`在「${cat1.name}」下新建子分区：`); if(!name||!name.trim()) return;
+  cat1.children.push({id:'c'+Date.now(),name:name.trim()});
+  save(); renderSidebar(); renderMain(); toast('子分区已创建');
+}
+function renameCat1(id){
+  const c=data.cats.find(x=>x.id===id);
+  const n=prompt('重命名：',c.name); if(!n||!n.trim()||n.trim()===c.name) return;
+  c.name=n.trim(); save(); renderSidebar(); renderMain();
+}
+function renameCat2(c1id,id){
+  const c1=data.cats.find(x=>x.id===c1id);
+  const sub=c1&&c1.children.find(x=>x.id===id); if(!sub) return;
+  const n=prompt('重命名：',sub.name); if(!n||!n.trim()||n.trim()===sub.name) return;
+  sub.name=n.trim(); save(); renderSidebar(); renderMain();
+}
+function deleteCat1(id){
+  const c=data.cats.find(x=>x.id===id);
+  const count=data.notes.filter(n=>n.cat1===id).length;
+  if(!confirm(`删除「${c.name}」？${count?count+'条记录失去分类。':''}不可撤销。`)) return;
+  data.cats=data.cats.filter(x=>x.id!==id);
+  if(currentCat1===id){currentCat1=null;currentCat2=null;}
+  save(); renderSidebar();
+  if(!currentCat1){document.getElementById('catView').style.display='none';document.getElementById('welcomeState').style.display='';}
+  else renderMain();
+}
+function deleteCat2(c1id,id){
+  const c1=data.cats.find(x=>x.id===c1id);
+  const sub=c1&&c1.children.find(x=>x.id===id);
+  const count=data.notes.filter(n=>n.cat2===id).length;
+  if(!confirm(`删除「${sub.name}」？${count?count+'条记录失去子分类。':''}不可撤销。`)) return;
+  c1.children=c1.children.filter(x=>x.id!==id);
+  if(currentCat2===id) currentCat2=null;
+  save(); renderSidebar(); renderMain();
+}
+
+// Selectors
+function selectMastery(val){
+  document.getElementById('nMastery').value=val;
+  document.querySelectorAll('.mastery-opt').forEach(el=>{
+    el.className='mastery-opt'; if(el.dataset.val===val) el.classList.add('sel-'+val);
+  });
+}
+function selectDanger(val){
+  document.getElementById('nDanger').value=val;
+  document.querySelectorAll('.danger-opt').forEach(el=>{
+    el.className='danger-opt'; if(el.dataset.val===val) el.classList.add('sel-'+val);
+  });
+}
+
+// Note modal
+function openAddNote(){
+  editingNoteId=null; pendingImgs=[];
+  document.getElementById('noteModalTitle').textContent='新增技能';
+  ['nTitle','nScene','nTools','nNotes','nSource'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('nDesc').value='';
+  document.getElementById('imgThumbs').innerHTML='';
+  document.getElementById('stepsList').innerHTML='';
+  selectMastery('know'); selectDanger('low');
+  populateCat1Select(currentCat1);
+  document.getElementById('noteOverlay').classList.add('open');
+  setTimeout(()=>document.getElementById('nTitle').focus(),80);
+}
+
+function editNote(id){
+  const n=data.notes.find(x=>x.id===id); if(!n) return;
+  editingNoteId=id; pendingImgs=[...(n.images||[])];
+  document.getElementById('noteModalTitle').textContent='编辑技能';
+  document.getElementById('nTitle').value=n.title||'';
+  document.getElementById('nDesc').value=n.desc||'';
+  document.getElementById('nScene').value=n.scene||'';
+  document.getElementById('nTools').value=n.tools||'';
+  document.getElementById('nNotes').value=n.notes||'';
+  document.getElementById('nSource').value=n.source||'';
+  renderImgThumbs();
+  selectMastery(n.mastery||'know');
+  selectDanger(n.danger||'low');
+  populateCat1Select(n.cat1);
+  setTimeout(()=>{
+    const s2=document.getElementById('nCat2');
+    for(let i=0;i<s2.options.length;i++){if(s2.options[i].value===(n.cat2||'')){s2.selectedIndex=i;break;}}
+  },50);
+  document.getElementById('stepsList').innerHTML='';
+  (n.steps||[]).filter(Boolean).forEach(s=>addStepRow(s));
+  document.getElementById('noteOverlay').classList.add('open');
+}
+
+function populateCat1Select(sel){
+  const s=document.getElementById('nCat1');
+  s.innerHTML=data.cats.map(c=>`<option value="${c.id}" ${c.id===sel?'selected':''}>${escH(c.name)}</option>`).join('');
+  updateCat2Select();
+}
+function updateCat2Select(){
+  const cat1=data.cats.find(c=>c.id===document.getElementById('nCat1').value);
+  const s=document.getElementById('nCat2');
+  s.innerHTML=`<option value="">— 不指定 —</option>`+(cat1?cat1.children.map(c=>`<option value="${c.id}">${escH(c.name)}</option>`).join(''):'');
+}
+function closeNoteModal(){ document.getElementById('noteOverlay').classList.remove('open'); editingNoteId=null; pendingImgs=[]; }
+
+function saveNote(){
+  const title=document.getElementById('nTitle').value.trim();
+  if(!title){toast('请填写技能名称');return;}
+  const cat1id=document.getElementById('nCat1').value;
+  const cat2id=document.getElementById('nCat2').value||null;
+  const mastery=document.getElementById('nMastery').value||'know';
+  const danger=document.getElementById('nDanger').value||'low';
+  const steps=[...document.querySelectorAll('.step-input')].map(el=>el.value.trim()).filter(Boolean);
+  const now=new Date().toISOString();
+  if(editingNoteId){
+    const n=data.notes.find(x=>x.id===editingNoteId);
+    if(n){
+      n.title=title;n.cat1=cat1id;n.cat2=cat2id;n.mastery=mastery;n.danger=danger;
+      n.desc=document.getElementById('nDesc').value.trim();
+      n.scene=document.getElementById('nScene').value.trim();
+      n.tools=document.getElementById('nTools').value.trim();
+      n.notes=document.getElementById('nNotes').value.trim();
+      n.source=document.getElementById('nSource').value.trim();
+      n.images=[...pendingImgs];n.steps=steps;n.updatedAt=now;
+    }
+    toast('已更新 ✦');
+  } else {
+    data.notes.unshift({
+      id:'n'+Date.now(),title,cat1:cat1id,cat2:cat2id,mastery,danger,
+      desc:document.getElementById('nDesc').value.trim(),
+      scene:document.getElementById('nScene').value.trim(),
+      tools:document.getElementById('nTools').value.trim(),
+      notes:document.getElementById('nNotes').value.trim(),
+      source:document.getElementById('nSource').value.trim(),
+      images:[...pendingImgs],steps,createdAt:now,updatedAt:now
+    });
+    toast('技能已收录 ✦');
+  }
+  save(); closeNoteModal(); renderSidebar(); renderMain();
+  if(viewingNoteId) openDetail(viewingNoteId);
+}
+
+function deleteNote(id){
+  const n=data.notes.find(x=>x.id===id); if(!n) return;
+  data.notes=data.notes.filter(x=>x.id!==id);
+  save(); renderSidebar(); renderMain();
+  toast('已删除',()=>{data.notes.unshift(n);save();renderSidebar();renderMain();toast('已撤销 ✦');});
+}
+
+// Images
+function handleImgs(e){
+  [...e.target.files].forEach(f=>{
+    const r=new FileReader();r.onload=ev=>{pendingImgs.push(ev.target.result);renderImgThumbs();};r.readAsDataURL(f);
+  });
+  e.target.value='';
+}
+const imgZone=document.getElementById('imgZone');
+imgZone.addEventListener('dragover',e=>{e.preventDefault();imgZone.style.borderColor='var(--moss)';});
+imgZone.addEventListener('dragleave',()=>{imgZone.style.borderColor='';});
+imgZone.addEventListener('drop',e=>{
+  e.preventDefault();imgZone.style.borderColor='';
+  [...e.dataTransfer.files].filter(f=>f.type.startsWith('image/')).forEach(f=>{
+    const r=new FileReader();r.onload=ev=>{pendingImgs.push(ev.target.result);renderImgThumbs();};r.readAsDataURL(f);
+  });
+});
+function renderImgThumbs(){
+  document.getElementById('imgThumbs').innerHTML=pendingImgs.map((src,i)=>`
+    <div class="img-thumb"><img src="${src}" alt=""><button class="img-thumb-del" onclick="removeImg(${i})">×</button></div>`).join('');
+}
+function removeImg(i){pendingImgs.splice(i,1);renderImgThumbs();}
+
+// Steps
+function addStepRow(val=''){
+  const list=document.getElementById('stepsList');
+  const num=list.children.length+1;
+  const row=document.createElement('div');
+  row.className='step-row';
+  row.innerHTML=`<div class="step-num">${num}</div>
+    <input type="text" class="step-input" placeholder="第${num}步…" value="${escH(val)}">
+    <button class="step-del" onclick="this.parentElement.remove();reorderSteps()">×</button>`;
+  list.appendChild(row);
+}
+function reorderSteps(){
+  document.querySelectorAll('.step-num').forEach((el,i)=>el.textContent=i+1);
+  document.querySelectorAll('.step-input').forEach((el,i)=>el.placeholder=`第${i+1}步…`);
+}
+
+// Detail
+function openDetail(id){
+  viewingNoteId=id;
+  const n=data.notes.find(x=>x.id===id); if(!n) return;
+  const cat1=data.cats.find(c=>c.id===n.cat1);
+  const cat2=cat1&&cat1.children.find(c=>c.id===n.cat2);
+  const date=new Date(n.createdAt).toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'});
+  const mLabel={know:'了解',practice:'练习中',master:'已掌握'};
+  const dLabel={low:'低风险',mid:'需注意',high:'高危险'};
+  const mastery=n.mastery||'know', danger=n.danger||'low';
+
+  document.getElementById('detailHeader').innerHTML=`
+    <div>
+      <div class="modal-title">${escH(n.title||'未命名')}</div>
+      <div style="font-size:11px;color:var(--ink-soft);margin-top:4px;display:flex;gap:10px;align-items:center;">
+        <span>${date}</span>
+        <span class="card-mastery mastery-${mastery}" style="position:static;">${mLabel[mastery]}</span>
+        <span class="card-danger danger-${danger}" style="position:static;">${dLabel[danger]}</span>
+      </div>
+    </div>
+    <button class="close-btn" onclick="closeDetail()">×</button>`;
+
+  let body='';
+  if(n.images&&n.images.length){
+    body+=`<div class="detail-gallery">${n.images.map(src=>`<img class="detail-img" src="${src}" onclick="openLightbox('${src}')" alt="">`).join('')}</div>`;
+  }
+  body+=`<div class="detail-cats-row">
+    ${cat1?`<span class="card-cat-tag">${escH(cat1.name)}</span>`:''}
+    ${cat2?`<span class="card-cat-tag">${escH(cat2.name)}</span>`:''}
+    ${n.scene?`<span class="card-cat-tag" style="background:rgba(139,107,61,0.08);color:var(--earth-dark)">${escH(n.scene)}</span>`:''}
+  </div>`;
+  if(n.desc) body+=`<div class="detail-section"><div class="detail-section-label">概述</div><div class="detail-text">${escH(n.desc)}</div></div>`;
+  if(n.tools) body+=`<div class="detail-section"><div class="detail-section-label">所需工具</div><div class="detail-text">${escH(n.tools)}</div></div>`;
+  const steps=(n.steps||[]).filter(Boolean);
+  if(steps.length) body+=`<div class="detail-section"><div class="detail-section-label">操作步骤</div>
+    <div class="detail-steps">${steps.map((s,i)=>`<div class="detail-step"><span class="detail-step-num">${i+1}</span><span>${escH(s)}</span></div>`).join('')}</div></div>`;
+  if(n.notes) body+=`<div class="detail-section"><div class="detail-section-label">注意事项</div><div class="detail-text">${escH(n.notes)}</div></div>`;
+  if(n.source) body+=`<div class="detail-section"><div class="detail-section-label">参考来源</div><div class="detail-text">${escH(n.source)}</div></div>`;
+
+  document.getElementById('detailBody').innerHTML=body;
+  document.getElementById('detailOverlay').classList.add('open');
+}
+
+function closeDetail(){document.getElementById('detailOverlay').classList.remove('open');viewingNoteId=null;}
+function editCurrentNote(){const id=viewingNoteId;closeDetail();editNote(id);}
+function deleteCurrentNote(){const id=viewingNoteId;closeDetail();deleteNote(id);}
+
+function openLightbox(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('open');}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
+
+function toast(msg,undoFn=null){
+  const wrap=document.getElementById('toastWrap');
+  const el=document.createElement('div');el.className='toast';
+  el.innerHTML=`<span>${msg}</span>${undoFn?'<button class="toast-undo">撤销</button>':''}`;
+  wrap.appendChild(el);
+  if(undoFn) el.querySelector('.toast-undo').onclick=()=>{clearTimeout(t);undoFn();el.remove();};
+  const t=setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),250);},undoFn?5000:2000);
+}
+
+function overlayClose(e,id){
+  if(e.target===document.getElementById(id)){
+    document.getElementById(id).classList.remove('open');
+    if(id==='detailOverlay')viewingNoteId=null;
+    if(id==='noteOverlay'){editingNoteId=null;pendingImgs=[];}
+  }
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(document.getElementById('lightbox').classList.contains('open')){closeLightbox();return;}
+    if(document.getElementById('noteOverlay').classList.contains('open')){closeNoteModal();return;}
+    if(document.getElementById('detailOverlay').classList.contains('open')){closeDetail();return;}
+  }
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'&&document.getElementById('noteOverlay').classList.contains('open'))saveNote();
+});
+
+document.getElementById('searchInput').addEventListener('input',()=>{if(currentCat1)renderNotes();});
+
+function escH(s){if(!s)return '';return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+load();
+renderSidebar();
+</script>
+</body>
+</html>
