@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Alice's Color Theory Lab</title>
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #121215;
+        color: #e0e0e0;
+        margin: 0;
+        padding: 3rem 2rem;
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        align-items: flex-start;
+    }
+    .card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 2rem;
+        width: 45%;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+        backdrop-filter: blur(12px);
+    }
+    h2 {
+        margin-top: 0;
+        font-size: 1.1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #ffffff;
+    }
+    p.subtitle { font-size: 0.85rem; color: #888; line-height: 1.5; margin-bottom: 1.5rem; }
+    
+    /* Contrast Section */
+    .contrast-container { display: flex; gap: 1rem; }
+    .box {
+        flex: 1;
+        height: 280px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        transition: background 0.1s;
+    }
+    #box-left { background-color: #e63946; }
+    #box-right { background-color: #2b2b36; }
+    .inner-square {
+        width: 80px;
+        height: 80px;
+        background-color: #808080; /* 绝对中性灰 */
+        border-radius: 4px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .control-panel {
+        margin-top: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: rgba(0,0,0,0.2);
+        padding: 1rem;
+        border-radius: 8px;
+    }
+    input[type="color"] {
+        cursor: pointer;
+        border: none;
+        outline: none;
+        background: none;
+        width: 44px;
+        height: 44px;
+    }
+    
+    /* Extraction Section */
+    .upload-area {
+        border: 2px dashed rgba(255,255,255,0.15);
+        padding: 2.5rem 1rem;
+        text-align: center;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 1.5rem;
+        color: #aaa;
+        font-size: 0.9rem;
+    }
+    .upload-area:hover {
+        border-color: #aaa;
+        background: rgba(255,255,255,0.02);
+        color: #fff;
+    }
+    #image-preview {
+        max-width: 100%;
+        max-height: 220px;
+        border-radius: 8px;
+        display: none;
+        margin: 0 auto 1.5rem auto;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .palette { display: flex; flex-direction: column; gap: 0.5rem; }
+    .color-swatch {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: rgba(0,0,0,0.25);
+        padding: 0.6rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.03);
+    }
+    .color-block { width: 40px; height: 40px; border-radius: 6px; }
+    .color-info { font-family: 'Courier New', Courier, monospace; font-size: 0.9rem; letter-spacing: 0.5px; }
+</style>
+</head>
+<body>
+ 
+    <div class="card">
+        <h2>同时对比验证舱 (Simultaneous Contrast)</h2>
+        <p class="subtitle">原理：色彩在空间中相邻时，会互相将对方推向自己的补色方向。观察中心数值绝对相等的 `#808080` 灰色方块，是如何在左侧背景变化时产生视觉色相偏移的。</p>
+        <div class="contrast-container">
+            <div class="box" id="box-left">
+                <div class="inner-square"></div>
+            </div>
+            <div class="box" id="box-right">
+                <div class="inner-square"></div>
+            </div>
+        </div>
+        <div class="control-panel">
+            <label for="bg-color">尝试滑动改变左侧背景色：</label>
+            <input type="color" id="bg-color" value="#e63946">
+        </div>
+    </div>
+ 
+    <div class="card">
+        <h2>意象色彩捕获器 (Real-time Color Extraction)</h2>
+        <p class="subtitle">工具：调用本地 Canvas 引擎，直接读取像素矩阵。上传你需要用于刺绣参考的风景照或实物图，系统将为你提取关键采样点的 RGB 与 HEX 线号色值。</p>
+        <div class="upload-area" id="upload-btn">
+            点击或拖拽图片到此处 (支持 JPG/PNG)
+            <input type="file" id="file-input" style="display: none;" accept="image/*">
+        </div>
+        <img id="image-preview" alt="Preview">
+        <canvas id="canvas" style="display:none;"></canvas>
+        <div class="palette" id="palette-container">
+            </div>
+    </div>
+ 
+<script>
+    // 模块一：同时对比逻辑交互
+    const bgColorInput = document.getElementById('bg-color');
+    const boxLeft = document.getElementById('box-left');
+    bgColorInput.addEventListener('input', (e) => {
+        boxLeft.style.backgroundColor = e.target.value;
+    });
+ 
+    // 模块二：图像色彩抓取与分析
+    const uploadBtn = document.getElementById('upload-btn');
+    const fileInput = document.getElementById('file-input');
+    const imgPreview = document.getElementById('image-preview');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const paletteContainer = document.getElementById('palette-container');
+ 
+    // 绑定上传点击事件
+    uploadBtn.addEventListener('click', () => fileInput.click());
+ 
+    // 图片读取与渲染
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            imgPreview.src = event.target.result;
+            imgPreview.style.display = 'block';
+            imgPreview.onload = extractColors;
+            uploadBtn.style.display = 'none'; // 隐藏上传框，保持界面清爽
+        }
+        reader.readAsDataURL(file);
+    });
+ 
+    // 核心像素提取算法 (轻量级多点采样)
+    function extractColors() {
+        canvas.width = imgPreview.width;
+        canvas.height = imgPreview.height;
+        ctx.drawImage(imgPreview, 0, 0, canvas.width, canvas.height);
+        
+        // 选取画面中5个典型的视觉停留点进行色彩抓取
+        const samplingPoints = [
+            {x: canvas.width * 0.2, y: canvas.height * 0.2},
+            {x: canvas.width * 0.8, y: canvas.height * 0.2},
+            {x: canvas.width * 0.5, y: canvas.height * 0.5},
+            {x: canvas.width * 0.2, y: canvas.height * 0.8},
+            {x: canvas.width * 0.8, y: canvas.height * 0.8}
+        ];
+ 
+        paletteContainer.innerHTML = '';
+        
+        samplingPoints.forEach(p => {
+            const pixel = ctx.getImageData(p.x, p.y, 1, 1).data;
+            const r = pixel[0], g = pixel[1], b = pixel[2];
+            // 转换为标准的 HEX 格式
+            const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+            
+            // 动态生成色卡结构
+            const swatch = document.createElement('div');
+            swatch.className = 'color-swatch';
+            swatch.innerHTML = `
+                <div class="color-block" style="background-color: ${hex}"></div>
+                <div class="color-info">${hex}  |  R:${r} G:${g} B:${b}</div>
+            `;
+            paletteContainer.appendChild(swatch);
+        });
+    }
+</script>
+</body>
+</html>
+ 
