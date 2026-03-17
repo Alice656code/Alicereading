@@ -674,6 +674,118 @@
             text-align: center;
         }
 
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--accent-sage);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.4s ease;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Tag select area in modal */
+        .tag-select-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.6rem;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            background: var(--bg-primary);
+            min-height: 46px;
+        }
+        .tag-select-pill {
+            padding: 0.28rem 0.85rem;
+            border-radius: 16px;
+            font-size: 0.83rem;
+            cursor: pointer;
+            border: 1.5px solid var(--border-light);
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+        .tag-select-pill:hover { border-color: var(--accent-sage); color: var(--text-primary); }
+        .tag-select-pill.selected { background: var(--accent-dusty-purple); border-color: var(--accent-dusty-purple); color: var(--white); }
+
+        /* Sticky items */
+        .sticky-item-reading {
+            background: var(--white);
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            padding: 0;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+        .sticky-section {
+            padding: 0.65rem 0.9rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .sticky-section:last-child { border-bottom: none; }
+        .sticky-section-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: 0.3rem;
+            letter-spacing: 0.05em;
+        }
+        .sticky-section-label.label-quote { color: var(--accent-dusty-blue); }
+        .sticky-section-label.label-thought { color: var(--accent-sage); }
+        .sticky-section-label.label-claude { color: var(--accent-dusty-purple); }
+        .sticky-section-text {
+            color: var(--text-primary);
+            font-size: 0.88rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        .sticky-section-text.empty { color: var(--text-secondary); font-style: italic; font-size: 0.82rem; }
+        .sticky-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0.9rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-light);
+        }
+        .sticky-item-date { font-size: 0.75rem; color: var(--text-secondary); }
+        .sticky-item-actions { display: flex; gap: 0.25rem; }
+
+        /* Book link tag */
+        .book-link-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.2rem 0.6rem;
+            background: rgba(157,171,184,0.15);
+            border: 1px solid var(--accent-dusty-blue);
+            border-radius: 10px;
+            font-size: 0.78rem;
+            color: var(--accent-dusty-blue);
+            margin-top: 0.4rem;
+            cursor: pointer;
+        }
+        .book-link-tag:hover { background: rgba(157,171,184,0.3); }
+
+        /* Pool badge */
+        .pool-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            position: absolute; top: -6px; right: -6px;
+            background: var(--accent-dusty-pink); color: var(--white);
+            border-radius: 50%; width: 18px; height: 18px; font-size: 0.7rem;
+        }
+
         /* Mobile responsiveness */
         @media (max-width: 768px) {
             body {
@@ -750,6 +862,7 @@
                         <div class="sort-option" data-sort="pinyin" onclick="setSortOrder('pinyin')">按书籍拼音顺序排序</div>
                     </div>
                 </div>
+                <button class="btn btn-secondary" onclick="openStickyPool()" style="position:relative;letter-spacing:0">📎 便利贴池 <span id="poolBadge" class="pool-badge" style="display:none"></span></button>
                 <button class="btn" onclick="openAddBookModal()">+ 添加新书</button>
             </div>
         </div>
@@ -777,8 +890,8 @@
                     <input type="text" id="bookAuthor">
                 </div>
                 <div class="form-group">
-                    <label>分类标签（用顿号"、"分隔多个标签）</label>
-                    <input type="text" id="bookTags" placeholder="例如：建筑、美学" required>
+                    <label>分类标签 <span style="font-weight:300;color:var(--text-secondary);font-size:0.83rem">（可多选）</span></label>
+                    <div class="tag-select-area" id="tagSelectArea"></div>
                 </div>
                 <div class="form-group">
                     <label>开始阅读日期</label>
@@ -851,6 +964,15 @@
             <div class="button-group">
                 <button class="btn" onclick="addNote()">添加笔记</button>
                 <button class="btn btn-secondary" onclick="closeViewBookModal()">关闭</button>
+            </div>
+
+            <!-- 书内便利贴 -->
+            <div style="margin-top:2rem;border-top:1px solid var(--border-light);padding-top:1.5rem">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+                    <span style="font-size:0.95rem;color:var(--text-secondary)">📎 便利贴 · <span id="bookStickyCount"></span></span>
+                    <button class="btn btn-small btn-secondary" onclick="openAddSticky()">+ 新建便利贴</button>
+                </div>
+                <div id="bookStickyList"></div>
             </div>
         </div>
     </div>
@@ -943,6 +1065,9 @@
 
     <!-- Category Management Modal -->
     <div class="modal" id="categoryModal">
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
         <div class="modal-content">
             <h2>管理分类</h2>
             <div id="successMessage" style="display: none;" class="success-message"></div>
@@ -958,6 +1083,64 @@
         </div>
     </div>
 
+    <!-- Add/Edit Sticky Modal -->
+    <div class="modal" id="stickyModal">
+        <div class="modal-content">
+            <h2 id="stickyModalTitle">新建便利贴</h2>
+            <div class="form-group">
+                <label style="color:var(--accent-dusty-blue)">📖 原文摘录</label>
+                <textarea id="stickyQuote" placeholder="书中原文……" style="min-height:80px"></textarea>
+            </div>
+            <div class="form-group">
+                <label style="color:var(--accent-sage)">💭 我的想法</label>
+                <textarea id="stickyThought" placeholder="读到这里我想到……" style="min-height:80px"></textarea>
+            </div>
+            <div class="form-group">
+                <label style="color:var(--accent-dusty-purple)">✦ Claude 补充</label>
+                <textarea id="stickyClaudeNote" placeholder="粘贴 Claude 的补充……" style="min-height:80px"></textarea>
+            </div>
+            <div class="form-group">
+                <label>🔗 书间连线 <span style="font-weight:300;font-size:0.82rem;color:var(--text-secondary)">（这让我想到了……）</span></label>
+                <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem">
+                    <select id="stickyLinkBook" style="flex:1">
+                        <option value="">选择关联书目……</option>
+                    </select>
+                </div>
+                <input type="text" id="stickyLinkNote" placeholder="关联备注（选填）……">
+            </div>
+            <div class="button-group">
+                <button class="btn" onclick="saveSticky()">保存</button>
+                <button class="btn btn-secondary" onclick="closeStickyModal()">取消</button>
+                <button class="btn btn-danger" id="deleteStickyBtn" style="display:none" onclick="deleteCurrentSticky()">删除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sticky Pool Modal -->
+    <div class="modal" id="stickyPoolModal">
+        <div class="modal-content">
+            <h2>📎 便利贴池</h2>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1.5rem;font-style:italic">灵感先扔这里，想好了再归入某本书</p>
+            <div id="poolStickyList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem"></div>
+            <button class="btn btn-small" onclick="openAddPoolSticky()" style="margin-bottom:1rem">+ 新建便利贴</button>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="closeStickyPool()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Move Sticky Modal -->
+    <div class="modal" id="moveStickyModal">
+        <div class="modal-content" style="max-width:400px">
+            <h2>转移便利贴</h2>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem;font-style:italic" id="moveStickyPreview"></p>
+            <div id="moveDestList" style="display:flex;flex-direction:column;gap:0.5rem;max-height:300px;overflow-y:auto;margin-bottom:1.5rem"></div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="closeMoveStickyModal()">取消</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let books = [];
         let categories = ['计划阅读', '文学', '心理学', '艺术', '建筑史', '科技', '金融', '历史', '美学', '政治', '西方神秘学', '东方神秘学'];
@@ -967,7 +1150,21 @@
         let currentFilter = 'all';
         let editingBookId = null;
         let draggedNoteIndex = null;
-        let currentSortOrder = 'time'; // 'time' or 'pinyin'
+        let currentSortOrder = 'time';
+        let selectedTags = [];
+        let poolStickies = [];
+        let editingStickyIdx = null;
+        let editingStickySource = null; // bookId or 'pool'
+        let movingStickyIdx = null;
+        let movingStickySource = null;
+
+        // Toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
 
         // Pinyin mapping for sorting
         function getPinyin(str) {
@@ -982,11 +1179,9 @@
             const stored = localStorage.getItem('readingJournal');
             if (stored) {
                 books = JSON.parse(stored);
-                // Migrate old data: move first note to initialNote if initialNote doesn't exist
                 books.forEach(book => {
-                    if (book.initialNote === undefined) {
-                        book.initialNote = '';
-                    }
+                    if (book.initialNote === undefined) book.initialNote = '';
+                    if (book.stickies === undefined) book.stickies = [];
                 });
             }
             renderBooks();
@@ -1019,19 +1214,35 @@
 
         // Save data to localStorage
         function saveBooks() {
-            localStorage.setItem('readingJournal', JSON.stringify(books));
+            try {
+                localStorage.setItem('readingJournal', JSON.stringify(books));
+            } catch (e) {
+                alert('数据保存失败，可能是浏览器存储空间已满。请先导出备份数据。');
+            }
         }
 
         function saveCategories() {
-            localStorage.setItem('readingCategories', JSON.stringify(categories));
+            try {
+                localStorage.setItem('readingCategories', JSON.stringify(categories));
+            } catch (e) {
+                alert('分类保存失败。');
+            }
         }
 
         function saveQuoteText() {
-            localStorage.setItem('readingQuote', quoteText);
+            try {
+                localStorage.setItem('readingQuote', quoteText);
+            } catch (e) {
+                alert('感悟保存失败。');
+            }
         }
 
         function saveSortOrder() {
-            localStorage.setItem('readingSortOrder', currentSortOrder);
+            try {
+                localStorage.setItem('readingSortOrder', currentSortOrder);
+            } catch (e) {
+                console.error('排序设置保存失败');
+            }
         }
 
         // Sort functions
@@ -1101,15 +1312,32 @@
             document.getElementById('quoteModal').classList.remove('active');
         }
 
-        // Render categories
         function renderCategories() {
             const categoriesDiv = document.getElementById('categories');
             categoriesDiv.innerHTML = `
                 <div class="category-pill ${currentFilter === 'all' ? 'active' : ''}" data-category="all">全部</div>
-                ${categories.map(cat => 
+                ${categories.map(cat =>
                     `<div class="category-pill ${currentFilter === cat ? 'active' : ''}" data-category="${cat}">${cat}</div>`
                 ).join('')}
             `;
+            const area = document.getElementById('tagSelectArea');
+            if (area) renderTagSelectArea();
+        }
+
+        function renderTagSelectArea() {
+            const area = document.getElementById('tagSelectArea');
+            if (!area) return;
+            area.innerHTML = categories.map(cat => `
+                <div class="tag-select-pill ${selectedTags.includes(cat) ? 'selected' : ''}"
+                     onclick="toggleTagSelect('${cat}')">${cat}</div>
+            `).join('');
+        }
+
+        function toggleTagSelect(cat) {
+            selectedTags = selectedTags.includes(cat)
+                ? selectedTags.filter(t => t !== cat)
+                : [...selectedTags, cat];
+            renderTagSelectArea();
         }
 
         // Render books grid
@@ -1169,7 +1397,7 @@
                         <div class="book-title">${book.title}</div>
                         <div class="book-meta">
                             ${book.author ? book.author + ' · ' : ''}
-                            开始于 ${book.startDate}
+                            开始于 ${book.startDate}${book.stickies && book.stickies.length ? ` · 📎 ${book.stickies.length}` : ''}
                         </div>
                         <div class="book-tags">${tagsHtml}</div>
                         ${(book.notes.length > 0 || book.initialNote) ? `
@@ -1192,30 +1420,30 @@
         // Search
         document.getElementById('searchBox').addEventListener('input', renderBooks);
 
-        // Add/Edit book modal
         function openAddBookModal() {
             editingBookId = null;
+            selectedTags = [];
             document.getElementById('bookModalTitle').textContent = '添加新书';
             document.getElementById('deleteBookBtn').style.display = 'none';
             document.getElementById('initialNoteGroup').style.display = 'block';
             document.getElementById('bookInitialNote').value = '';
             document.getElementById('bookModal').classList.add('active');
             document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
+            renderTagSelectArea();
         }
 
         function openEditBook(bookId) {
             editingBookId = bookId;
             const book = books.find(b => b.id === bookId);
-            
+            selectedTags = book.tags ? [...book.tags] : [];
             document.getElementById('bookModalTitle').textContent = '编辑书籍';
             document.getElementById('bookTitle').value = book.title;
             document.getElementById('bookAuthor').value = book.author || '';
-            document.getElementById('bookTags').value = book.tags ? book.tags.join('、') : '';
             document.getElementById('startDate').value = book.startDate;
-            document.getElementById('initialNoteGroup').style.display = 'none'; // 编辑时隐藏，在详情页编辑
+            document.getElementById('initialNoteGroup').style.display = 'none';
             document.getElementById('deleteBookBtn').style.display = 'block';
-            
             document.getElementById('bookModal').classList.add('active');
+            renderTagSelectArea();
         }
 
         function closeBookModal() {
@@ -1223,6 +1451,7 @@
             document.getElementById('bookForm').reset();
             document.getElementById('bookInitialNote').value = '';
             editingBookId = null;
+            selectedTags = [];
         }
 
         function deleteBook() {
@@ -1238,66 +1467,54 @@
 
         document.getElementById('bookForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            
             const title = document.getElementById('bookTitle').value;
             const author = document.getElementById('bookAuthor').value;
-            const tagsInput = document.getElementById('bookTags').value;
-            const tags = tagsInput.split('、').map(t => t.trim()).filter(t => t);
             const startDate = document.getElementById('startDate').value;
             const initialNote = document.getElementById('bookInitialNote').value;
 
             if (editingBookId) {
-                // Edit existing book
                 const book = books.find(b => b.id === editingBookId);
                 book.title = title;
                 book.author = author;
-                book.tags = tags;
+                book.tags = [...selectedTags];
                 book.startDate = startDate;
             } else {
-                // Add new book
-                const newBook = {
+                books.unshift({
                     id: Date.now().toString(),
-                    title: title,
-                    author: author,
-                    tags: tags,
-                    startDate: startDate,
+                    title, author,
+                    tags: [...selectedTags],
+                    startDate,
                     notes: [],
+                    stickies: [],
                     summary: '',
                     initialNote: initialNote || ''
-                };
-
-                books.unshift(newBook);
+                });
             }
 
+            const isEditing = !!editingBookId;
             saveBooks();
-            renderBooks();
             closeBookModal();
+            currentFilter = 'all';
+            document.getElementById('searchBox').value = '';
+            renderCategories();
+            renderBooks();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showToast(isEditing ? '书籍已更新 ✓' : '新书已添加 ✓');
         });
 
-        // View book
         function openBook(bookId) {
             currentBookId = bookId;
             const book = books.find(b => b.id === bookId);
-            
             document.getElementById('viewBookTitle').textContent = book.title;
-            document.getElementById('viewBookMeta').textContent = 
+            document.getElementById('viewBookMeta').textContent =
                 `${book.author ? book.author + ' · ' : ''}开始于 ${book.startDate}`;
-            
-            // Display tags
-            const tagsHtml = book.tags ? book.tags.map(tag => 
-                `<span class="book-tag">${tag}</span>`
-            ).join('') : '';
+            const tagsHtml = book.tags ? book.tags.map(tag =>
+                `<span class="book-tag">${tag}</span>`).join('') : '';
             document.getElementById('viewBookTags').innerHTML = tagsHtml;
-            
-            // Display summary
             displaySummary(book);
-            
-            // Display initial note
             displayInitialNote(book);
-            
-            // Display notes
             renderNotes(book);
-            
+            renderBookStickies(book);
             document.getElementById('newNoteContent').value = '';
             document.getElementById('viewBookModal').classList.add('active');
         }
@@ -1487,6 +1704,7 @@
             renderNotes(book);
             renderBooks(); // Update preview
             document.getElementById('newNoteContent').value = '';
+            showToast('笔记已添加 ✓');
         }
 
         function editNote(index) {
@@ -1535,81 +1753,53 @@
             document.getElementById('settingsModal').classList.remove('active');
         }
 
-        // Export data
         function exportData() {
             const data = {
-                books: books,
-                categories: categories,
-                quote: quoteText,
+                books, categories, quote: quoteText,
                 sortOrder: currentSortOrder,
+                poolStickies,
                 exportDate: new Date().toISOString()
             };
-            
             const dataStr = JSON.stringify(data, null, 2);
             const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            
             const url = URL.createObjectURL(dataBlob);
             const link = document.createElement('a');
             link.href = url;
             link.download = `reading-journal-backup-${new Date().toISOString().split('T')[0]}.json`;
             link.click();
-            
             URL.revokeObjectURL(url);
-            
-            alert('数据导出成功！');
+            showToast('数据导出成功 ✓');
             closeSettingsModal();
         }
 
-        // Import data
         function importData(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
-                    
                     if (data.books) {
                         books = data.books;
-                        // Ensure initialNote field exists for all books
                         books.forEach(book => {
-                            if (book.initialNote === undefined) {
-                                book.initialNote = '';
-                            }
+                            if (book.initialNote === undefined) book.initialNote = '';
+                            if (book.stickies === undefined) book.stickies = [];
                         });
                         saveBooks();
                     }
-                    
-                    if (data.categories) {
-                        categories = data.categories;
-                        saveCategories();
-                    }
-                    
-                    if (data.quote !== undefined) {
-                        quoteText = data.quote;
-                        saveQuoteText();
-                        displayQuote();
-                    }
-
-                    if (data.sortOrder) {
-                        currentSortOrder = data.sortOrder;
-                        saveSortOrder();
-                        updateSortLabel();
-                        updateSortOptions();
-                    }
-                    
+                    if (data.categories) { categories = data.categories; saveCategories(); }
+                    if (data.quote !== undefined) { quoteText = data.quote; saveQuoteText(); displayQuote(); }
+                    if (data.sortOrder) { currentSortOrder = data.sortOrder; saveSortOrder(); updateSortLabel(); updateSortOptions(); }
+                    if (data.poolStickies) { poolStickies = data.poolStickies; savePoolStickies(); }
                     renderCategories();
                     renderBooks();
-                    
-                    alert('数据导入成功！');
+                    showToast('数据导入成功 ✓');
                     closeSettingsModal();
                 } catch (error) {
-                    alert('文件格式错误，导入失败');
+                    showToast('文件格式错误，导入失败');
                 }
             };
             reader.readAsText(file);
-            
             event.target.value = '';
         }
 
@@ -1738,11 +1928,257 @@
             });
         });
 
+        // ── Sticky helpers ──
+        function escHtml(str) {
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        function stickyCardHtml(s, idx, source) {
+            const linkHtml = s.linkBookId ? (() => {
+                const lb = books.find(b => b.id === s.linkBookId);
+                return lb ? `<div class="book-link-tag" onclick="event.stopPropagation();openBook('${lb.id}')">🔗 ${escHtml(lb.title)}${s.linkNote ? ' · ' + escHtml(s.linkNote) : ''}</div>` : '';
+            })() : '';
+            return `<div class="sticky-item-reading">
+                <div class="sticky-item-header">
+                    <span class="sticky-item-date">${new Date(s.createdAt).toLocaleDateString('zh-CN',{month:'short',day:'numeric'})}</span>
+                    <div class="sticky-item-actions">
+                        <button class="icon-btn" onclick="openEditSticky(${idx},'${source}')" title="编辑">🔘</button>
+                        <button class="icon-btn" onclick="openMoveSticky(${idx},'${source}')" title="转移">→</button>
+                        <button class="icon-btn danger" onclick="deleteSticky(${idx},'${source}')" title="删除">🗑️</button>
+                    </div>
+                </div>
+                ${s.quote ? `<div class="sticky-section"><div class="sticky-section-label label-quote">📖 原文</div><div class="sticky-section-text">${escHtml(s.quote)}</div></div>` : ''}
+                ${s.thought ? `<div class="sticky-section"><div class="sticky-section-label label-thought">💭 想法</div><div class="sticky-section-text">${escHtml(s.thought)}</div></div>` : ''}
+                ${s.claudeNote ? `<div class="sticky-section"><div class="sticky-section-label label-claude">✦ Claude</div><div class="sticky-section-text">${escHtml(s.claudeNote)}</div></div>` : ''}
+                ${linkHtml ? `<div class="sticky-section">${linkHtml}</div>` : ''}
+            </div>`;
+        }
+
+        // ── Book stickies ──
+        function renderBookStickies(book) {
+            const list = document.getElementById('bookStickyList');
+            const count = document.getElementById('bookStickyCount');
+            const stickies = book.stickies || [];
+            count.textContent = stickies.length ? `共 ${stickies.length} 条` : '还没有便利贴';
+            list.innerHTML = stickies.length
+                ? [...stickies].reverse().map((s, ri) => stickyCardHtml(s, stickies.length - 1 - ri, book.id)).join('')
+                : '';
+        }
+
+        function openAddSticky() {
+            editingStickyIdx = null;
+            editingStickySource = currentBookId;
+            document.getElementById('stickyModalTitle').textContent = '新建便利贴';
+            document.getElementById('stickyQuote').value = '';
+            document.getElementById('stickyThought').value = '';
+            document.getElementById('stickyClaudeNote').value = '';
+            document.getElementById('stickyLinkNote').value = '';
+            document.getElementById('deleteStickyBtn').style.display = 'none';
+            populateLinkBookSelect(currentBookId);
+            document.getElementById('stickyModal').classList.add('active');
+        }
+
+        function openEditSticky(idx, source) {
+            editingStickyIdx = idx;
+            editingStickySource = source;
+            const s = source === 'pool' ? poolStickies[idx] : books.find(b => b.id === source).stickies[idx];
+            document.getElementById('stickyModalTitle').textContent = '编辑便利贴';
+            document.getElementById('stickyQuote').value = s.quote || '';
+            document.getElementById('stickyThought').value = s.thought || '';
+            document.getElementById('stickyClaudeNote').value = s.claudeNote || '';
+            document.getElementById('stickyLinkNote').value = s.linkNote || '';
+            document.getElementById('deleteStickyBtn').style.display = 'block';
+            populateLinkBookSelect(source === 'pool' ? null : source, s.linkBookId);
+            document.getElementById('stickyModal').classList.add('active');
+        }
+
+        function populateLinkBookSelect(excludeId, selectedId) {
+            const sel = document.getElementById('stickyLinkBook');
+            sel.innerHTML = '<option value="">选择关联书目……</option>' +
+                books.filter(b => b.id !== excludeId).map(b =>
+                    `<option value="${b.id}" ${b.id === selectedId ? 'selected' : ''}>${escHtml(b.title)}</option>`
+                ).join('');
+        }
+
+        function saveSticky() {
+            const s = {
+                quote: document.getElementById('stickyQuote').value.trim(),
+                thought: document.getElementById('stickyThought').value.trim(),
+                claudeNote: document.getElementById('stickyClaudeNote').value.trim(),
+                linkBookId: document.getElementById('stickyLinkBook').value || null,
+                linkNote: document.getElementById('stickyLinkNote').value.trim(),
+                createdAt: new Date().toISOString()
+            };
+            if (!s.quote && !s.thought && !s.claudeNote) { showToast('至少填写一个区域'); return; }
+
+            if (editingStickyIdx !== null) {
+                s.createdAt = editingStickySource === 'pool'
+                    ? poolStickies[editingStickyIdx].createdAt
+                    : books.find(b => b.id === editingStickySource).stickies[editingStickyIdx].createdAt;
+                if (editingStickySource === 'pool') {
+                    poolStickies[editingStickyIdx] = s;
+                    savePoolStickies();
+                    renderPoolStickies();
+                } else {
+                    const book = books.find(b => b.id === editingStickySource);
+                    book.stickies[editingStickyIdx] = s;
+                    saveBooks();
+                    if (currentBookId === editingStickySource) renderBookStickies(book);
+                }
+            } else {
+                if (editingStickySource === 'pool') {
+                    poolStickies.push(s);
+                    savePoolStickies();
+                    renderPoolStickies();
+                } else {
+                    const book = books.find(b => b.id === editingStickySource);
+                    if (!book.stickies) book.stickies = [];
+                    book.stickies.push(s);
+                    saveBooks();
+                    renderBookStickies(book);
+                    renderBooks();
+                }
+            }
+            closeStickyModal();
+            showToast('便利贴已保存 ✓');
+        }
+
+        function deleteCurrentSticky() {
+            deleteSticky(editingStickyIdx, editingStickySource);
+            closeStickyModal();
+        }
+
+        function deleteSticky(idx, source) {
+            if (source === 'pool') {
+                poolStickies.splice(idx, 1);
+                savePoolStickies();
+                renderPoolStickies();
+            } else {
+                const book = books.find(b => b.id === source);
+                book.stickies.splice(idx, 1);
+                saveBooks();
+                if (currentBookId === source) renderBookStickies(book);
+                renderBooks();
+            }
+            showToast('已删除');
+        }
+
+        function closeStickyModal() {
+            document.getElementById('stickyModal').classList.remove('active');
+            editingStickyIdx = null;
+            editingStickySource = null;
+        }
+
+        // ── Sticky Pool ──
+        function loadPoolStickies() {
+            const stored = localStorage.getItem('readingPoolStickies');
+            if (stored) poolStickies = JSON.parse(stored);
+            updatePoolBadge();
+        }
+
+        function savePoolStickies() {
+            localStorage.setItem('readingPoolStickies', JSON.stringify(poolStickies));
+            updatePoolBadge();
+        }
+
+        function updatePoolBadge() {
+            const badge = document.getElementById('poolBadge');
+            if (poolStickies.length > 0) {
+                badge.textContent = poolStickies.length;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function openStickyPool() {
+            renderPoolStickies();
+            document.getElementById('stickyPoolModal').classList.add('active');
+        }
+
+        function closeStickyPool() {
+            document.getElementById('stickyPoolModal').classList.remove('active');
+        }
+
+        function renderPoolStickies() {
+            const list = document.getElementById('poolStickyList');
+            if (poolStickies.length === 0) {
+                list.innerHTML = '<p style="color:var(--text-secondary);font-style:italic;text-align:center;padding:1rem">池里还没有便利贴～</p>';
+                return;
+            }
+            list.innerHTML = [...poolStickies].reverse().map((s, ri) =>
+                stickyCardHtml(s, poolStickies.length - 1 - ri, 'pool')
+            ).join('');
+        }
+
+        function openAddPoolSticky() {
+            editingStickyIdx = null;
+            editingStickySource = 'pool';
+            document.getElementById('stickyModalTitle').textContent = '新建便利贴（池）';
+            document.getElementById('stickyQuote').value = '';
+            document.getElementById('stickyThought').value = '';
+            document.getElementById('stickyClaudeNote').value = '';
+            document.getElementById('stickyLinkNote').value = '';
+            document.getElementById('deleteStickyBtn').style.display = 'none';
+            populateLinkBookSelect(null);
+            document.getElementById('stickyModal').classList.add('active');
+        }
+
+        // ── Move Sticky ──
+        function openMoveSticky(idx, source) {
+            movingStickyIdx = idx;
+            movingStickySource = source;
+            const s = source === 'pool' ? poolStickies[idx] : books.find(b => b.id === source).stickies[idx];
+            const preview = (s.quote || s.thought || '').slice(0, 40);
+            document.getElementById('moveStickyPreview').textContent = `「${preview}${preview.length >= 40 ? '…' : ''}」`;
+            const dests = source === 'pool'
+                ? books
+                : [{ id: 'pool', title: '📎 便利贴池（取消归类）' }, ...books.filter(b => b.id !== source)];
+            document.getElementById('moveDestList').innerHTML = dests.map(d => `
+                <div class="settings-item" onclick="confirmMoveSticky('${d.id}')" style="padding:0.75rem 1rem">
+                    <div class="settings-item-title">${escHtml(d.title)}</div>
+                </div>
+            `).join('');
+            document.getElementById('moveStickyModal').classList.add('active');
+        }
+
+        function closeMoveStickyModal() {
+            document.getElementById('moveStickyModal').classList.remove('active');
+        }
+
+        function confirmMoveSticky(destId) {
+            let stickyObj;
+            if (movingStickySource === 'pool') {
+                stickyObj = poolStickies.splice(movingStickyIdx, 1)[0];
+                savePoolStickies();
+                renderPoolStickies();
+            } else {
+                const src = books.find(b => b.id === movingStickySource);
+                stickyObj = src.stickies.splice(movingStickyIdx, 1)[0];
+                saveBooks();
+                if (currentBookId === movingStickySource) renderBookStickies(src);
+            }
+            if (destId === 'pool') {
+                poolStickies.push(stickyObj);
+                savePoolStickies();
+            } else {
+                const dest = books.find(b => b.id === destId);
+                if (!dest.stickies) dest.stickies = [];
+                dest.stickies.push(stickyObj);
+                saveBooks();
+                if (currentBookId === destId) renderBookStickies(dest);
+            }
+            renderBooks();
+            closeMoveStickyModal();
+            showToast('已转移 ✓');
+        }
+
         // Initialize
         loadCategories();
         loadBooks();
         loadQuote();
         loadSortOrder();
+        loadPoolStickies();
     </script>
 </body>
 </html>
