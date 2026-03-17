@@ -152,6 +152,7 @@ h1 em {
 .tool-card:nth-child(7) { animation-delay: 0.35s; }
 .tool-card:nth-child(8) { animation-delay: 0.40s; }
 .tool-card:nth-child(9) { animation-delay: 0.45s; }
+.tool-card:nth-child(10) { animation-delay: 0.50s; }
 
 @keyframes cardIn {
   from { opacity:0; transform:translateY(16px); }
@@ -200,6 +201,17 @@ h1 em {
 .card-venus   { --card-color: #A08070;   --card-glow: rgba(160,128,112,0.1); }
 .card-embroid { --card-color: #C0392B;   --card-glow: rgba(192,57,43,0.1); }
 .card-gaia    { --card-color: #4A6B35;   --card-glow: rgba(74,107,53,0.1); }
+.card-nihongo { --card-color: #E8456B;   --card-glow: rgba(232,69,107,0.1); }
+
+/* Center the last card when it's alone in a 3-col row */
+@media (min-width: 601px) {
+  .cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .cards-grid > .tool-card:last-child:nth-child(3n + 1) {
+    grid-column: 2;
+  }
+}
 
 .card-emoji {
   font-size: 32px;
@@ -282,7 +294,7 @@ footer .heart {
   <header>
     <div class="header-eyebrow">Alice's Digital Garden</div>
     <h1><em>工具花园</em></h1>
-    <p class="header-sub">Claude 为 Alice 制作的九个小世界</p>
+    <p class="header-sub">Claude 为 Alice 制作的十个小世界</p>
     <div class="rainbow-line"></div>
   </header>
 
@@ -358,6 +370,14 @@ footer .heart {
       <div class="card-name">Gaia & Isis</div>
       <span class="card-name-en">生存技能手记</span>
       <p class="card-desc">野外生存 · 城市应急 · 急救<br>大地会保护懂她的人</p>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a href="jp-flashcards.html" class="tool-card card-nihongo">
+      <span class="card-emoji">🍬</span>
+      <div class="card-name">昼も夜も春も渡らず</div>
+      <span class="card-name-en">白日春不渡，黑夜万梦星</span>
+      <p class="card-desc">五十音 · N5词库 · 闪卡<br>一张一张，把日语吃进去</p>
       <span class="card-arrow">→</span>
     </a>
 
