@@ -52,7 +52,121 @@ body {
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
 }
 
-/* ── Layout ── */
+/* ── Keywords ── */
+.keyword-area {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 8px; border: 1px solid var(--border);
+  border-radius: 6px; background: var(--bg); min-height: 42px;
+  cursor: text;
+}
+.keyword-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 12px;
+  background: var(--bg-deep); border: 1px solid var(--border);
+  font-size: 12px; color: var(--ink-mid); cursor: pointer;
+  transition: all 0.2s;
+}
+.keyword-tag:hover { border-color: var(--ink-mid); }
+.keyword-tag.selected { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.keyword-tag.new-tag { border-style: dashed; color: var(--ink-soft); }
+.keyword-input-inline {
+  border: none; background: transparent; outline: none;
+  font-family: 'Noto Serif SC', serif; font-size: 12px;
+  color: var(--ink); min-width: 80px; flex: 1;
+}
+
+/* ── Keyword display on card ── */
+.card-keywords {
+  display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px;
+}
+.card-keyword {
+  font-size: 10px; padding: 2px 7px; border-radius: 8px;
+  background: var(--bg-deep); color: var(--ink-soft);
+  border: 1px solid var(--border-light);
+}
+
+/* ── Dark thread (connections) ── */
+.dark-thread {
+  margin-top: 20px; padding-top: 16px;
+  border-top: 1px solid var(--border-light);
+}
+.dark-thread-label {
+  font-family: 'EB Garamond', serif; font-size: 11px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ink-soft); margin-bottom: 10px;
+}
+.thread-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 8px 10px; border-radius: 6px;
+  border: 1px solid var(--border-light);
+  background: var(--paper-warm); margin-bottom: 6px;
+  cursor: pointer; transition: all 0.2s;
+}
+.thread-item:hover { border-color: var(--border); background: var(--paper); }
+.thread-item-source {
+  font-size: 10px; padding: 2px 6px; border-radius: 4px;
+  background: var(--bg-deep); color: var(--ink-soft);
+  white-space: nowrap; flex-shrink: 0;
+}
+.thread-item-source.venus { color: #8B6B4A; background: rgba(139,107,74,0.08); }
+.thread-item-source.reading { color: #4A6B7A; background: rgba(74,107,122,0.08); }
+.thread-item-title { font-size: 13px; color: var(--ink-mid); line-height: 1.4; }
+.thread-item-keywords { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+
+/* ── Stickies ── */
+.sticky-pool-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 6px;
+  border: 1px solid var(--border); background: var(--paper);
+  font-family: 'Noto Serif SC', serif; font-size: 12px;
+  color: var(--ink-mid); cursor: pointer; transition: all 0.2s;
+  position: relative;
+}
+.sticky-pool-btn:hover { border-color: var(--ink-mid); }
+.sticky-pool-badge {
+  display: none; position: absolute; top: -6px; right: -6px;
+  background: #7A4A6B; color: white; border-radius: 50%;
+  width: 16px; height: 16px; font-size: 10px;
+  align-items: center; justify-content: center;
+}
+.sticky-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.sticky-item-v {
+  background: var(--paper-warm); border: 1px solid var(--border-light);
+  border-left: 3px solid var(--border); border-radius: 6px;
+  padding: 8px 10px; font-size: 13px; line-height: 1.6;
+  color: var(--ink-mid); white-space: pre-wrap;
+}
+.sticky-item-v:nth-child(3n+1) { border-left-color: #8B6B4A; }
+.sticky-item-v:nth-child(3n+2) { border-left-color: #4A6B7A; }
+.sticky-item-v:nth-child(3n+3) { border-left-color: #7A4A6B; }
+.sticky-item-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 4px;
+}
+.sticky-item-date { font-size: 10px; color: var(--ink-soft); }
+.sticky-item-kws { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 6px; }
+.sticky-item-kw {
+  font-size: 10px; padding: 1px 6px; border-radius: 6px;
+  background: var(--bg-deep); color: var(--ink-soft);
+}
+.sticky-actions { display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s; }
+.sticky-item-v:hover .sticky-actions { opacity: 1; }
+.sticky-input-area {
+  display: flex; gap: 8px; margin-top: 4px;
+}
+.sticky-textarea {
+  flex: 1; padding: 8px 10px; border: 1px solid var(--border);
+  border-radius: 6px; background: var(--bg); font-family: 'Noto Serif SC', serif;
+  font-size: 13px; color: var(--ink); resize: vertical; min-height: 60px;
+}
+.sticky-textarea:focus { outline: none; border-color: var(--ink-mid); }
+
+/* ── Note sticky section in detail ── */
+.detail-sticky-section {
+  margin-top: 16px; padding-top: 16px;
+  border-top: 1px solid var(--border-light);
+}
+
 .layout {
   display: grid;
   grid-template-columns: 260px 1fr;
@@ -998,6 +1112,7 @@ textarea {
         </div>
         <div class="main-actions">
           <button class="btn-ghost" id="addSub2Btn" style="display:none;" onclick="promptAddCat2()">＋ 添加子分区</button>
+          <button class="sticky-pool-btn" onclick="openStickyPool()">📎 便利贴池<span class="sticky-pool-badge" id="poolBadge"></span></button>
           <button class="btn-primary" onclick="openAddNote()">＋ 新增笔记</button>
         </div>
       </div>
@@ -1067,6 +1182,11 @@ textarea {
       <div class="books-list" id="booksList"></div>
       <button class="add-book-btn" onclick="addBookRow()">＋ 添加书籍</button>
 
+      <div class="form-group" style="margin-top:16px">
+        <label class="form-label">关键词标签 <span>（用于暗线连接）</span></label>
+        <div class="keyword-area" id="keywordArea" onclick="focusKwInput()"></div>
+      </div>
+
     </div>
     <div class="modal-footer">
       <button class="btn-ghost" onclick="closeNoteModal()">取消</button>
@@ -1092,18 +1212,62 @@ textarea {
   <img id="lightboxImg" src="" alt="">
 </div>
 
+<!-- Sticky Pool Modal -->
+<div class="overlay" id="stickyPoolOverlay" onclick="overlayClose(event,'stickyPoolOverlay')">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:520px">
+    <div class="modal-header">
+      <span class="modal-title">📎 便利贴池</span>
+      <button class="close-btn" onclick="closeStickyPool()">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:12px;color:var(--ink-soft);margin-bottom:16px;font-style:italic">灵感先扔这里，想好了再归入某条笔记</p>
+      <div class="sticky-list" id="poolStickyList"></div>
+      <div class="sticky-input-area">
+        <textarea class="sticky-textarea" id="poolStickyInput" placeholder="随手记一条灵感……"></textarea>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button class="btn-primary" onclick="addPoolSticky()" style="white-space:nowrap">贴上</button>
+        </div>
+      </div>
+      <div style="margin-top:8px">
+        <div class="keyword-area" id="poolStickyKwArea" onclick="focusPoolKwInput()" style="margin-top:6px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Move Sticky Modal -->
+<div class="overlay" id="moveStickyOverlay" onclick="overlayClose(event,'moveStickyOverlay')">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:400px">
+    <div class="modal-header">
+      <span class="modal-title">转移便利贴</span>
+      <button class="close-btn" onclick="closeMoveSticky()">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:12px;color:var(--ink-soft);margin-bottom:12px;font-style:italic" id="moveStickyPreview"></p>
+      <div id="moveStickyDestList" style="display:flex;flex-direction:column;gap:6px;max-height:300px;overflow-y:auto"></div>
+    </div>
+  </div>
+</div>
+
 <!-- Toast -->
 <div class="toast-wrap" id="toastWrap"></div>
 
 <script>
 // ── Data ──
 const SK = 'venus_v1';
+const SK_SHARED_KW = 'shared_keywords'; // shared with reading journal
+const SK_POOL = 'venus_pool_stickies';
 let data = { cats: [], notes: [] };
 let currentCat1 = null;
 let currentCat2 = null;
 let editingNoteId = null;
 let viewingNoteId = null;
 let pendingImgs = [];
+let selectedKws = []; // keywords being edited in note modal
+let poolSelectedKws = []; // keywords for pool sticky input
+let movingStickyIdx = null;
+let movingStickySource = null; // 'pool' or noteId
+let poolStickies = [];
 
 const CAT_COLORS = [
   '#8B6B4A','#4A6B7A','#7A4A6B','#4A6B4A','#6B4A4A','#4A4A6B',
@@ -1130,9 +1294,29 @@ function load() {
     ];
   }
   if (!data.notes) data.notes = [];
+  data.notes.forEach(n => { if (!n.keywords) n.keywords = []; if (!n.stickies) n.stickies = []; });
+  try { poolStickies = JSON.parse(localStorage.getItem(SK_POOL)) || []; } catch(e) { poolStickies = []; }
+  updatePoolBadge();
 }
 
 function save() { localStorage.setItem(SK, JSON.stringify(data)); }
+
+function savePool() { localStorage.setItem(SK_POOL, JSON.stringify(poolStickies)); updatePoolBadge(); }
+
+// ── Shared keywords ──
+function loadSharedKeywords() {
+  try { return JSON.parse(localStorage.getItem(SK_SHARED_KW)) || []; } catch(e) { return []; }
+}
+function saveSharedKeyword(kw) {
+  const kws = loadSharedKeywords();
+  if (!kws.includes(kw)) { kws.push(kw); localStorage.setItem(SK_SHARED_KW, JSON.stringify(kws)); }
+}
+function updatePoolBadge() {
+  const b = document.getElementById('poolBadge');
+  if (!b) return;
+  if (poolStickies.length) { b.textContent = poolStickies.length; b.style.display = 'flex'; }
+  else { b.style.display = 'none'; }
+}
 
 function getCatColor(idx) { return CAT_COLORS[idx % CAT_COLORS.length]; }
 function getCatBg(idx) { return CAT_BGS[idx % CAT_BGS.length]; }
@@ -1316,6 +1500,7 @@ function renderNotes() {
         </div>
         <div class="card-title">${escH(n.title||'无题')}</div>
         ${n.concept?`<div class="card-concept-preview">${escH(n.concept)}</div>`:''}
+        ${n.keywords && n.keywords.length ? `<div class="card-keywords">${n.keywords.map(k=>`<span class="card-keyword">#${escH(k)}</span>`).join('')}</div>` : ''}
       </div>
       <div class="card-footer">
         <span>${date}</span>
@@ -1396,7 +1581,8 @@ function deleteCat2(cat1id, id) {
 function openAddNote() {
   editingNoteId = null;
   pendingImgs = [];
-  document.getElementById('noteModalTitle').textContent = '新增笔记';
+  selectedKws = [];
+  document.getElementById('noteModalTitle').textContent = '新増笔记';
   document.getElementById('nTitle').value = '';
   document.getElementById('nConcept').value = '';
   document.getElementById('nWorks').value = '';
@@ -1405,6 +1591,7 @@ function openAddNote() {
   document.getElementById('imgThumbs').innerHTML = '';
   document.getElementById('booksList').innerHTML = '';
   populateCat1Select(currentCat1);
+  renderKeywordArea('keywordArea', selectedKws, 'toggleNoteKw', 'addNoteKw');
   document.getElementById('noteOverlay').classList.add('open');
   setTimeout(() => document.getElementById('nTitle').focus(), 80);
 }
@@ -1414,6 +1601,7 @@ function editNote(id) {
   if (!n) return;
   editingNoteId = id;
   pendingImgs = [...(n.images||[])];
+  selectedKws = [...(n.keywords||[])];
   document.getElementById('noteModalTitle').textContent = '编辑笔记';
   document.getElementById('nTitle').value = n.title || '';
   document.getElementById('nConcept').value = n.concept || '';
@@ -1428,9 +1616,9 @@ function editNote(id) {
       if (sel2.options[i].value === (n.cat2||'')) { sel2.selectedIndex = i; break; }
     }
   }, 50);
-  // Books
   document.getElementById('booksList').innerHTML = '';
   (n.books||[]).filter(b=>b).forEach(b => addBookRow(b));
+  renderKeywordArea('keywordArea', selectedKws, 'toggleNoteKw', 'addNoteKw');
   document.getElementById('noteOverlay').classList.add('open');
 }
 
@@ -1450,7 +1638,7 @@ function updateCat2Select() {
 
 function closeNoteModal() {
   document.getElementById('noteOverlay').classList.remove('open');
-  editingNoteId = null; pendingImgs = [];
+  editingNoteId = null; pendingImgs = []; selectedKws = [];
 }
 
 function saveNote() {
@@ -1460,6 +1648,7 @@ function saveNote() {
   const cat2id = document.getElementById('nCat2').value || null;
   const books = [...document.querySelectorAll('.book-input')].map(el=>el.value.trim()).filter(Boolean);
   const now = new Date().toISOString();
+  selectedKws.forEach(kw => saveSharedKeyword(kw));
 
   if (editingNoteId) {
     const n = data.notes.find(x => x.id === editingNoteId);
@@ -1471,6 +1660,7 @@ function saveNote() {
       n.feeling = document.getElementById('nFeeling').value.trim();
       n.images  = [...pendingImgs];
       n.books   = books;
+      n.keywords = [...selectedKws];
       n.updatedAt = now;
     }
     toast('笔记已更新 ✓');
@@ -1481,7 +1671,10 @@ function saveNote() {
       works:   document.getElementById('nWorks').value.trim(),
       source:  document.getElementById('nSource').value.trim(),
       feeling: document.getElementById('nFeeling').value.trim(),
-      images: [...pendingImgs], books, createdAt: now, updatedAt: now
+      images: [...pendingImgs], books,
+      keywords: [...selectedKws],
+      stickies: [],
+      createdAt: now, updatedAt: now
     });
     toast('笔记已收录 ✓');
   }
@@ -1527,6 +1720,239 @@ function renderImgThumbs() {
 
 function removeImg(i) { pendingImgs.splice(i,1); renderImgThumbs(); }
 
+// ── Keywords ──
+function renderKeywordArea(areaId, selected, onToggle, onAdd) {
+  const area = document.getElementById(areaId);
+  if (!area) return;
+  const all = loadSharedKeywords();
+  area.innerHTML = all.map(kw => `
+    <span class="keyword-tag ${selected.includes(kw) ? 'selected' : ''}"
+          onclick="${onToggle}('${escH(kw)}')">${escH(kw)}</span>
+  `).join('') +
+  `<input class="keyword-input-inline" id="${areaId}_input" placeholder="新关键词…"
+    onkeydown="kwInputKey(event,'${areaId}','${onAdd}')"
+    onblur="kwInputBlur(event,'${areaId}','${onAdd}')">`;
+}
+
+function kwInputKey(e, areaId, onAdd) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    const val = e.target.value.trim().replace(/,$/, '');
+    if (val) { window[onAdd](val); e.target.value = ''; }
+  }
+}
+function kwInputBlur(e, areaId, onAdd) {
+  const val = e.target.value.trim();
+  if (val) { window[onAdd](val); e.target.value = ''; }
+}
+function focusKwInput() { const el = document.getElementById('keywordArea_input'); if(el) el.focus(); }
+function focusPoolKwInput() { const el = document.getElementById('poolStickyKwArea_input'); if(el) el.focus(); }
+
+function toggleNoteKw(kw) {
+  selectedKws = selectedKws.includes(kw) ? selectedKws.filter(k=>k!==kw) : [...selectedKws, kw];
+  renderKeywordArea('keywordArea', selectedKws, 'toggleNoteKw', 'addNoteKw');
+}
+function addNoteKw(kw) {
+  if (!selectedKws.includes(kw)) selectedKws.push(kw);
+  saveSharedKeyword(kw);
+  renderKeywordArea('keywordArea', selectedKws, 'toggleNoteKw', 'addNoteKw');
+}
+
+function togglePoolKw(kw) {
+  poolSelectedKws = poolSelectedKws.includes(kw) ? poolSelectedKws.filter(k=>k!==kw) : [...poolSelectedKws, kw];
+  renderKeywordArea('poolStickyKwArea', poolSelectedKws, 'togglePoolKw', 'addPoolKw');
+}
+function addPoolKw(kw) {
+  if (!poolSelectedKws.includes(kw)) poolSelectedKws.push(kw);
+  saveSharedKeyword(kw);
+  renderKeywordArea('poolStickyKwArea', poolSelectedKws, 'togglePoolKw', 'addPoolKw');
+}
+
+// ── Dark thread connections ──
+function getDarkThreadConnections(keywords, excludeId) {
+  if (!keywords || !keywords.length) return [];
+  const results = [];
+
+  // Venus notes
+  data.notes.forEach(n => {
+    if (n.id === excludeId) return;
+    const shared = (n.keywords || []).filter(k => keywords.includes(k));
+    if (shared.length) results.push({ source: 'venus', id: n.id, title: n.title, sharedKws: shared });
+  });
+
+  // Reading journal
+  try {
+    const rj = JSON.parse(localStorage.getItem('readingJournal')) || [];
+    rj.forEach(book => {
+      // book-level keywords
+      const bShared = (book.keywords || []).filter(k => keywords.includes(k));
+      if (bShared.length) results.push({ source: 'reading', id: book.id, title: book.title, sharedKws: bShared, type: 'book' });
+      // note-level keywords
+      (book.notes || []).forEach((note, ni) => {
+        const nShared = (note.keywords || []).filter(k => keywords.includes(k));
+        if (nShared.length) results.push({ source: 'reading', id: book.id, title: `${book.title} · 笔记`, sharedKws: nShared, type: 'note' });
+      });
+      // sticky keywords
+      (book.stickies || []).forEach(s => {
+        const sShared = (s.keywords || []).filter(k => keywords.includes(k));
+        if (sShared.length) results.push({ source: 'reading', id: book.id, title: `${book.title} · 便利贴`, sharedKws: sShared, type: 'sticky' });
+      });
+    });
+  } catch(e) {}
+
+  return results.slice(0, 8);
+}
+
+function renderDarkThread(keywords, excludeId) {
+  const conns = getDarkThreadConnections(keywords, excludeId);
+  if (!conns.length) return '';
+  return `<div class="dark-thread">
+    <div class="dark-thread-label">暗线连接 · ${conns.length} 处共鸣</div>
+    ${conns.map(c => `
+      <div class="thread-item" onclick="threadClick('${c.source}','${c.id}')">
+        <span class="thread-item-source ${c.source}">${c.source === 'venus' ? '美学' : '书籍'}</span>
+        <div>
+          <div class="thread-item-title">${escH(c.title)}</div>
+          <div class="thread-item-keywords">${c.sharedKws.map(k=>`#${escH(k)}`).join(' ')}</div>
+        </div>
+      </div>`).join('')}
+  </div>`;
+}
+
+function threadClick(source, id) {
+  if (source === 'venus') { closeDetail(); openDetail(id); }
+  else { toast('在读书笔记中查看：' + id); }
+}
+
+// ── Stickies per note ──
+function renderNoteStickies(note) {
+  const stickies = note.stickies || [];
+  const countLabel = stickies.length ? `共 ${stickies.length} 条` : '还没有便利贴';
+  return `<div class="detail-sticky-section">
+    <div class="dark-thread-label" style="margin-bottom:10px">便利贴 · ${countLabel}</div>
+    <div class="sticky-list" id="noteStickyList_${note.id}">
+      ${[...stickies].reverse().map((s, ri) => {
+        const realIdx = stickies.length - 1 - ri;
+        return stickyItemHtml(s, realIdx, note.id);
+      }).join('')}
+    </div>
+    <div class="sticky-input-area" style="margin-top:8px">
+      <textarea class="sticky-textarea" id="noteStickyInput_${note.id}" placeholder="随手记一条灵感……"></textarea>
+      <button class="btn-primary" onclick="addNoteSticky('${note.id}')" style="white-space:nowrap;align-self:flex-end">贴上</button>
+    </div>
+  </div>`;
+}
+
+function stickyItemHtml(s, idx, source) {
+  const kwHtml = s.keywords && s.keywords.length
+    ? `<div class="sticky-item-kws">${s.keywords.map(k=>`<span class="sticky-item-kw">#${escH(k)}</span>`).join('')}</div>` : '';
+  return `<div class="sticky-item-v">
+    <div class="sticky-item-header">
+      <span class="sticky-item-date">${new Date(s.createdAt).toLocaleDateString('zh-CN',{month:'short',day:'numeric'})}</span>
+      <div class="sticky-actions">
+        <button class="btn-sm" onclick="openMoveSticky(${idx},'${source}')">→</button>
+        <button class="btn-sm danger" onclick="deleteSticky(${idx},'${source}')">×</button>
+      </div>
+    </div>
+    ${escH(s.text)}
+    ${kwHtml}
+  </div>`;
+}
+
+function addNoteSticky(noteId) {
+  const input = document.getElementById(`noteStickyInput_${noteId}`);
+  const text = input ? input.value.trim() : '';
+  if (!text) return;
+  const n = data.notes.find(x => x.id === noteId);
+  if (!n) return;
+  if (!n.stickies) n.stickies = [];
+  n.stickies.push({ text, keywords: [], createdAt: new Date().toISOString() });
+  save();
+  if (input) input.value = '';
+  openDetail(noteId);
+  toast('便利贴已贴上 ✓');
+}
+
+function deleteSticky(idx, source) {
+  if (source === 'pool') {
+    poolStickies.splice(idx, 1);
+    savePool();
+    renderPoolStickies();
+  } else {
+    const n = data.notes.find(x => x.id === source);
+    if (n && n.stickies) { n.stickies.splice(idx, 1); save(); openDetail(source); }
+  }
+  toast('已删除');
+}
+
+// ── Sticky Pool ──
+function openStickyPool() {
+  poolSelectedKws = [];
+  renderPoolStickies();
+  renderKeywordArea('poolStickyKwArea', poolSelectedKws, 'togglePoolKw', 'addPoolKw');
+  document.getElementById('stickyPoolOverlay').classList.add('open');
+}
+function closeStickyPool() { document.getElementById('stickyPoolOverlay').classList.remove('open'); }
+
+function renderPoolStickies() {
+  const list = document.getElementById('poolStickyList');
+  if (!list) return;
+  list.innerHTML = poolStickies.length
+    ? [...poolStickies].reverse().map((s, ri) => stickyItemHtml(s, poolStickies.length-1-ri, 'pool')).join('')
+    : '<p style="color:var(--ink-soft);font-style:italic;text-align:center;padding:12px">池里还没有便利贴～</p>';
+}
+
+function addPoolSticky() {
+  const text = document.getElementById('poolStickyInput').value.trim();
+  if (!text) return;
+  poolStickies.push({ text, keywords: [...poolSelectedKws], createdAt: new Date().toISOString() });
+  savePool();
+  document.getElementById('poolStickyInput').value = '';
+  poolSelectedKws = [];
+  renderPoolStickies();
+  renderKeywordArea('poolStickyKwArea', poolSelectedKws, 'togglePoolKw', 'addPoolKw');
+  toast('已放入便利贴池 ✓');
+}
+
+// ── Move sticky ──
+function openMoveSticky(idx, source) {
+  movingStickyIdx = idx;
+  movingStickySource = source;
+  const s = source === 'pool' ? poolStickies[idx] : data.notes.find(x=>x.id===source)?.stickies?.[idx];
+  if (!s) return;
+  document.getElementById('moveStickyPreview').textContent = `「${s.text.slice(0,40)}${s.text.length>40?'…':''}」`;
+  const dests = source === 'pool'
+    ? data.notes.map(n => ({ id: n.id, label: n.title }))
+    : [{ id: 'pool', label: '📎 便利贴池（取消归类）' }, ...data.notes.filter(n=>n.id!==source).map(n=>({id:n.id,label:n.title}))];
+  document.getElementById('moveStickyDestList').innerHTML = dests.map(d => `
+    <div class="settings-item" onclick="confirmMoveSticky('${d.id}')" style="padding:10px 14px;background:var(--paper-warm);border:1px solid var(--border-light);border-radius:6px;cursor:pointer;font-size:13px;color:var(--ink-mid)">
+      ${escH(d.label)}
+    </div>`).join('');
+  document.getElementById('moveStickyOverlay').classList.add('open');
+}
+
+function closeMoveSticky() { document.getElementById('moveStickyOverlay').classList.remove('open'); }
+
+function confirmMoveSticky(destId) {
+  let obj;
+  if (movingStickySource === 'pool') {
+    obj = poolStickies.splice(movingStickyIdx, 1)[0]; savePool(); renderPoolStickies();
+  } else {
+    const n = data.notes.find(x=>x.id===movingStickySource);
+    if (n && n.stickies) { obj = n.stickies.splice(movingStickyIdx, 1)[0]; save(); }
+  }
+  if (!obj) { closeMoveSticky(); return; }
+  if (destId === 'pool') {
+    poolStickies.push(obj); savePool();
+  } else {
+    const dest = data.notes.find(x=>x.id===destId);
+    if (dest) { if (!dest.stickies) dest.stickies=[]; dest.stickies.push(obj); save(); }
+  }
+  closeMoveSticky();
+  if (viewingNoteId) openDetail(viewingNoteId);
+  toast('已转移 ✓');
+}
+
 // ── Books ──
 function addBookRow(val='') {
   const row = document.createElement('div');
@@ -1570,6 +1996,7 @@ function openDetail(id) {
   body += `<div class="detail-cats-row">
     ${cat1?`<span class="card-cat-tag" style="--card-cat-color:${color};--card-cat-bg:${bg}">${escH(cat1.name)}</span>`:''}
     ${cat2?`<span class="card-cat-tag" style="--card-cat-color:${color};--card-cat-bg:${bg}">${escH(cat2.name)}</span>`:''}
+    ${(n.keywords||[]).map(k=>`<span class="card-keyword">#${escH(k)}</span>`).join('')}
   </div>`;
 
   if (n.concept) body += `<div class="detail-section"><div class="detail-section-label">概念解释</div><div class="detail-text">${escH(n.concept)}</div></div>`;
@@ -1582,6 +2009,14 @@ function openDetail(id) {
     body += `<div class="detail-section"><div class="detail-section-label">推荐阅读</div>
       <div class="detail-books">${books.map(b=>`<div class="detail-book-item">${escH(b)}</div>`).join('')}</div>
     </div>`;
+  }
+
+  // Stickies
+  body += renderNoteStickies(n);
+
+  // Dark thread
+  if (n.keywords && n.keywords.length) {
+    body += renderDarkThread(n.keywords, n.id);
   }
 
   document.getElementById('detailBody').innerHTML = body;

@@ -674,6 +674,53 @@
             text-align: center;
         }
 
+        /* Keywords */
+        .keyword-area-rj {
+            display: flex; flex-wrap: wrap; gap: 5px;
+            padding: 7px; border: 1px solid var(--border-light);
+            border-radius: 4px; background: var(--bg-primary); min-height: 40px; cursor: text;
+        }
+        .kw-tag {
+            display: inline-flex; align-items: center; gap: 3px;
+            padding: 3px 9px; border-radius: 12px;
+            background: var(--bg-secondary); border: 1px solid var(--border-light);
+            font-size: 0.8rem; color: var(--text-secondary); cursor: pointer; transition: all 0.2s;
+        }
+        .kw-tag:hover { border-color: var(--accent-sage); }
+        .kw-tag.selected { background: var(--accent-sage); color: white; border-color: var(--accent-sage); }
+        .kw-input-inline {
+            border: none; background: transparent; outline: none;
+            font-family: inherit; font-size: 0.85rem; color: var(--text-primary); min-width: 80px; flex: 1;
+        }
+        .dark-thread-rj {
+            margin-top: 1.5rem; padding-top: 1rem;
+            border-top: 1px solid var(--border-light);
+        }
+        .dark-thread-label-rj {
+            font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--text-secondary); margin-bottom: 0.75rem; font-style: italic;
+        }
+        .thread-item-rj {
+            display: flex; align-items: flex-start; gap: 8px;
+            padding: 8px 10px; border-radius: 4px;
+            border: 1px solid var(--border-light);
+            background: var(--white); margin-bottom: 6px;
+            cursor: pointer; transition: all 0.2s; font-size: 0.85rem;
+        }
+        .thread-item-rj:hover { border-color: var(--accent-sage); }
+        .thread-source-badge {
+            font-size: 0.72rem; padding: 2px 6px; border-radius: 3px;
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .thread-source-badge.venus { color: #8B6B4A; background: rgba(139,107,74,0.1); }
+        .thread-source-badge.reading { color: var(--accent-dusty-blue); background: rgba(157,171,184,0.15); }
+        .note-kw-display { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+        .note-kw-chip {
+            font-size: 0.75rem; padding: 1px 7px; border-radius: 8px;
+            background: var(--bg-secondary); color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+        }
+
         /* Toast notification */
         .toast {
             position: fixed;
@@ -959,6 +1006,10 @@
             <div class="form-group" style="margin-top: 2rem;">
                 <label>添加新笔记</label>
                 <textarea id="newNoteContent" placeholder="今天的思考、与Claude的讨论、新的扩展想法..."></textarea>
+                <div style="margin-top:0.5rem">
+                    <label style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:4px;display:block">关键词 <span style="font-weight:300">（连接暗线）</span></label>
+                    <div class="keyword-area-rj" id="noteKwArea" onclick="document.getElementById('noteKwArea_inp')&&document.getElementById('noteKwArea_inp').focus()"></div>
+                </div>
             </div>
 
             <div class="button-group">
@@ -1144,6 +1195,7 @@
     <script>
         let books = [];
         let categories = ['计划阅读', '文学', '心理学', '艺术', '建筑史', '科技', '金融', '历史', '美学', '政治', '西方神秘学', '东方神秘学'];
+        const SK_SHARED_KW = 'shared_keywords';
         let quoteText = '';
         let currentBookId = null;
         let currentNoteIndex = null;
@@ -1152,9 +1204,10 @@
         let draggedNoteIndex = null;
         let currentSortOrder = 'time';
         let selectedTags = [];
+        let selectedNoteKws = [];
         let poolStickies = [];
         let editingStickyIdx = null;
-        let editingStickySource = null; // bookId or 'pool'
+        let editingStickySource = null;
         let movingStickyIdx = null;
         let movingStickySource = null;
 
@@ -1182,6 +1235,9 @@
                 books.forEach(book => {
                     if (book.initialNote === undefined) book.initialNote = '';
                     if (book.stickies === undefined) book.stickies = [];
+                    if (book.notes) book.notes.forEach(n => {
+                        if (!n.keywords) n.keywords = [];
+                    });
                 });
             }
             renderBooks();
@@ -1516,6 +1572,8 @@
             renderNotes(book);
             renderBookStickies(book);
             document.getElementById('newNoteContent').value = '';
+            selectedNoteKws = [];
+            renderKwArea('noteKwArea', selectedNoteKws, 'toggleNoteKw', 'addNoteKw');
             document.getElementById('viewBookModal').classList.add('active');
         }
 
@@ -1622,11 +1680,16 @@
 
         // Notes functions
         function renderNotes(book) {
-            const notesHtml = book.notes.length > 0 
-                ? book.notes.map((note, index) => `
+            const notesHtml = book.notes.length > 0
+                ? book.notes.map((note, index) => {
+                    const kwHtml = note.keywords && note.keywords.length
+                        ? `<div class="note-kw-display">${note.keywords.map(k=>`<span class="note-kw-chip">#${k}</span>`).join('')}</div>` : '';
+                    const thread = note.keywords && note.keywords.length
+                        ? renderDarkThreadRJ(note.keywords, book.id, index) : '';
+                    return `
                     <div class="note-entry" draggable="true" data-index="${index}">
                         <div class="note-header">
-                            <div class="note-date">${new Date(note.date).toLocaleDateString('zh-CN', { 
+                            <div class="note-date">${new Date(note.date).toLocaleDateString('zh-CN', {
                                 year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
                             })}</div>
                             <div class="note-actions">
@@ -1635,8 +1698,10 @@
                             </div>
                         </div>
                         <div class="note-content">${note.content}</div>
-                    </div>
-                `).reverse().join('')
+                        ${kwHtml}
+                        ${thread}
+                    </div>`;
+                }).reverse().join('')
                 : '<p style="color: var(--text-secondary); text-align: center; padding: 2rem;">还没有添加阅读中笔记</p>';
             
             document.getElementById('bookNotes').innerHTML = notesHtml;
@@ -1695,15 +1760,19 @@
             if (!content) return;
 
             const book = books.find(b => b.id === currentBookId);
+            selectedNoteKws.forEach(kw => saveSharedKeyword(kw));
             book.notes.push({
                 date: new Date().toISOString(),
-                content: content
+                content: content,
+                keywords: [...selectedNoteKws]
             });
 
             saveBooks();
             renderNotes(book);
-            renderBooks(); // Update preview
+            renderBooks();
             document.getElementById('newNoteContent').value = '';
+            selectedNoteKws = [];
+            renderKwArea('noteKwArea', selectedNoteKws, 'toggleNoteKw', 'addNoteKw');
             showToast('笔记已添加 ✓');
         }
 
@@ -1927,6 +1996,108 @@
                 }
             });
         });
+
+        // ── Shared Keywords ──
+        function loadSharedKeywords() {
+            try { return JSON.parse(localStorage.getItem(SK_SHARED_KW)) || []; } catch(e) { return []; }
+        }
+        function saveSharedKeyword(kw) {
+            const kws = loadSharedKeywords();
+            if (!kws.includes(kw)) { kws.push(kw); localStorage.setItem(SK_SHARED_KW, JSON.stringify(kws)); }
+        }
+
+        function renderKwArea(areaId, selected, onToggle, onAdd) {
+            const area = document.getElementById(areaId);
+            if (!area) return;
+            const all = loadSharedKeywords();
+            area.innerHTML = all.map(kw =>
+                `<span class="kw-tag ${selected.includes(kw) ? 'selected' : ''}"
+                      onclick="${onToggle}('${kw.replace(/'/g,"\\'")}')">
+                    #${kw}
+                 </span>`
+            ).join('') +
+            `<input class="kw-input-inline" id="${areaId}_inp" placeholder="新关键词…"
+                onkeydown="kwKey(event,'${onAdd}')" onblur="kwBlur(event,'${onAdd}')">`;
+        }
+
+        function kwKey(e, fn) {
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                const v = e.target.value.trim().replace(/,$/, '');
+                if (v) { window[fn](v); e.target.value = ''; }
+            }
+        }
+        function kwBlur(e, fn) {
+            const v = e.target.value.trim();
+            if (v) { window[fn](v); e.target.value = ''; }
+        }
+
+        function toggleNoteKw(kw) {
+            selectedNoteKws = selectedNoteKws.includes(kw)
+                ? selectedNoteKws.filter(k=>k!==kw) : [...selectedNoteKws, kw];
+            renderKwArea('noteKwArea', selectedNoteKws, 'toggleNoteKw', 'addNoteKw');
+        }
+        function addNoteKw(kw) {
+            if (!selectedNoteKws.includes(kw)) selectedNoteKws.push(kw);
+            saveSharedKeyword(kw);
+            renderKwArea('noteKwArea', selectedNoteKws, 'toggleNoteKw', 'addNoteKw');
+        }
+
+        // ── Dark Thread ──
+        function getDarkThreadRJ(keywords, excludeBookId, excludeNoteIdx) {
+            if (!keywords || !keywords.length) return [];
+            const results = [];
+            // Reading journal books & notes
+            books.forEach(book => {
+                (book.notes || []).forEach((note, ni) => {
+                    if (book.id === excludeBookId && ni === excludeNoteIdx) return;
+                    const shared = (note.keywords || []).filter(k => keywords.includes(k));
+                    if (shared.length) results.push({
+                        source: 'reading', id: book.id, title: `《${book.title}》笔记`, sharedKws: shared
+                    });
+                });
+                (book.stickies || []).forEach(s => {
+                    const shared = (s.keywords || []).filter(k => keywords.includes(k));
+                    if (shared.length) results.push({
+                        source: 'reading', id: book.id, title: `《${book.title}》便利贴`, sharedKws: shared
+                    });
+                });
+            });
+            // Venus notes
+            try {
+                const vd = JSON.parse(localStorage.getItem('venus_v1'));
+                if (vd && vd.notes) {
+                    vd.notes.forEach(n => {
+                        const shared = (n.keywords || []).filter(k => keywords.includes(k));
+                        if (shared.length) results.push({
+                            source: 'venus', id: n.id, title: n.title, sharedKws: shared
+                        });
+                    });
+                }
+            } catch(e) {}
+            return results.slice(0, 8);
+        }
+
+        function renderDarkThreadRJ(keywords, excludeBookId, excludeNoteIdx) {
+            const conns = getDarkThreadRJ(keywords, excludeBookId, excludeNoteIdx);
+            if (!conns.length) return '';
+            return `<div class="dark-thread-rj">
+                <div class="dark-thread-label-rj">暗线连接 · ${conns.length} 处共鸣</div>
+                ${conns.map(c => `
+                    <div class="thread-item-rj" onclick="threadClickRJ('${c.source}','${c.id}')">
+                        <span class="thread-source-badge ${c.source}">${c.source === 'venus' ? '美学' : '书籍'}</span>
+                        <div>
+                            <div style="color:var(--text-primary)">${c.title}</div>
+                            <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:2px">${c.sharedKws.map(k=>`#${k}`).join(' ')}</div>
+                        </div>
+                    </div>`).join('')}
+            </div>`;
+        }
+
+        function threadClickRJ(source, id) {
+            if (source === 'reading') openBook(id);
+            else showToast('在 Venus 美学笔记中查看');
+        }
 
         // ── Sticky helpers ──
         function escHtml(str) {
