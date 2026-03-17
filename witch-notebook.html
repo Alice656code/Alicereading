@@ -799,7 +799,103 @@
             font-size: 0.7rem;
         }
 
-        /* Mobile responsiveness */
+        /* Tag select area */
+        .tag-select-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.6rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            min-height: 46px;
+        }
+
+        .tag-select-pill {
+            padding: 0.3rem 0.9rem;
+            border-radius: 16px;
+            font-size: 0.84rem;
+            cursor: pointer;
+            border: 1.5px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .tag-select-pill:hover {
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+        }
+
+        .tag-select-pill.selected {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+            color: white;
+        }
+
+        /* Sticky items */
+        .sticky-item-witch {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-left: 3px solid var(--accent-gold);
+            border-radius: 6px;
+            padding: 0.7rem 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 0.5rem;
+            font-size: 0.88rem;
+            line-height: 1.6;
+        }
+
+        .sticky-item-witch:nth-child(3n+1) { border-left-color: var(--accent-purple); }
+        .sticky-item-witch:nth-child(3n+2) { border-left-color: var(--accent-rose); }
+        .sticky-item-witch:nth-child(3n+3) { border-left-color: var(--accent-gold); }
+
+        .sticky-item-actions {
+            display: flex;
+            gap: 0.25rem;
+            flex-shrink: 0;
+        }
+
+        /* Pool badge */
+        .pool-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: var(--accent-rose);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            font-style: normal;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--text-primary);
+            color: white;
+            padding: 0.7rem 1.4rem;
+            border-radius: 20px;
+            font-size: 0.88rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
         @media (max-width: 768px) {
             body {
                 padding: 1rem;
@@ -875,6 +971,7 @@
                         <div class="sort-option" data-sort="pinyin" onclick="setSortOrder('pinyin')">按拼音顺序排序</div>
                     </div>
                 </div>
+                <button class="btn btn-secondary" onclick="openStickyPool()" style="position:relative">🗒️ 便利贴池 <span id="poolBadge" style="display:none;position:absolute;top:-6px;right:-6px;background:var(--accent-rose);color:white;border-radius:50%;width:18px;height:18px;font-size:0.7rem;display:none;align-items:center;justify-content:center"></span></button>
                 <button class="btn" onclick="openAddTopicModal()">+ 新增课题</button>
             </div>
         </div>
@@ -888,6 +985,8 @@
         </div>
     </div>
 
+    <div class="toast" id="toastMsg"></div>
+
     <!-- Add/Edit Topic Modal -->
     <div class="modal" id="topicModal">
         <div class="modal-content">
@@ -898,8 +997,8 @@
                     <input type="text" id="topicTitle" required>
                 </div>
                 <div class="form-group">
-                    <label>分类标签（用顿号"、"分隔多个标签）</label>
-                    <input type="text" id="topicTags" placeholder="例如：塔罗、占星学" required>
+                    <label>分类标签 <span style="font-weight:300;color:var(--text-secondary)">（可多选）</span></label>
+                    <div class="tag-select-area" id="tagSelectArea"></div>
                 </div>
                 <div class="form-group">
                     <label>开始日期</label>
@@ -979,6 +1078,18 @@
             <div class="button-group">
                 <button class="btn" onclick="addNote()">添加笔记</button>
                 <button class="btn btn-secondary" onclick="closeViewTopicModal()">关闭</button>
+            </div>
+
+            <!-- 课题内便利贴 -->
+            <div style="margin-top:2rem;border-top:1px solid var(--border-light);padding-top:1.5rem">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+                    <span style="font-size:0.95rem;color:var(--text-secondary);font-style:italic">🗒️ 便利贴 · <span id="topicStickyCount"></span></span>
+                </div>
+                <div id="topicStickyList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px"></div>
+                <div style="display:flex;gap:0.5rem">
+                    <textarea id="topicStickyInput" placeholder="随手记一条灵感……" style="flex:1;min-height:60px;resize:vertical;border:1px solid var(--border-color);border-radius:6px;padding:0.6rem;font-family:'Noto Serif SC',serif;font-size:0.88rem;background:var(--bg-primary);color:var(--text-primary)"></textarea>
+                    <button class="btn btn-small" onclick="addTopicSticky()" style="align-self:flex-end">贴上</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1099,6 +1210,34 @@
         <img id="previewImage" src="" alt="预览">
     </div>
 
+    <!-- Sticky Pool Modal -->
+    <div class="modal" id="stickyPoolModal">
+        <div class="modal-content">
+            <h2>🗒️ 便利贴池</h2>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1.5rem;font-style:italic">灵感先扔这里，想好了再归入课题</p>
+            <div id="poolStickyList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem"></div>
+            <div style="display:flex;gap:0.5rem;margin-bottom:1rem">
+                <textarea id="poolStickyInput" placeholder="随手记一条……" style="flex:1;min-height:60px;resize:vertical;border:1px solid var(--border-color);border-radius:6px;padding:0.6rem;font-family:'Noto Serif SC',serif;font-size:0.88rem;background:var(--bg-primary);color:var(--text-primary)"></textarea>
+                <button class="btn btn-small" onclick="addPoolSticky()" style="align-self:flex-end">贴上</button>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="closeStickyPool()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Move Sticky to Topic Modal -->
+    <div class="modal" id="moveStickyModal">
+        <div class="modal-content" style="max-width:400px">
+            <h2>转移至课题</h2>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem;font-style:italic" id="moveStickyPreview"></p>
+            <div id="moveTopicList" style="display:flex;flex-direction:column;gap:0.5rem;max-height:300px;overflow-y:auto;margin-bottom:1.5rem"></div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="closeMoveStickyModal()">取消</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let topics = [];
         let categories = ['塔罗', '雷诺曼', '西方魔法仪式', '占星学', '佛教理论观点'];
@@ -1111,6 +1250,10 @@
         let currentSortOrder = 'time';
         let pendingImages = [];
         let editingNoteImages = [];
+        let selectedTags = [];
+        let poolStickies = [];
+        let movingStickyIdx = null;
+        let movingStickySource = null;
 
         // Load data from localStorage
         function loadTopics() {
@@ -1242,10 +1385,12 @@
             const categoriesDiv = document.getElementById('categories');
             categoriesDiv.innerHTML = `
                 <div class="category-pill ${currentFilter === 'all' ? 'active' : ''}" data-category="all">全部</div>
-                ${categories.map(cat => 
+                ${categories.map(cat =>
                     `<div class="category-pill ${currentFilter === cat ? 'active' : ''}" data-category="${cat}">${cat}</div>`
                 ).join('')}
             `;
+            // refresh tag select if open
+            if (document.getElementById('tagSelectArea')) renderTagSelectArea();
         }
 
         // Render topics grid
@@ -1298,7 +1443,7 @@
                             <button class="icon-btn" onclick="event.stopPropagation(); openTopic('${topic.id}')" title="查看详情">✨</button>
                         </div>
                         <div class="topic-title">${topic.title}</div>
-                        <div class="topic-meta">开始于 ${topic.startDate}</div>
+                        <div class="topic-meta">开始于 ${topic.startDate}${topic.stickies && topic.stickies.length ? ` · 🗒️ ${topic.stickies.length} 条便利贴` : ''}</div>
                         <div class="topic-tags">${tagsHtml}</div>
                         ${(topic.notes.length > 0 || topic.motivation) ? `
                             <div class="notes-preview">${latestNote}</div>
@@ -1318,29 +1463,29 @@
 
         document.getElementById('searchBox').addEventListener('input', renderTopics);
 
-        // Add/Edit topic modal
         function openAddTopicModal() {
             editingTopicId = null;
+            selectedTags = [];
             document.getElementById('topicModalTitle').textContent = '新增课题';
             document.getElementById('deleteTopicBtn').style.display = 'none';
             document.getElementById('motivationGroup').style.display = 'block';
             document.getElementById('topicMotivation').value = '';
             document.getElementById('topicModal').classList.add('active');
             document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
+            renderTagSelectArea();
         }
 
         function openEditTopic(topicId) {
             editingTopicId = topicId;
             const topic = topics.find(t => t.id === topicId);
-            
+            selectedTags = topic.tags ? [...topic.tags] : [];
             document.getElementById('topicModalTitle').textContent = '编辑课题';
             document.getElementById('topicTitle').value = topic.title;
-            document.getElementById('topicTags').value = topic.tags ? topic.tags.join('、') : '';
             document.getElementById('startDate').value = topic.startDate;
             document.getElementById('motivationGroup').style.display = 'none';
             document.getElementById('deleteTopicBtn').style.display = 'block';
-            
             document.getElementById('topicModal').classList.add('active');
+            renderTagSelectArea();
         }
 
         function closeTopicModal() {
@@ -1348,6 +1493,7 @@
             document.getElementById('topicForm').reset();
             document.getElementById('topicMotivation').value = '';
             editingTopicId = null;
+            selectedTags = [];
         }
 
         function deleteTopic() {
@@ -1363,30 +1509,26 @@
 
         document.getElementById('topicForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            
             const title = document.getElementById('topicTitle').value;
-            const tagsInput = document.getElementById('topicTags').value;
-            const tags = tagsInput.split('、').map(t => t.trim()).filter(t => t);
             const startDate = document.getElementById('startDate').value;
             const motivation = document.getElementById('topicMotivation').value;
 
             if (editingTopicId) {
                 const topic = topics.find(t => t.id === editingTopicId);
                 topic.title = title;
-                topic.tags = tags;
+                topic.tags = [...selectedTags];
                 topic.startDate = startDate;
             } else {
-                const newTopic = {
+                topics.unshift({
                     id: Date.now().toString(),
-                    title: title,
-                    tags: tags,
-                    startDate: startDate,
+                    title,
+                    tags: [...selectedTags],
+                    startDate,
                     notes: [],
+                    stickies: [],
                     insight: '',
                     motivation: motivation || ''
-                };
-
-                topics.unshift(newTopic);
+                });
             }
 
             saveTopics();
@@ -1394,25 +1536,21 @@
             closeTopicModal();
         });
 
-        // View topic
         function openTopic(topicId) {
             currentTopicId = topicId;
             const topic = topics.find(t => t.id === topicId);
-            
             document.getElementById('viewTopicTitle').textContent = topic.title;
             document.getElementById('viewTopicMeta').textContent = `开始于 ${topic.startDate}`;
-            
-            const tagsHtml = topic.tags ? topic.tags.map(tag => 
-                `<span class="topic-tag">${tag}</span>`
-            ).join('') : '';
+            const tagsHtml = topic.tags ? topic.tags.map(tag =>
+                `<span class="topic-tag">${tag}</span>`).join('') : '';
             document.getElementById('viewTopicTags').innerHTML = tagsHtml;
-            
             displayInsight(topic);
             displayMotivation(topic);
             renderNotes(topic);
-            
+            renderTopicStickies(topic);
             document.getElementById('newNoteContent').value = '';
             document.getElementById('newNoteImagePreview').innerHTML = '';
+            document.getElementById('topicStickyInput').value = '';
             pendingImages = [];
             document.getElementById('viewTopicModal').classList.add('active');
         }
@@ -1731,28 +1869,22 @@
             document.getElementById('settingsModal').classList.remove('active');
         }
 
-        // Export data
         function exportData() {
             const data = {
-                topics: topics,
-                categories: categories,
-                quote: quoteText,
+                topics, categories, quote: quoteText,
                 sortOrder: currentSortOrder,
+                poolStickies,
                 exportDate: new Date().toISOString()
             };
-            
             const dataStr = JSON.stringify(data, null, 2);
             const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            
             const url = URL.createObjectURL(dataBlob);
             const link = document.createElement('a');
             link.href = url;
             link.download = `witch-notebook-backup-${new Date().toISOString().split('T')[0]}.json`;
             link.click();
-            
             URL.revokeObjectURL(url);
-            
-            alert('数据导出成功！');
+            showToast('数据导出成功 ✓');
             closeSettingsModal();
         }
 
@@ -1771,32 +1903,20 @@
                         topics.forEach(topic => {
                             if (topic.motivation === undefined) topic.motivation = '';
                             if (topic.insight === undefined) topic.insight = '';
+                            if (topic.stickies === undefined) topic.stickies = [];
                         });
                         saveTopics();
                     }
                     
-                    if (data.categories) {
-                        categories = data.categories;
-                        saveCategories();
-                    }
-                    
-                    if (data.quote !== undefined) {
-                        quoteText = data.quote;
-                        saveQuoteText();
-                        displayQuote();
-                    }
-
-                    if (data.sortOrder) {
-                        currentSortOrder = data.sortOrder;
-                        saveSortOrder();
-                        updateSortLabel();
-                        updateSortOptions();
-                    }
+                    if (data.categories) { categories = data.categories; saveCategories(); }
+                    if (data.quote !== undefined) { quoteText = data.quote; saveQuoteText(); displayQuote(); }
+                    if (data.sortOrder) { currentSortOrder = data.sortOrder; saveSortOrder(); updateSortLabel(); updateSortOptions(); }
+                    if (data.poolStickies) { poolStickies = data.poolStickies; savePoolStickies(); }
                     
                     renderCategories();
                     renderTopics();
                     
-                    alert('数据导入成功！');
+                    showToast('数据导入成功 ✓');
                     closeSettingsModal();
                 } catch (error) {
                     alert('文件格式错误，导入失败');
@@ -1934,6 +2054,203 @@
         loadTopics();
         loadQuote();
         loadSortOrder();
+        loadPoolStickies();
+
+        // ── Toast ──
+        function showToast(msg) {
+            const t = document.getElementById('toastMsg');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2200);
+        }
+
+        // ── Tag Select Pills ──
+        function renderTagSelectArea() {
+            const area = document.getElementById('tagSelectArea');
+            area.innerHTML = categories.map(cat => `
+                <div class="tag-select-pill ${selectedTags.includes(cat) ? 'selected' : ''}"
+                     onclick="toggleTagSelect('${cat}')">${cat}</div>
+            `).join('');
+        }
+
+        function toggleTagSelect(cat) {
+            if (selectedTags.includes(cat)) {
+                selectedTags = selectedTags.filter(t => t !== cat);
+            } else {
+                selectedTags.push(cat);
+            }
+            renderTagSelectArea();
+        }
+
+        // ── Pool Stickies ──
+        function loadPoolStickies() {
+            const stored = localStorage.getItem('witchPoolStickies');
+            if (stored) poolStickies = JSON.parse(stored);
+            updatePoolBadge();
+        }
+
+        function savePoolStickies() {
+            localStorage.setItem('witchPoolStickies', JSON.stringify(poolStickies));
+            updatePoolBadge();
+        }
+
+        function updatePoolBadge() {
+            const badge = document.getElementById('poolBadge');
+            if (poolStickies.length > 0) {
+                badge.textContent = poolStickies.length;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function openStickyPool() {
+            renderPoolStickies();
+            document.getElementById('stickyPoolModal').classList.add('active');
+        }
+
+        function closeStickyPool() {
+            document.getElementById('stickyPoolModal').classList.remove('active');
+        }
+
+        function renderPoolStickies() {
+            const list = document.getElementById('poolStickyList');
+            if (poolStickies.length === 0) {
+                list.innerHTML = '<p style="color:var(--text-secondary);font-style:italic;text-align:center;padding:1rem">池里还没有便利贴～</p>';
+                return;
+            }
+            list.innerHTML = [...poolStickies].reverse().map((s, ri) => {
+                const realIdx = poolStickies.length - 1 - ri;
+                return `<div class="sticky-item-witch">
+                    <div style="flex:1;white-space:pre-wrap">${escHtml(s.text)}</div>
+                    <div class="sticky-item-actions">
+                        <button class="icon-btn" onclick="openMoveSticky(${realIdx}, 'pool')" title="转移到课题">→</button>
+                        <button class="icon-btn danger" onclick="deletePoolSticky(${realIdx})" title="删除">🗑️</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function addPoolSticky() {
+            const text = document.getElementById('poolStickyInput').value.trim();
+            if (!text) return;
+            poolStickies.push({ text, createdAt: new Date().toISOString() });
+            savePoolStickies();
+            renderPoolStickies();
+            document.getElementById('poolStickyInput').value = '';
+            showToast('已放入便利贴池 ✓');
+        }
+
+        function deletePoolSticky(idx) {
+            poolStickies.splice(idx, 1);
+            savePoolStickies();
+            renderPoolStickies();
+            showToast('已删除');
+        }
+
+        // ── Topic Stickies ──
+        function renderTopicStickies(topic) {
+            const list = document.getElementById('topicStickyList');
+            const count = document.getElementById('topicStickyCount');
+            const stickies = topic.stickies || [];
+            count.textContent = stickies.length ? `共 ${stickies.length} 条` : '还没有便利贴';
+            if (stickies.length === 0) {
+                list.innerHTML = '';
+                return;
+            }
+            list.innerHTML = [...stickies].reverse().map((s, ri) => {
+                const realIdx = stickies.length - 1 - ri;
+                return `<div class="sticky-item-witch">
+                    <div style="flex:1;white-space:pre-wrap">${escHtml(s.text)}</div>
+                    <div class="sticky-item-actions">
+                        <button class="icon-btn" onclick="openMoveSticky(${realIdx}, '${topic.id}')" title="转移">→</button>
+                        <button class="icon-btn danger" onclick="deleteTopicStickyItem(${realIdx})" title="删除">🗑️</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function addTopicSticky() {
+            const text = document.getElementById('topicStickyInput').value.trim();
+            if (!text) return;
+            const topic = topics.find(t => t.id === currentTopicId);
+            if (!topic) return;
+            if (!topic.stickies) topic.stickies = [];
+            topic.stickies.push({ text, createdAt: new Date().toISOString() });
+            saveTopics();
+            renderTopicStickies(topic);
+            renderTopics();
+            document.getElementById('topicStickyInput').value = '';
+            showToast('便利贴已贴上 ✓');
+        }
+
+        function deleteTopicStickyItem(idx) {
+            const topic = topics.find(t => t.id === currentTopicId);
+            if (!topic || !topic.stickies) return;
+            topic.stickies.splice(idx, 1);
+            saveTopics();
+            renderTopicStickies(topic);
+            renderTopics();
+            showToast('已删除');
+        }
+
+        // ── Move Sticky ──
+        function openMoveSticky(idx, source) {
+            movingStickyIdx = idx;
+            movingStickySource = source;
+            const text = source === 'pool'
+                ? poolStickies[idx].text
+                : (topics.find(t => t.id === source)?.stickies?.[idx]?.text || '');
+            document.getElementById('moveStickyPreview').textContent = `「${text.slice(0, 40)}${text.length > 40 ? '…' : ''}」`;
+            const topicList = document.getElementById('moveTopicList');
+            const destinations = source === 'pool'
+                ? topics
+                : [{ id: 'pool', title: '🗒️ 便利贴池（取消归类）' }, ...topics.filter(t => t.id !== source)];
+            topicList.innerHTML = destinations.map(t => `
+                <div class="settings-item" onclick="confirmMoveSticky('${t.id}')" style="padding:0.75rem 1rem">
+                    <div class="settings-item-title">${t.title}</div>
+                </div>
+            `).join('');
+            document.getElementById('moveStickyModal').classList.add('active');
+        }
+
+        function closeMoveStickyModal() {
+            document.getElementById('moveStickyModal').classList.remove('active');
+            movingStickyIdx = null;
+            movingStickySource = null;
+        }
+
+        function confirmMoveSticky(destId) {
+            let stickyObj;
+            if (movingStickySource === 'pool') {
+                stickyObj = poolStickies.splice(movingStickyIdx, 1)[0];
+                savePoolStickies();
+                renderPoolStickies();
+            } else {
+                const srcTopic = topics.find(t => t.id === movingStickySource);
+                stickyObj = srcTopic.stickies.splice(movingStickyIdx, 1)[0];
+                saveTopics();
+                if (currentTopicId === movingStickySource) renderTopicStickies(srcTopic);
+            }
+
+            if (destId === 'pool') {
+                poolStickies.push(stickyObj);
+                savePoolStickies();
+            } else {
+                const destTopic = topics.find(t => t.id === destId);
+                if (!destTopic.stickies) destTopic.stickies = [];
+                destTopic.stickies.push(stickyObj);
+                saveTopics();
+                if (currentTopicId === destId) renderTopicStickies(destTopic);
+            }
+
+            closeMoveStickyModal();
+            showToast('已转移 ✓');
+        }
+
+        function escHtml(str) {
+            return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
     </script>
 </body>
 </html>
